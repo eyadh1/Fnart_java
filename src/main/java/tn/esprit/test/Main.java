@@ -11,12 +11,7 @@ public class Main {
 //        System.out.println(t1);
 //        System.out.println(t2);
 
-        ServicePersonne sp = new ServicePersonne();
 
-        sp.add(new Personne(10,"bouhaja","omar"));
-
-
-        System.out.println(sp.getAll());
     }
 
 }
