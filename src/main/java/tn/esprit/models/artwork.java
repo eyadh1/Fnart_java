@@ -31,13 +31,12 @@ public class artwork {
         this.status = status;
     }
 
-    public int getId(int id) {
+    public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
-
     }
 
     public String getTitre() {

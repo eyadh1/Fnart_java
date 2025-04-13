@@ -29,13 +29,51 @@ public class serviceartwork implements IService<artwork> {
 
     @Override
     public List<artwork> getAll() {
-        return List.of();
+        List<artwork> artworks = new ArrayList<>();
+        String qry = "SELECT * FROM `artwork`";
+
+        try {
+            Statement stm = conn.createStatement();
+            ResultSet rs = stm.executeQuery(qry);
+            while (rs.next()) {
+                artwork artwork = new artwork();
+                artwork.setId(rs.getInt(1)); // correction ici
+                artwork.setTitre(rs.getString("titre"));
+                artwork.setPrix(rs.getInt("prix"));
+                artwork.setDescription(rs.getString("description"));
+                artwork.setImage(rs.getString("image"));
+                artwork.setArtistenom(rs.getString("artistenom"));
+                artwork.setStatus(rs.getString("status"));
+
+                artworks.add(artwork); // il manquait cette ligne
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur getAll : " + e.getMessage());
+        }
+
+        return artworks; // retourne la vraie liste
     }
 
     @Override
     public void update(artwork artwork) {
-
+        String qry = "UPDATE `artwork` SET `titre`=?, `prix`=?, `description`=?, `image`=?, `artistenom`=?, `status`=? WHERE `id`=?";
+        try {
+            PreparedStatement pstm = conn.prepareStatement(qry);
+            pstm.setString(1, artwork.getTitre());
+            pstm.setInt(2, artwork.getPrix());
+            pstm.setString(3, artwork.getDescription());
+            pstm.setString(4, artwork.getImage());
+            pstm.setString(5, artwork.getArtistenom());
+            pstm.setString(6, artwork.getStatus());
+            pstm.setInt(7, artwork.getId()); // <-- correction ici
+            pstm.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
+
+
+
 
     @Override
     public void delete(artwork artwork) {

@@ -14,16 +14,16 @@ public class Home extends Application {
 
 
     @Override
-    public void start(Stage stage) throws Exception {
-
+    public void start(Stage stage) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/ajouterartwork.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/listartwork.fxml"));
             Scene scene = new Scene(root);
             stage.setScene(scene);
-            stage.setTitle("Ajouter artwork");
+            stage.setTitle("Liste des œuvres");
             stage.show();
         } catch (IOException e) {
             System.err.println("Erreur: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
