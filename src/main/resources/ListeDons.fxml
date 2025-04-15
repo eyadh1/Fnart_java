@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+
+<?import javafx.scene.control.Label?>
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ListeDonsController" style="-fx-background-color: #EFDAC7;">
+   <children>
+      <VBox spacing="20" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
+         <Label text="Liste des Dons" style="-fx-text-fill: #F2F2F2; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+         
+         <ListView fx:id="donsListView" prefHeight="400" style="-fx-background-color: #EFDAC7;"/>
+         
+         <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button fx:id="backButton" text="Retour" style="-fx-background-color: #A6695B; -fx-text-fill: #F2F2F2; -fx-font-weight: bold;"/>
+         </HBox>
+      </VBox>
+   </children>
+</AnchorPane> 

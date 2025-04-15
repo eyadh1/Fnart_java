@@ -50,8 +50,8 @@ public class beneficiaires {
     public beneficiaires(String text, String text1, String text2, String value, String text3, String text4, String text5) {
     }
 
-    public Long getId() {
-        return id;
+    public int getId() {
+        return Math.toIntExact(id);
     }
 
     public void setId(Long id) {
