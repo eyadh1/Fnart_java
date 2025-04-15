@@ -6,36 +6,44 @@ public class beneficiaires {
     private String email;
     private String telephone;
     private String cause;
-    private String estElleAssociation;
+    private String est_elle_association;
     private String description;
     private String status = "En attente";
-    private Double valeurDemande;
+    private Double valeur_demande;
 
 
-    public beneficiaires(Long id, String nom, String email, String telephone, String cause, String estElleAssociation, String description, String status, Double valeurDemande) {
+    public beneficiaires(Long id, String nom, String email, String telephone, String cause, String estElleAssociation, String description, String status, Double valeur_demande) {
         this.id = id;
         this.nom = nom;
         this.email = email;
         this.telephone = telephone;
         this.cause = cause;
-        this.estElleAssociation = estElleAssociation;
+        this.est_elle_association = est_elle_association;
         this.description = description;
         this.status = "En attente";
-        this.valeurDemande = valeurDemande;
+        this.valeur_demande = valeur_demande;
     }
 
     public beneficiaires() {
+        this.nom = "";
+        this.email = "";
+        this.telephone = "";
+        this.cause = "";
+        this.est_elle_association = "Non";
+        this.description = "";
+        this.status = "En attente";
+        this.valeur_demande = null;
     }
 
-    public beneficiaires(String nom, String email, String telephone, String cause, String estElleAssociation, String description, String status, Double valeurDemande) {
+    public beneficiaires(String nom, String email, String telephone, String estElleAssociation, String cause, String description, Double valeurDemande) {
         this.nom = nom;
         this.email = email;
         this.telephone = telephone;
+        this.est_elle_association = estElleAssociation;
         this.cause = cause;
-        this.estElleAssociation = estElleAssociation;
         this.description = description;
-        this.status = status;
-        this.valeurDemande = valeurDemande;
+        this.status = "En attente";
+        this.valeur_demande = valeurDemande;
     }
 
 
@@ -83,11 +91,11 @@ public class beneficiaires {
     }
 
     public String getEstElleAssociation() {
-        return estElleAssociation;
+        return est_elle_association;
     }
 
     public void setEstElleAssociation(String estElleAssociation) {
-        this.estElleAssociation = estElleAssociation;
+        this.est_elle_association = est_elle_association;
     }
 
     public String getDescription() {
@@ -107,11 +115,11 @@ public class beneficiaires {
     }
 
     public Double getValeurDemande() {
-        return valeurDemande;
+        return valeur_demande;
     }
 
     public void setValeurDemande(Double valeurDemande) {
-        this.valeurDemande = valeurDemande;
+        this.valeur_demande = valeurDemande;
     }
 
     @Override
@@ -122,10 +130,10 @@ public class beneficiaires {
                 ", email='" + email + '\'' +
                 ", telephone='" + telephone + '\'' +
                 ", cause='" + cause + '\'' +
-                ", estElleAssociation='" + estElleAssociation + '\'' +
+                ", estElleAssociation='" + est_elle_association + '\'' +
                 ", description='" + description + '\'' +
                /* ", status='" + status + '\'' +*/
-                ", valeurDemande=" + valeurDemande +
+                ", valeurDemande=" + valeur_demande +
                 '}';
     }
 }
