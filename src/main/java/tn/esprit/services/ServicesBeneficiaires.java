@@ -1,0 +1,119 @@
+package tn.esprit.services;
+
+import tn.esprit.interfaces.IService;
+import tn.esprit.models.beneficiaires;
+import tn.esprit.utils.MyDataBase;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ServicesBeneficiaires implements IService<beneficiaires> {
+
+    private final Connection connection;
+
+    public ServicesBeneficiaires() {
+        this.connection = MyDataBase.getInstance().getCnx();
+    }
+
+    @Override
+    public  void add(beneficiaires b) {
+        String sql = "INSERT INTO beneficiaires (nom, email, telephone,est_elle_association, cause,valeur_demande,status, description) VALUES (?, ?, ?, ?, ?, ?, 'en attente',?)";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            if (b.getNom() == null || b.getNom().trim().isEmpty()) {
+                throw new IllegalArgumentException("Le champ 'nom' est obligatoire.");
+            }
+            ps.setString(1, b.getNom());
+            ps.setString(2, b.getEmail());
+            ps.setString(3, b.getTelephone());
+            ps.setString(4, b.getEstElleAssociation());
+            ps.setString(5, b.getCause());
+            if (b.getValeurDemande() != null) {
+                ps.setDouble(6, b.getValeurDemande());
+            } else {
+                ps.setNull(6, java.sql.Types.DOUBLE);
+            }
+            ps.setString(7, b.getDescription());
+
+            ps.executeUpdate();
+            System.out.println("Beneficiaire ajouté avec succès !");
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de l'ajout du bénéficiaire !");
+            e.printStackTrace(); // Keep this to see the full error
+        }
+    }
+
+    @Override
+    public List<beneficiaires> getAll() {
+        List<beneficiaires> beneficiairesList = new ArrayList<>();
+        String sql = "SELECT * FROM beneficiaires";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                beneficiaires b = new beneficiaires();
+                b.setId(rs.getLong("id"));
+                b.setNom(rs.getString("nom"));
+                b.setEmail(rs.getString("email"));
+                b.setTelephone(rs.getString("telephone"));
+                b.setEstElleAssociation(rs.getString("est_elle_association"));
+                b.setCause(rs.getString("cause"));
+                b.setValeurDemande(rs.getDouble("valeur_demande"));
+                b.setStatus(rs.getString("status"));
+                b.setDescription(rs.getString("description"));
+                
+                beneficiairesList.add(b);
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération des bénéficiaires !");
+            e.printStackTrace();
+        }
+        
+        return beneficiairesList;
+    }
+
+    @Override
+    public void update(beneficiaires beneficiaire) {
+        String sql = "UPDATE beneficiaires SET nom = ?, email = ?, telephone = ?, est_elle_association = ?, cause = ?, valeur_demande = ?, description = ? WHERE id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, beneficiaire.getNom());
+            ps.setString(2, beneficiaire.getEmail());
+            ps.setString(3, beneficiaire.getTelephone());
+            ps.setString(4, beneficiaire.getEstElleAssociation());
+            ps.setString(5, beneficiaire.getCause());
+            if (beneficiaire.getValeurDemande() != null) {
+                ps.setDouble(6, beneficiaire.getValeurDemande());
+            } else {
+                ps.setNull(6, java.sql.Types.DOUBLE);
+            }
+            ps.setString(7, beneficiaire.getDescription());
+            ps.setLong(8, beneficiaire.getId());
+
+            ps.executeUpdate();
+            System.out.println("Bénéficiaire mis à jour avec succès !");
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la mise à jour du bénéficiaire !");
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void delete(beneficiaires beneficiaire) {
+        String sql = "DELETE FROM beneficiaires WHERE id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setLong(1, beneficiaire.getId());
+            ps.executeUpdate();
+            System.out.println("Bénéficiaire supprimé avec succès !");
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la suppression du bénéficiaire !");
+            e.printStackTrace();
+        }
+    }
+}
