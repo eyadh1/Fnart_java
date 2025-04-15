@@ -44,7 +44,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>contollers.Home</mainClass>
+                    <mainClass>controllers.Home</mainClass>
                 </configuration>
             </plugin>
         </plugins>

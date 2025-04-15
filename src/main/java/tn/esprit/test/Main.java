@@ -1,22 +1,27 @@
 package tn.esprit.test;
 
+import tn.esprit.models.beneficiaires;
+import tn.esprit.services.ServicesBeneficiaires;
+import tn.esprit.utils.MyDataBase;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
 public class Main {
 
-
     public static void main(String[] args) {
-//        Test t1 = Test.getInstance();
-//        Test t2 = Test.getInstance();
-//
-//
-//        System.out.println(t1);
-//        System.out.println(t2);
+        Connection connection=MyDataBase.getInstance().getCnx();
+        Connection connection1=MyDataBase.getInstance().getCnx();
 
-        ServicePersonne sp = new ServicePersonne();
+        System.out.println(connection);
+        System.out.println(connection1);
 
-        sp.add(new Personne(10,"bouhaja","omar"));
+        ServicesBeneficiaires beneficiairesService = new ServicesBeneficiaires() {
 
-
-        System.out.println(sp.getAll());
+            };
+        };
+        // ServicesBeneficiaires.add(new beneficiaires("jnen","marwen@gmail.com",22250300,"club","oui","description"));
+        //   personneService.update(new Personne(1,"ben","ali",24));
+        //System.out.println(ServicesBeneficiaires.select());
     }
 
-}
