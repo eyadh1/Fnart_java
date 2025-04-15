@@ -5,22 +5,41 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.ajouterartworkController">
+<AnchorPane prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.ajouterartworkController">
    <children>
-      <TextField fx:id="titreTextField" layoutX="23.0" layoutY="44.0" />
-      <TextField fx:id="descriptionTextField" layoutX="23.0" layoutY="89.0" />
-      <TextField fx:id="prixTextField" layoutX="23.0" layoutY="141.0" />
-      <TextField fx:id="artistenomTextField" layoutX="23.0" layoutY="197.0" />
-      <TextField fx:id="imageTextField" layoutX="23.0" layoutY="255.0" />
-      <Label layoutX="23.0" layoutY="26.0" text="titre" />
-      <Label layoutX="26.0" layoutY="71.0" text="description" />
-      <Label layoutX="24.0" layoutY="117.0" text="prix" />
-      <Label layoutX="21.0" layoutY="173.0" text="artistenom" />
-      <Label layoutX="24.0" layoutY="224.0" text="image" />
-      <TextField fx:id="statusTextField" layoutX="23.0" layoutY="312.0" />
-      <Label layoutX="24.0" layoutY="281.0" text="status" />
-      <Button fx:id="btnSave" layoutX="300.0" layoutY="338.0" mnemonicParsing="false" onAction="#creatartwork" prefHeight="26.0" prefWidth="75.0" text="Save" />
-      <Text fx:id="ArtworkText" layoutX="277.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Artwork" wrappingWidth="83.4183349609375" />
+      <VBox spacing="10" layoutX="23.0" layoutY="44.0">
+         <children>
+            <Label text="Titre" />
+            <TextField fx:id="titreTextField" />
+            
+            <Label text="Description" />
+            <TextField fx:id="descriptionTextField" />
+            
+            <Label text="Prix" />
+            <TextField fx:id="prixTextField" />
+            
+            <Label text="Nom de l'artiste" />
+            <TextField fx:id="artistenomTextField" />
+            
+            <Label text="Image" />
+            <HBox spacing="10">
+               <children>
+                  <TextField fx:id="imageTextField" editable="false" prefWidth="200" promptText="Aucune image sélectionnée" />
+                  <Button fx:id="btnUpload" text="Parcourir..." onAction="#uploadImage" />
+               </children>
+            </HBox>
+            <ImageView fx:id="imagePreview" fitHeight="150.0" fitWidth="200.0" preserveRatio="true" />
+            
+            <Label text="Status" />
+            <TextField fx:id="statusTextField" />
+         </children>
+      </VBox>
+      
+      <Button fx:id="btnSave" layoutX="263.0" layoutY="450.0" mnemonicParsing="false" onAction="#creatartwork" prefHeight="26.0" prefWidth="75.0" text="Enregistrer" />
+      <Text fx:id="ArtworkText" layoutX="23.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ajouter une œuvre d'art" style="-fx-font-size: 18px;" />
    </children>
 </AnchorPane>

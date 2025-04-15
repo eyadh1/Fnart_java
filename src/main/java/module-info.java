@@ -3,6 +3,8 @@ module java_pi{
 requires java.sql;
 requires javafx.fxml;
     requires java.desktop;
+    requires layout;
+    requires kernel;
 
     exports tn.esprit.controllers;
     exports tn.esprit.service;

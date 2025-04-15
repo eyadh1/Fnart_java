@@ -26,6 +26,7 @@ public class servicecommande implements IService<commande> {
         pstm.setInt(5, commande.getArtwork_id());
         pstm.setDate(6, new java.sql.Date(commande.getDate().getTime()));
         pstm.setDouble(7, commande.getTotale());
+        pstm.setString(8, commande.getStatus());
 
         pstm.executeUpdate();
     }

@@ -9,12 +9,20 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import tn.esprit.models.artwork;
 import tn.esprit.service.serviceartwork;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.Optional;
 
@@ -23,6 +31,8 @@ public class ajouterartworkController {
     private static final String VALID_STYLE = "-fx-border-color: #00ff00;";
     private static final String INVALID_STYLE = "-fx-border-color: #ff0000;";
     private static final String DEFAULT_STYLE = "";
+    private static final String UPLOAD_DIR = "src/main/resources/uploads/";
+    private File selectedFile;
 
     @FXML
     private Text ArtworkText;
@@ -34,10 +44,16 @@ public class ajouterartworkController {
     private Button btnSave;
 
     @FXML
+    private Button btnUpload;
+
+    @FXML
     private TextField descriptionTextField;
 
     @FXML
     private TextField imageTextField;
+
+    @FXML
+    private ImageView imagePreview;
 
     @FXML
     private TextField prixTextField;
@@ -51,60 +67,112 @@ public class ajouterartworkController {
     @FXML
     void initialize() {
         setupValidationListeners();
-        // Ajouter les listeners pour la validation en temps réel
-        titreTextField.textProperty().addListener((observable, oldValue, newValue) -> validateTextField(titreTextField, newValue, 3, 100));
-        descriptionTextField.textProperty().addListener((observable, oldValue, newValue) -> validateTextField(descriptionTextField, newValue, 10, 500));
-        artistenomTextField.textProperty().addListener((observable, oldValue, newValue) -> validateTextField(artistenomTextField, newValue, 3, 100));
-        prixTextField.textProperty().addListener((observable, oldValue, newValue) -> validatePrixField(newValue));
-        imageTextField.textProperty().addListener((observable, oldValue, newValue) -> validateImageField(newValue));
-        statusTextField.textProperty().addListener((observable, oldValue, newValue) -> validateStatusField(newValue));
-    }
-
-    private void validateTextField(TextField textField, String text, int minLength, int maxLength) {
-        if (text.isEmpty()) {
-            textField.setStyle(INVALID_STYLE);
-        } else if (text.length() < minLength || text.length() > maxLength) {
-            textField.setStyle(INVALID_STYLE);
-        } else {
-            textField.setStyle(VALID_STYLE);
+        // Create uploads directory if it doesn't exist
+        File uploadDir = new File(UPLOAD_DIR);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
         }
     }
 
-    private void validatePrixField(String text) {
-        if (text.isEmpty()) {
-            prixTextField.setStyle(INVALID_STYLE);
-            return;
+    @FXML
+    void uploadImage() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Sélectionner une image");
+        fileChooser.getExtensionFilters().add(
+            new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif")
+        );
+
+        selectedFile = fileChooser.showOpenDialog(btnUpload.getScene().getWindow());
+        if (selectedFile != null) {
+            // Update TextField with file name
+            imageTextField.setText(selectedFile.getName());
+            
+            // Show image preview
+            Image image = new Image(selectedFile.toURI().toString());
+            imagePreview.setImage(image);
+            
+            validateImageField(selectedFile.getName());
         }
-        try {
-            int prix = Integer.parseInt(text);
-            if (prix <= 0 || prix > 1000000) {
-                prixTextField.setStyle(INVALID_STYLE);
-            } else {
-                prixTextField.setStyle(VALID_STYLE);
+    }
+
+    private String saveImage() throws IOException {
+        if (selectedFile != null) {
+            String fileName = System.currentTimeMillis() + "_" + selectedFile.getName();
+            Path destination = Paths.get(UPLOAD_DIR + fileName);
+            Files.copy(selectedFile.toPath(), destination, StandardCopyOption.REPLACE_EXISTING);
+            return fileName;
+        }
+        return null;
+    }
+
+    @FXML
+    void creatartwork(ActionEvent event) {
+        if (validateFields()) {
+            try {
+                String imagePath = saveImage();
+                if (imagePath == null) {
+                    showAlert(Alert.AlertType.ERROR, "Erreur", "Veuillez sélectionner une image.");
+                    return;
+                }
+
+                artwork newArtwork = new artwork(
+                    titreTextField.getText(),
+                    descriptionTextField.getText(),
+                    Integer.parseInt(prixTextField.getText()),
+                    imagePath,
+                    artistenomTextField.getText(),
+                    statusTextField.getText()
+                );
+
+                serviceartwork service = new serviceartwork();
+                service.add(newArtwork);
+
+                showAlert(Alert.AlertType.INFORMATION, "Succès", "L'œuvre d'art a été ajoutée avec succès!");
+
+                // Demander à l'utilisateur s'il veut voir la liste
+                Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+                confirmAlert.setTitle("Voir la liste");
+                confirmAlert.setHeaderText(null);
+                confirmAlert.setContentText("Voulez-vous voir la liste des œuvres d'art ?");
+
+                Optional<ButtonType> result = confirmAlert.showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/listartwork.fxml"));
+                        Parent root = loader.load();
+                        Stage stage = (Stage) btnSave.getScene().getWindow();
+                        stage.setScene(new Scene(root));
+                        stage.show();
+                    } catch (IOException e) {
+                        showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'ouvrir la liste : " + e.getMessage());
+                    }
+                } else {
+                    clearForm();
+                }
+
+            } catch (SQLException | IOException e) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'ajout de l'œuvre: " + e.getMessage());
             }
-        } catch (NumberFormatException e) {
-            prixTextField.setStyle(INVALID_STYLE);
         }
     }
 
-    private void validateImageField(String text) {
-        if (text.isEmpty()) {
-            imageTextField.setStyle(INVALID_STYLE);
-        } else if (text.toLowerCase().matches(".*\\.(jpg|jpeg|png|gif)$")) {
-            imageTextField.setStyle(VALID_STYLE);
-        } else {
-            imageTextField.setStyle(INVALID_STYLE);
-        }
-    }
+    private void clearForm() {
+        titreTextField.clear();
+        descriptionTextField.clear();
+        prixTextField.clear();
+        artistenomTextField.clear();
+        imageTextField.clear();
+        statusTextField.clear();
+        imagePreview.setImage(null);
+        selectedFile = null;
 
-    private void validateStatusField(String text) {
-        if (text.isEmpty()) {
-            statusTextField.setStyle(INVALID_STYLE);
-        } else if (text.toLowerCase().matches("(disponible|vendu|en_exposition)")) {
-            statusTextField.setStyle(VALID_STYLE);
-        } else {
-            statusTextField.setStyle(INVALID_STYLE);
-        }
+        // Reset styles
+        titreTextField.setStyle(DEFAULT_STYLE);
+        descriptionTextField.setStyle(DEFAULT_STYLE);
+        prixTextField.setStyle(DEFAULT_STYLE);
+        artistenomTextField.setStyle(DEFAULT_STYLE);
+        imageTextField.setStyle(DEFAULT_STYLE);
+        statusTextField.setStyle(DEFAULT_STYLE);
     }
 
     private void setupValidationListeners() {
@@ -229,69 +297,14 @@ public class ajouterartworkController {
         return isValid;
     }
 
-    @FXML
-    void creatartwork(ActionEvent event) {
-        if (validateFields()) {
-            try {
-                String titre = titreTextField.getText().trim();
-                String description = descriptionTextField.getText().trim();
-                int prix = Integer.parseInt(prixTextField.getText());
-                String artistenom = artistenomTextField.getText().trim();
-                String image = imageTextField.getText().trim();
-                String status = statusTextField.getText().toLowerCase();
-
-                artwork artwork = new artwork(titre, description, prix, image, artistenom, status);
-                serviceartwork serviceartwork = new serviceartwork();
-                serviceartwork.add(artwork);
-
-                showAlert(Alert.AlertType.INFORMATION, "Succès", "Artwork ajouté avec succès !");
-
-                // Ask user if they want to return to the list
-                Alert returnAlert = new Alert(Alert.AlertType.CONFIRMATION);
-                returnAlert.setTitle("Retour à la liste");
-                returnAlert.setHeaderText("Voulez-vous retourner à la liste des artworks?");
-                returnAlert.setContentText("Cliquez sur 'OK' pour retourner à la liste, ou 'Annuler' pour rester sur cette page.");
-                
-                Optional<ButtonType> result = returnAlert.showAndWait();
-                if (result.isPresent() && result.get() == ButtonType.OK) {
-                    // Return to the artwork list
-                    try {
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/listartwork.fxml"));
-                        Parent root = loader.load();
-                        
-                        // Get the current stage
-                        Stage stage = (Stage) btnSave.getScene().getWindow();
-                        stage.setScene(new Scene(root));
-                        stage.setTitle("Liste des Artworks");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de retourner à la liste des artworks : " + e.getMessage());
-                    }
-                } else {
-                    // Clear the form for a new entry
-                    clearForm();
-                }
-            } catch (SQLException e) {
-                showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'ajout de l'artwork : " + e.getMessage());
-            }
+    private void validateImageField(String text) {
+        if (text.isEmpty()) {
+            imageTextField.setStyle(INVALID_STYLE);
+        } else if (text.toLowerCase().matches(".*\\.(jpg|jpeg|png|gif)$")) {
+            imageTextField.setStyle(VALID_STYLE);
+        } else {
+            imageTextField.setStyle(INVALID_STYLE);
         }
-    }
-    
-    private void clearForm() {
-        titreTextField.clear();
-        descriptionTextField.clear();
-        prixTextField.clear();
-        artistenomTextField.clear();
-        imageTextField.clear();
-        statusTextField.clear();
-        
-        // Réinitialiser les styles
-        titreTextField.setStyle(DEFAULT_STYLE);
-        descriptionTextField.setStyle(DEFAULT_STYLE);
-        prixTextField.setStyle(DEFAULT_STYLE);
-        artistenomTextField.setStyle(DEFAULT_STYLE);
-        imageTextField.setStyle(DEFAULT_STYLE);
-        statusTextField.setStyle(DEFAULT_STYLE);
     }
 
     private void showAlert(Alert.AlertType type, String title, String content) {
