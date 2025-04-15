@@ -35,6 +35,8 @@ public class AddBeneficiaireController implements Initializable {
     private TextField TelephoneTextField;
     @FXML
     private TextField ValeurTextField;
+    @FXML
+    private Button retourButton;
 
     // Email validation pattern
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
@@ -75,6 +77,7 @@ public class AddBeneficiaireController implements Initializable {
 
         AjoutBoutton.setOnAction(event -> handleSubmit());
         ListeBenebutton.setOnAction(event -> handleListeBene());
+        retourButton.setOnAction(event -> handleRetour());
     }
 
     private boolean isValidEmail(String email) {
@@ -89,6 +92,7 @@ public class AddBeneficiaireController implements Initializable {
         return NUMBER_PATTERN.matcher(number).matches();
     }
 
+    @FXML
     private void handleSubmit() {
         // Validate all required fields
         if (NomTextField.getText().trim().isEmpty()) {
@@ -137,7 +141,7 @@ public class AddBeneficiaireController implements Initializable {
         b.setTelephone(TelephoneTextField.getText());
         b.setEstElleAssociation(AssociationChoice.getValue());
         b.setCause(CauseTextField.getText());
-        
+
         try {
             if (!ValeurTextField.getText().isEmpty()) {
                 b.setValeurDemande(Double.parseDouble(ValeurTextField.getText()));
@@ -146,19 +150,19 @@ public class AddBeneficiaireController implements Initializable {
             showAlert("Erreur", "La valeur demandée doit être un nombre valide");
             return;
         }
-        
+
         b.setDescription(DescriptionTextArea.getText());
 
         ServicesBeneficiaires s = new ServicesBeneficiaires();
         s.add(b);
-        
+
         // Show success message
         Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
         successAlert.setTitle("Succès");
         successAlert.setHeaderText(null);
         successAlert.setContentText("Votre demande a été soumise avec succès !");
         successAlert.showAndWait();
-        
+
         // Clear all fields
         clearFields();
     }
@@ -173,11 +177,25 @@ public class AddBeneficiaireController implements Initializable {
         DescriptionTextArea.clear();
     }
 
+    @FXML
     private void handleListeBene() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ListeBeneficiaires.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) ListeBenebutton.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleRetour() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Home.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) retourButton.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
@@ -191,6 +209,25 @@ public class AddBeneficiaireController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    public static void start(Stage primaryStage) {
+        try {
+            FXMLLoader loader = new FXMLLoader(AddBeneficiaireController.class.getResource("/AddBeneficiaire.fxml"));
+            Parent root = loader.load();
+            
+            Scene scene = new Scene(root);
+            primaryStage.setTitle("Ajouter un Bénéficiaire");
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Impossible de charger la fenêtre d'ajout de bénéficiaire: " + e.getMessage());
+            alert.showAndWait();
+        }
     }
 }
 

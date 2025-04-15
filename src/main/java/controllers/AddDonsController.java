@@ -43,6 +43,9 @@ public class AddDonsController implements Initializable {
     @FXML
     private Button ListeBeneficiairesButton;
 
+    @FXML
+    private Button retourButton;
+
     private final ServicesDons servicesDons = new ServicesDons();
     private final ServicesBeneficiaires servicesBeneficiaires = new ServicesBeneficiaires();
 
@@ -71,6 +74,7 @@ public class AddDonsController implements Initializable {
         AjoutButton.setOnAction(event -> handleSubmit());
         ListeButton.setOnAction(event -> handleListe());
         ListeBeneficiairesButton.setOnAction(event -> handleListeBeneficiaires());
+        retourButton.setOnAction(event -> handleRetour());
     }
 
     private boolean isValidNumber(String number) {
@@ -189,11 +193,50 @@ public class AddDonsController implements Initializable {
         }
     }
 
+    private void handleRetour() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/Home.fxml"));
+            Stage stage = (Stage) retourButton.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            showAlert("Erreur", "Impossible de retourner à l'accueil", Alert.AlertType.ERROR);
+        }
+    }
+
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    private void showAlert(String title, String message, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    public static void start(Stage primaryStage) {
+        try {
+            FXMLLoader loader = new FXMLLoader(AddDonsController.class.getResource("/AddDons.fxml"));
+            Parent root = loader.load();
+            
+            Scene scene = new Scene(root);
+            primaryStage.setTitle("Ajouter un Don");
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Impossible de charger la fenêtre d'ajout de don.");
+            alert.showAndWait();
+        }
     }
 } 

@@ -1,29 +1,77 @@
 package controllers;
+
 import javafx.application.Application;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
 public class Home extends Application {
+    private Stage primaryStage;
+
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        this.primaryStage = primaryStage;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Home.fxml"));
+        Parent root = loader.load();
+        
+        Scene scene = new Scene(root);
+        primaryStage.setTitle("Fnart - Gestion des Dons");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
     public static void main(String[] args) {
         launch(args);
     }
 
-
-    @Override
-    public void start(Stage stage) {
+    @FXML
+    private void handleAddBeneficiaire() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/AddBeneficiaire.fxml"));
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setTitle("Ajouter un beneficiaire");
-            stage.show();
-        } catch (IOException e) {
-            System.err.println("Erreur: " + e.getMessage());
+            Stage stage = new Stage();
+            AddBeneficiaireController.start(stage);
+        } catch (Exception e) {
             e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Impossible d'ouvrir la fenêtre d'ajout de bénéficiaire: " + e.getMessage());
+            alert.showAndWait();
         }
+    }
+
+    @FXML
+    private void handleAddDons() {
+        try {
+            Stage stage = new Stage();
+            AddDonsController.start(stage);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Impossible d'ouvrir la fenêtre d'ajout de don: " + e.getMessage());
+            alert.showAndWait();
+        }
+    }
+
+    private void handleListeBeneficiaire() {
+        Stage stage = new Stage();
+        ListeBeneficiairesController.start(stage);
+    }
+
+    private void handleListeDons() {
+        Stage stage = new Stage();
+        ListeDonsController.start(stage);
     }
 }

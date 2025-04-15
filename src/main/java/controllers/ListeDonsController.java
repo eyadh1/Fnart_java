@@ -1,17 +1,26 @@
 package controllers;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.geometry.Insets;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import tn.esprit.models.dons;
 import tn.esprit.services.ServicesDons;
 
@@ -26,87 +35,116 @@ public class ListeDonsController implements Initializable {
     private ListView<dons> donsListView;
 
     @FXML
+    private TextField searchTextField;
+
+    @FXML
+    private ChoiceBox<String> typeFilterChoice;
+
+    @FXML
     private Button backButton;
 
     private final ServicesDons servicesDons = new ServicesDons();
+    private ObservableList<dons> donsList;
+    private FilteredList<dons> filteredDons;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Set the background color of the list view
-        donsListView.setStyle("-fx-background-color: #EFDAC7;");
-        
-        // Style the back button
-        backButton.setStyle("-fx-background-color: #A6695B; -fx-text-fill: #F2F2F2; -fx-font-weight: bold;");
-        
+        // Initialize type filter choices
+        typeFilterChoice.getItems().addAll("Tous", "Argent", "Materiel", "Locale", "Oeuvre");
+        typeFilterChoice.setValue("Tous");
+
+        // Load dons
         loadDons();
+
+        // Set up search functionality
+        setupSearch();
+
+        // Set up type filtering
+        setupTypeFilter();
+
+        // Set up back button
         backButton.setOnAction(event -> handleBack());
     }
 
     private void loadDons() {
         try {
-            List<dons> donsList = servicesDons.getAll();
-            donsListView.getItems().setAll(donsList);
-            
-            // Set cell factory to display dons information in a custom format
-            donsListView.setCellFactory(lv -> new javafx.scene.control.ListCell<dons>() {
+            donsList = FXCollections.observableArrayList(servicesDons.getAll());
+            filteredDons = new FilteredList<>(donsList, p -> true);
+
+            // Set up the list view cell factory
+            donsListView.setCellFactory(new Callback<ListView<dons>, ListCell<dons>>() {
                 @Override
-                protected void updateItem(dons item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty || item == null) {
-                        setGraphic(null);
-                        setText(null);
-                    } else {
-                        // Create a VBox to hold all the information
-                        VBox vbox = new VBox(5);
-                        vbox.setPadding(new Insets(10));
-                        vbox.setStyle("-fx-background-color: #A6695B; -fx-border-color: #BA9D1F; -fx-border-width: 2; -fx-border-radius: 5;");
+                public ListCell<dons> call(ListView<dons> param) {
+                    return new ListCell<dons>() {
+                        @Override
+                        protected void updateItem(dons item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (empty || item == null) {
+                                setText(null);
+                                setGraphic(null);
+                            } else {
+                                VBox vbox = new VBox(5);
+                                vbox.setStyle("-fx-background-color: #A6695B; -fx-padding: 10; -fx-background-radius: 5;");
 
-                        // Create labels for each piece of information
-                        Label valeurLabel = new Label("Valeur: " + item.getValeur() + " TND");
-                        valeurLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #F2F2F2;");
+                                Label typeLabel = new Label("Type: " + item.getType());
+                                typeLabel.setStyle("-fx-text-fill: #BA9D1F; -fx-font-weight: bold;");
 
-                        HBox details = new HBox(20);
-                        Label typeLabel = new Label("Type: " + item.getType());
-                        typeLabel.setStyle("-fx-text-fill: #F2F2F2;");
-                        details.getChildren().add(typeLabel);
+                                HBox valueBox = new HBox(10);
+                                Label valeurLabel = new Label("Valeur: " + item.getValeur());
+                                valeurLabel.setStyle("-fx-text-fill: #F2F2F2;");
+                                valueBox.getChildren().add(valeurLabel);
 
-                        Label descriptionLabel = new Label("Description: " + item.getDescription());
-                        descriptionLabel.setWrapText(true);
-                        descriptionLabel.setMaxWidth(600);
-                        descriptionLabel.setStyle("-fx-text-fill: #F2F2F2;");
+                                Label beneficiaireLabel = new Label("Bénéficiaire: " + item.getBeneficiaire().getNom());
+                                beneficiaireLabel.setStyle("-fx-text-fill: #F2F2F2;");
 
-                        // Create a VBox for beneficiaire information
-                        VBox beneficiaireInfo = new VBox(5);
-                        beneficiaireInfo.setStyle("-fx-background-color: #BA9D1F; -fx-padding: 5; -fx-border-radius: 3;");
-                        
-                        Label beneficiaireTitle = new Label("Bénéficiaire:");
-                        beneficiaireTitle.setStyle("-fx-font-weight: bold; -fx-text-fill: #F2F2F2;");
-                        
-                        Label beneficiaireName = new Label("Nom: " + item.getBeneficiaire().getNom());
-                        Label beneficiaireContact = new Label("Contact: " + item.getBeneficiaire().getEmail() + " | " + item.getBeneficiaire().getTelephone());
-                        beneficiaireName.setStyle("-fx-text-fill: #F2F2F2;");
-                        beneficiaireContact.setStyle("-fx-text-fill: #F2F2F2;");
-                        
-                        beneficiaireInfo.getChildren().addAll(beneficiaireTitle, beneficiaireName, beneficiaireContact);
+                                Label descriptionLabel = new Label(item.getDescription());
+                                descriptionLabel.setStyle("-fx-text-fill: #F2F2F2;");
+                                descriptionLabel.setWrapText(true);
 
-                        // Add all labels to the VBox
-                        vbox.getChildren().addAll(
-                            valeurLabel,
-                            details,
-                            descriptionLabel,
-                            beneficiaireInfo
-                        );
-
-                        setGraphic(vbox);
-                        setText(null);
-                    }
+                                vbox.getChildren().addAll(typeLabel, valueBox, beneficiaireLabel, descriptionLabel);
+                                setGraphic(vbox);
+                            }
+                        }
+                    };
                 }
             });
+
+            // Set the items to the filtered list
+            donsListView.setItems(filteredDons);
+
         } catch (Exception e) {
+            showAlert("Erreur", "Impossible de charger les dons");
             e.printStackTrace();
         }
     }
 
+    private void setupSearch() {
+        searchTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredDons.setPredicate(don -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String lowerCaseFilter = newValue.toLowerCase();
+                return don.getType().toLowerCase().contains(lowerCaseFilter) ||
+                       don.getDescription().toLowerCase().contains(lowerCaseFilter) ||
+                       don.getBeneficiaire().getNom().toLowerCase().contains(lowerCaseFilter) ||
+                       don.getValeur().toString().contains(lowerCaseFilter);
+            });
+        });
+    }
+
+    private void setupTypeFilter() {
+        typeFilterChoice.valueProperty().addListener((observable, oldValue, newValue) -> {
+            filteredDons.setPredicate(don -> {
+                if ("Tous".equals(newValue)) {
+                    return true;
+                }
+                return don.getType().equals(newValue);
+            });
+        });
+    }
+
+    @FXML
     private void handleBack() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddDons.fxml"));
@@ -116,6 +154,33 @@ public class ListeDonsController implements Initializable {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    public static void start(Stage primaryStage) {
+        try {
+            FXMLLoader loader = new FXMLLoader(ListeDonsController.class.getResource("/ListeDons.fxml"));
+            Parent root = loader.load();
+            
+            Scene scene = new Scene(root);
+            primaryStage.setTitle("Liste des Dons");
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Impossible de charger la liste des dons.");
+            alert.showAndWait();
         }
     }
 } 

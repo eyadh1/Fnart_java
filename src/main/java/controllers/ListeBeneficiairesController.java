@@ -1,23 +1,30 @@
 package controllers;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import javafx.geometry.Insets;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import tn.esprit.models.beneficiaires;
 import tn.esprit.services.ServicesBeneficiaires;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class ListeBeneficiairesController implements Initializable {
@@ -26,21 +33,36 @@ public class ListeBeneficiairesController implements Initializable {
     private ListView<beneficiaires> beneficiairesListView;
 
     @FXML
+    private TextField searchTextField;
+
+    @FXML
+    private ChoiceBox<String> sortChoice;
+
+    @FXML
     private Button backButton;
 
     private final ServicesBeneficiaires servicesBeneficiaires = new ServicesBeneficiaires();
+    private ObservableList<beneficiaires> beneficiairesList;
+    private FilteredList<beneficiaires> filteredBeneficiaires;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Set the background color of the list view
-        beneficiairesListView.setStyle("-fx-background-color: #EFDAC7;");
-        
-        // Style the back button
-        backButton.setStyle("-fx-background-color: #A6695B; -fx-text-fill: #F2F2F2; -fx-font-weight: bold;");
-        
+        // Initialize sort choices
+        sortChoice.getItems().addAll("Nom (A-Z)", "Nom (Z-A)");
+        sortChoice.setValue("Nom (A-Z)");
+
+        // Load beneficiaires
         loadBeneficiaires();
+
+        // Set up search functionality
+        setupSearch();
+
+        // Set up sorting
+        setupSorting();
+
+        // Set up back button
         backButton.setOnAction(event -> handleBack());
-        
+
         // Add double-click handler to open update form
         beneficiairesListView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
@@ -53,64 +75,101 @@ public class ListeBeneficiairesController implements Initializable {
     }
 
     private void loadBeneficiaires() {
-        List<beneficiaires> beneficiairesList = servicesBeneficiaires.getAll();
-        beneficiairesListView.getItems().setAll(beneficiairesList);
-        
-        // Set cell factory to display beneficiaires information in a custom format
-        beneficiairesListView.setCellFactory(lv -> new javafx.scene.control.ListCell<beneficiaires>() {
-            @Override
-            protected void updateItem(beneficiaires item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setGraphic(null);
-                    setText(null);
-                } else {
-                    // Create a VBox to hold all the information
-                    VBox vbox = new VBox(5);
-                    vbox.setPadding(new Insets(10));
-                    vbox.setStyle("-fx-background-color: #A6695B; -fx-border-color: #BA9D1F; -fx-border-width: 2; -fx-border-radius: 5;");
+        try {
+            beneficiairesList = FXCollections.observableArrayList(servicesBeneficiaires.getAll());
+            filteredBeneficiaires = new FilteredList<>(beneficiairesList, p -> true);
 
-                    // Create labels for each piece of information
-                    Label nameLabel = new Label("Nom: " + item.getNom());
-                    nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #F2F2F2;");
+            // Set up the list view cell factory
+            beneficiairesListView.setCellFactory(new Callback<ListView<beneficiaires>, ListCell<beneficiaires>>() {
+                @Override
+                public ListCell<beneficiaires> call(ListView<beneficiaires> param) {
+                    return new ListCell<beneficiaires>() {
+                        @Override
+                        protected void updateItem(beneficiaires item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (empty || item == null) {
+                                setText(null);
+                                setGraphic(null);
+                            } else {
+                                VBox vbox = new VBox(5);
+                                vbox.setStyle("-fx-background-color: #A6695B; -fx-padding: 10; -fx-background-radius: 5;");
 
-                    HBox contactInfo = new HBox(20);
-                    Label emailLabel = new Label("Email: " + item.getEmail());
-                    Label phoneLabel = new Label("Téléphone: " + item.getTelephone());
-                    emailLabel.setStyle("-fx-text-fill: #F2F2F2;");
-                    phoneLabel.setStyle("-fx-text-fill: #F2F2F2;");
-                    contactInfo.getChildren().addAll(emailLabel, phoneLabel);
+                                Label nameLabel = new Label(item.getNom());
+                                nameLabel.setStyle("-fx-text-fill: #BA9D1F; -fx-font-weight: bold;");
 
-                    HBox details = new HBox(20);
-                    Label causeLabel = new Label("Cause: " + item.getCause());
-                    Label associationLabel = new Label("Association: " + item.getEstElleAssociation());
-                    causeLabel.setStyle("-fx-text-fill: #F2F2F2;");
-                    associationLabel.setStyle("-fx-text-fill: #F2F2F2;");
-                    details.getChildren().addAll(causeLabel, associationLabel);
+                                HBox contactBox = new HBox(10);
+                                Label emailLabel = new Label("Email: " + item.getEmail());
+                                Label phoneLabel = new Label("Téléphone: " + item.getTelephone());
+                                emailLabel.setStyle("-fx-text-fill: #F2F2F2;");
+                                phoneLabel.setStyle("-fx-text-fill: #F2F2F2;");
+                                contactBox.getChildren().addAll(emailLabel, phoneLabel);
 
-                    Label descriptionLabel = new Label("Description: " + item.getDescription());
-                    descriptionLabel.setWrapText(true);
-                    descriptionLabel.setMaxWidth(600);
-                    descriptionLabel.setStyle("-fx-text-fill: #F2F2F2;");
+                                HBox detailsBox = new HBox(10);
+                                Label causeLabel = new Label("Cause: " + item.getCause());
+                                Label associationLabel = new Label("Association: " + item.getEstElleAssociation());
+                                causeLabel.setStyle("-fx-text-fill: #F2F2F2;");
+                                associationLabel.setStyle("-fx-text-fill: #F2F2F2;");
+                                detailsBox.getChildren().addAll(causeLabel, associationLabel);
 
-                    Label valueLabel = new Label("Valeur demandée: " + 
-                        (item.getValeurDemande() != null ? item.getValeurDemande().toString() : "Non spécifiée"));
-                    valueLabel.setStyle("-fx-text-fill: #F2F2F2;");
+                                Label descriptionLabel = new Label(item.getDescription());
+                                descriptionLabel.setStyle("-fx-text-fill: #F2F2F2;");
+                                descriptionLabel.setWrapText(true);
 
-                    // Add all labels to the VBox
-                    vbox.getChildren().addAll(
-                        nameLabel,
-                        contactInfo,
-                        details,
-                        descriptionLabel,
-                        valueLabel
-                    );
-
-                    setGraphic(vbox);
-                    setText(null);
+                                vbox.getChildren().addAll(nameLabel, contactBox, detailsBox, descriptionLabel);
+                                setGraphic(vbox);
+                            }
+                        }
+                    };
                 }
-            }
+            });
+
+            // Set the items to the filtered list
+            beneficiairesListView.setItems(filteredBeneficiaires);
+
+        } catch (Exception e) {
+            showAlert("Erreur", "Impossible de charger les bénéficiaires");
+            e.printStackTrace();
+        }
+    }
+
+    private void setupSearch() {
+        searchTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredBeneficiaires.setPredicate(beneficiaire -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String lowerCaseFilter = newValue.toLowerCase();
+                return beneficiaire.getNom().toLowerCase().contains(lowerCaseFilter) ||
+                       beneficiaire.getEmail().toLowerCase().contains(lowerCaseFilter) ||
+                       beneficiaire.getTelephone().toLowerCase().contains(lowerCaseFilter) ||
+                       beneficiaire.getCause().toLowerCase().contains(lowerCaseFilter);
+            });
         });
+    }
+
+    private void setupSorting() {
+        sortChoice.valueProperty().addListener((observable, oldValue, newValue) -> {
+            SortedList<beneficiaires> sortedList = new SortedList<>(filteredBeneficiaires);
+            if ("Nom (A-Z)".equals(newValue)) {
+                sortedList.setComparator((b1, b2) -> b1.getNom().compareToIgnoreCase(b2.getNom()));
+            } else if ("Nom (Z-A)".equals(newValue)) {
+                sortedList.setComparator((b1, b2) -> b2.getNom().compareToIgnoreCase(b1.getNom()));
+            }
+            beneficiairesListView.setItems(sortedList);
+        });
+    }
+
+    @FXML
+    private void handleBack() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddBeneficiaire.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) backButton.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void openUpdateForm(beneficiaires beneficiaire) {
@@ -133,15 +192,30 @@ public class ListeBeneficiairesController implements Initializable {
         }
     }
 
-    private void handleBack() {
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    public static void start(Stage primaryStage) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddBeneficiaire.fxml"));
+            FXMLLoader loader = new FXMLLoader(ListeBeneficiairesController.class.getResource("/ListeBeneficiaires.fxml"));
             Parent root = loader.load();
-            Stage stage = (Stage) backButton.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
+            
+            Scene scene = new Scene(root);
+            primaryStage.setTitle("Liste des Bénéficiaires");
+            primaryStage.setScene(scene);
+            primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Impossible de charger la liste des bénéficiaires.");
+            alert.showAndWait();
         }
     }
 }
