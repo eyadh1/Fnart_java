@@ -1,0 +1,26 @@
+Pour compléter l'implémentation de la fonctionnalité de visualisation :
+
+1. Créez un dossier 'images' dans src/main/resources s'il n'existe pas déjà :
+   - Naviguez vers src/main/resources
+   - Créez un nouveau dossier nommé 'images'
+
+2. Ajoutez l'icône de visualisation :
+   - Téléchargez une icône d'œil (vous pouvez en trouver sur des sites comme flaticon.com)
+   - Renommez-la en 'visualisation.png'
+   - Placez-la dans le dossier src/main/resources/images
+
+3. Vérifiez que :
+   - L'icône est au format PNG
+   - Le nom du fichier est exactement 'visualisation.png'
+   - L'icône est de taille raisonnable (idéalement 32x32 pixels)
+
+4. Le code est déjà configuré pour :
+   - Charger l'icône depuis le chemin '/images/visualisation.png'
+   - Redimensionner l'icône à 20x20 pixels dans l'interface
+   - Afficher un bouton transparent avec l'icône
+   - Rediriger vers la liste des commandes lors du clic
+
+5. Si l'icône ne s'affiche pas :
+   - Vérifiez que le chemin est correct
+   - Vérifiez que le fichier est bien inclus dans le build
+   - Vérifiez que le fichier a les bonnes permissions 

@@ -5,22 +5,26 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 
-<AnchorPane fx:id="tableview" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.listartwork"> <!-- 💡 Ton package doit être complet ici -->
+<AnchorPane fx:id="tableview" prefHeight="400.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.listartwork"> <!-- 💡 Ton package doit être complet ici -->
     <children>
-        <TableView fx:id="tableView" layoutX="10.0" layoutY="31.0" prefHeight="308.0" prefWidth="529.0">
+        <TableView fx:id="tableView" layoutX="10.0" layoutY="31.0" prefHeight="308.0" prefWidth="680.0">
             <columns>
-                <TableColumn fx:id="titreTableColumn" prefWidth="75.0" text="titre" />
-                <TableColumn fx:id="descriptionTableColumn" prefWidth="75.0" text="description" />
+                <TableColumn fx:id="titreTableColumn" prefWidth="100.0" text="titre" />
+                <TableColumn fx:id="descriptionTableColumn" prefWidth="100.0" text="description" />
                 <TableColumn fx:id="prixTableColumn" prefWidth="75.0" text="prix" />
-                <TableColumn fx:id="imageTableCollumn" prefWidth="75.0" text="image" />
-                <TableColumn fx:id="artistenomTableColumn" prefWidth="75.0" text="artistenom" />
+                <TableColumn fx:id="imageTableCollumn" prefWidth="100.0" text="image" />
+                <TableColumn fx:id="artistenomTableColumn" prefWidth="100.0" text="artistenom" />
                 <TableColumn fx:id="statusTableColumn" prefWidth="75.0" text="status" />
+                <TableColumn fx:id="commanderTableColumn" prefWidth="75.0" text="Commander" />
             </columns>
         </TableView>
         <Text fx:id="listartwork" layoutX="236.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="List of Artwork" />
+        <Button fx:id="btnAdd" layoutX="330.0" layoutY="361.0" mnemonicParsing="false" text="Add" onAction="#addArtwork" />
         <Button fx:id="btnupdate" layoutX="405.0" layoutY="361.0" mnemonicParsing="false" text="Update" onAction="#btnupdate" />
-
-        <Button fx:id="btndelete" layoutX="480.0" layoutY="361.0" mnemonicParsing="false" text="Delete" />
+        <Button fx:id="btndelete" layoutX="480.0" layoutY="361.0" mnemonicParsing="false" text="Delete" onAction="#deleteart" />
+        <Button fx:id="btnVisualiser" layoutX="555.0" layoutY="361.0" mnemonicParsing="false" text="👁" onAction="#visualiserToutesCommandes" styleClass="button-transparent" />
     </children>
 </AnchorPane>

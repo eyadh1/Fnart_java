@@ -77,6 +77,20 @@ public class serviceartwork implements IService<artwork> {
 
     @Override
     public void delete(artwork artwork) {
+        String qry = "DELETE FROM `artwork` WHERE `id`=?";
+        try {
+            PreparedStatement pstm = conn.prepareStatement(qry);
+            pstm.setInt(1, artwork.getId());
+            int affectedRows = pstm.executeUpdate();
 
+            if (affectedRows == 0) {
+                throw new SQLException("La suppression a échoué, aucune ligne affectée.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la suppression: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
+
 }
+

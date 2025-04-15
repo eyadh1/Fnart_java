@@ -12,22 +12,24 @@ public class commande {
     private Date date;
     private double totale;
     private String status;
+    private artwork artwork; // import tn.esprit.models.Artwork;
+
     public commande() {
         super();
     }
 
-    public commande(int id, String nom, String adress, String telephone, String email, int artwork_id, Date date, double totale, String statut) {
-        super();
+    public commande(int id, String nom, String adress, String telephone, String email, artwork artwork, Date date, double totale, String statut) {
         this.id = id;
         this.nom = nom;
         this.adress = adress;
         this.telephone = telephone;
         this.email = email;
-        this.artwork_id = artwork_id;
+        this.artwork = artwork;
         this.date = date;
         this.totale = totale;
         this.status = statut;
     }
+
 
     public commande(String nom, String adress, String telephone, String email, int artwork_id, Date date, double totale, String statut) {
         this.nom = nom;
@@ -104,12 +106,19 @@ public class commande {
         this.totale = totale;
     }
 
-    public String getStatut() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatut(String statut) {
-        this.status = statut;
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    public artwork getArtwork() {
+        return artwork;
+    }
+
+    public void setArtwork(artwork artwork) {
+        this.artwork = artwork;
     }
 
     @Override

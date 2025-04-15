@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.listcommandeController">
+   <children>
+      <TableView fx:id="tableView" layoutX="10.0" layoutY="31.0" prefHeight="308.0" prefWidth="780.0">
+        <columns>
+          <TableColumn fx:id="artwork_idTableColumn" prefWidth="75.0" text="artwork_id" />
+          <TableColumn fx:id="nomTableColumn" prefWidth="100.0" text="nom" />
+          <TableColumn fx:id="adressTableColumn" prefWidth="100.0" text="adress" />
+          <TableColumn fx:id="telephoneTableColumn" prefWidth="100.0" text="telephone" />
+          <TableColumn fx:id="emailTableColumn" prefWidth="100.0" text="email" />
+          <TableColumn fx:id="dateTableColumn" prefWidth="100.0" text="date" />
+          <TableColumn fx:id="totaleTableColumn" prefWidth="100.0" text="totale" />
+
+        </columns>
+      </TableView>
+      <Text fx:id="listcommande" layoutX="336.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Liste des Commandes" />
+      <Button fx:id="btnUpdate" layoutX="605.0" layoutY="361.0" mnemonicParsing="false" text="Update" onAction="#btnupdate" />
+      <Button fx:id="btnDelete" layoutX="680.0" layoutY="361.0" mnemonicParsing="false" text="Delete" onAction="#deletecmd" />
+      <Button fx:id="btnRetour" layoutX="530.0" layoutY="361.0" mnemonicParsing="false" text="Retour" onAction="#retourArtworkList" />
+   </children>
+</AnchorPane>

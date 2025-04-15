@@ -19,7 +19,7 @@ public class Home extends Application {
             Parent root = FXMLLoader.load(getClass().getResource("/listartwork.fxml"));
             Scene scene = new Scene(root);
             stage.setScene(scene);
-            stage.setTitle("Liste des œuvres");
+            stage.setTitle("Liste des artwork");
             stage.show();
         } catch (IOException e) {
             System.err.println("Erreur: " + e.getMessage());
