@@ -2,8 +2,6 @@ package tn.esprit.models;
 
 import tn.esprit.enumerations.Role;
 
-import java.util.Date;
-
 public class RegularUser extends User {
     private static RegularUser instance;
 
@@ -12,8 +10,8 @@ public class RegularUser extends User {
         this.setRole(Role.REGULARUSER);
     }
 
-    public RegularUser(String nom, String email, String password, String phone, String gender, Date DateOfBirth) {
-        super(nom, email, password, phone, gender,DateOfBirth);
+    public RegularUser(String nom, String email, String password, String phone, String gender) {
+        super(nom, email, password, phone, gender);
         this.setRole(Role.REGULARUSER);
     }
 
@@ -24,9 +22,9 @@ public class RegularUser extends User {
         return instance;
     }
 
-    public static RegularUser getInstance(String nom, String email, String password, String phone, String gender,  Date DateOfBirth) {
+    public static RegularUser getInstance(String nom, String email, String password, String phone, String gender) {
         if (instance == null) {
-            instance = new RegularUser(nom, email, password, phone, gender, DateOfBirth);
+            instance = new RegularUser(nom, email, password, phone, gender);
         }
         return instance;
     }

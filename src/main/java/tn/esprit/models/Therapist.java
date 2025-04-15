@@ -14,10 +14,9 @@ public class Therapist extends User {
         this.setRole(Role.THERAPIST);
     }
 
-    public Therapist(String nom, String email, String password, String phone, String gender, Date DateOfBirth,
-                    String specialization,int yearsOfExperience) {
-        super(nom, email, password, phone, gender, DateOfBirth);
-        this.setRole(Role.THERAPIST);
+    public Therapist(String nom, String email, String password, String phone, String gender,
+                    String specialization, int yearsOfExperience) {
+        super(nom, email, password, phone, gender, Role.THERAPIST);
         this.specialization = specialization;
         this.yearsOfExperience = yearsOfExperience;
     }
@@ -29,10 +28,10 @@ public class Therapist extends User {
         return instance;
     }
 
-    public static Therapist getInstance(String nom, String email, String password, String phone, String gender, Date DateOfBirth,
+    public static Therapist getInstance(String nom, String email, String password, String phone, String gender,
                                      String specialization, int yearsOfExperience) {
         if (instance == null) {
-            instance = new Therapist(nom, email, password, phone, gender,DateOfBirth, specialization, yearsOfExperience);
+            instance = new Therapist(nom, email, password, phone, gender, specialization, yearsOfExperience);
         }
         return instance;
     }
@@ -44,8 +43,6 @@ public class Therapist extends User {
     public void setSpecialization(String specialization) {
         this.specialization = specialization;
     }
-
-
 
     public int getYearsOfExperience() {
         return yearsOfExperience;

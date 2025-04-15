@@ -2,12 +2,10 @@ package tn.esprit.models;
 
 import tn.esprit.enumerations.Role;
 
-import java.util.Date;
-
 public class Artist extends User {
     private static Artist instance;
     private String artStyle;
-
+    private String portfolio;
 
 
     public Artist() {
@@ -15,11 +13,11 @@ public class Artist extends User {
         this.setRole(Role.ARTIST);
     }
 
-    public Artist(String nom, String email, String password, String phone, String gender, Date DateOfBirth, String artStyle) {
-        super(nom, email, password, phone, gender, DateOfBirth);
+    public Artist(String nom, String email, String password, String phone, String gender, String artStyle, String portfolio) {
+        super(nom, email, password, phone, gender);
         this.setRole(Role.ARTIST);
         this.artStyle = artStyle;
-
+        this.portfolio = portfolio;
     }
 
     public static Artist getInstance() {
@@ -29,9 +27,9 @@ public class Artist extends User {
         return instance;
     }
 
-    public static Artist getInstance(String nom, String email, String password, String phone, String gender,Date DateOfBirth, String artStyle) {
+    public static Artist getInstance(String nom, String email, String password, String phone, String gender, String artStyle, String portfolio) {
         if (instance == null) {
-            instance = new Artist(nom, email, password, phone, gender,DateOfBirth, artStyle);
+            instance = new Artist(nom, email, password, phone, gender, artStyle, portfolio);
         }
         return instance;
     }
@@ -44,6 +42,13 @@ public class Artist extends User {
         this.artStyle = artStyle;
     }
 
+    public String getPortfolio() {
+        return portfolio;
+    }
+
+    public void setPortfolio(String portfolio) {
+        this.portfolio = portfolio;
+    }
 
 
 } 

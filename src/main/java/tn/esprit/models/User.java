@@ -1,11 +1,13 @@
 package tn.esprit.models;
 
 import tn.esprit.enumerations.Role;
+
 import java.util.Date;
 
 public class User {
+
     private int id;
-    private String nom, email, password, phone, gender;
+    private String nom, email, password, phone, gender, status;
     private Role role;
     private Date DateOfBirth;
 
@@ -13,23 +15,23 @@ public class User {
         // Default constructor
     }
 
-    public User( String nom, String email, String password, String phone, String gender, Date DateOfBirth) {
+    public User(String nom, String email, String password, String phone, String gender) {
         this.nom = nom;
         this.email = email;
         this.password = password;
         this.phone = phone;
         this.gender = gender;
-        this.DateOfBirth = DateOfBirth;
+        this.status = "PENDING";
     }
 
-    public User(String nom, String email, String password, String phone, String gender,Date DateOfBirth, Role role) {
+    public User(String nom, String email, String password, String phone, String gender, Role role) {
         this.nom = nom;
         this.email = email;
         this.password = password;
         this.phone = phone;
         this.gender = gender;
         this.role = role;
-        this.DateOfBirth = DateOfBirth;
+        this.status = "PENDING";
     }
 
     public int getId() {
@@ -88,6 +90,14 @@ public class User {
         this.role = role;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -98,6 +108,7 @@ public class User {
                 ", phone='" + phone + '\'' +
                 ", gender='" + gender + '\'' +
                 ", role=" + role +
+                ", status='" + status + '\'' +
                 '}';
     }
 }

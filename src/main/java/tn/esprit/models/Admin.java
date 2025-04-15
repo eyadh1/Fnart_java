@@ -12,9 +12,8 @@ public class Admin extends User {
         this.setRole(Role.ADMIN);
     }
 
-    public Admin(String nom, String email, String password, String phone, String gender, Date DateOfBirth) {
-        super(nom, email, password, phone, gender, DateOfBirth);
-        this.setRole(Role.ADMIN);
+    public Admin(String nom, String email, String password, String phone, String gender) {
+        super(nom, email, password, phone, gender, Role.ADMIN);
     }
 
     public static Admin getInstance() {
@@ -24,9 +23,9 @@ public class Admin extends User {
         return instance;
     }
 
-    public static Admin getInstance(String nom, String email, String password, String phone, String gender, Date DateOfBirth) {
+    public static Admin getInstance(String nom, String email, String password, String phone, String gender) {
         if (instance == null) {
-            instance = new Admin(nom, email, password, phone, gender,  DateOfBirth);
+            instance = new Admin(nom, email, password, phone, gender);
         }
         return instance;
     }
