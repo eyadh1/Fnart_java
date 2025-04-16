@@ -65,13 +65,33 @@ public class Home extends Application {
         }
     }
 
+    @FXML
     private void handleListeBeneficiaire() {
-        Stage stage = new Stage();
-        ListeBeneficiairesController.start(stage);
+        try {
+            Stage stage = new Stage();
+            ListeBeneficiairesController.start(stage);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Impossible d'ouvrir la liste des bénéficiaires: " + e.getMessage());
+            alert.showAndWait();
+        }
     }
 
+    @FXML
     private void handleListeDons() {
-        Stage stage = new Stage();
-        ListeDonsController.start(stage);
+        try {
+            Stage stage = new Stage();
+            ListeDonsController.start(stage);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Impossible d'ouvrir la liste des dons: " + e.getMessage());
+            alert.showAndWait();
+        }
     }
 }

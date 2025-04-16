@@ -159,7 +159,6 @@ public class ListeBeneficiairesController implements Initializable {
         });
     }
 
-    @FXML
     private void handleBack() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddBeneficiaire.fxml"));

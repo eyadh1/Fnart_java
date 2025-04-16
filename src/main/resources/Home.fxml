@@ -5,20 +5,26 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="rootPane" prefHeight="462.0" prefWidth="683.0" style="-fx-background-color: #EFDAC7;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Home">
+<AnchorPane fx:id="rootPane" prefHeight="462.0" prefWidth="683.0" style="-fx-background-color: #EFDAC7;" xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Home">
    <children>
       
                <!-- Menu Buttons -->
-      <Button fx:id="addBeneficiaireButton" layoutX="182.0" layoutY="220.0" mnemonicParsing="false" onAction="#handleAddBeneficiaire" prefHeight="50.0" prefWidth="306.0" style="-fx-background-color: #A6695B; -fx-text-fill: #F2F2F2; -fx-font-weight: bold;" text="Devenir Beneficiaire ">
-         <font>
-            <Font size="27.0" />
-         </font>
+      <Button fx:id="addBeneficiaireButton" layoutX="182.0" layoutY="220.0" mnemonicParsing="false" onAction="#handleAddBeneficiaire" prefHeight="50.0" prefWidth="306.0" style="-fx-background-color: #A6695B; -fx-text-fill: #F2F2F2; -fx-font-weight: bold; -fx-font-size: 20px;" text="Devenir Beneficiaire">
+         <style>
+            -fx-background-color: #A6695B;
+            -fx-text-fill: #F2F2F2;
+            -fx-font-weight: bold;
+            -fx-font-size: 20px;
+         </style>
       </Button>
       
-               <Button fx:id="addDonsButton" layoutX="182.0" layoutY="332.0" mnemonicParsing="false" onAction="#handleAddDons" prefHeight="70.0" prefWidth="306.0" style="-fx-background-color: #A6695B; -fx-text-fill: #F2F2F2; -fx-font-weight: bold;" text="Faire un don" textAlignment="CENTER">
-         <font>
-            <Font size="27.0" />
-         </font>
+               <Button fx:id="addDonsButton" layoutX="182.0" layoutY="332.0" mnemonicParsing="false" onAction="#handleAddDons" prefHeight="70.0" prefWidth="306.0" text="Faire un don" textAlignment="CENTER">
+         <style>
+            -fx-background-color: #A6695B;
+            -fx-text-fill: #F2F2F2;
+            -fx-font-weight: bold;
+            -fx-font-size: 20px;
+         </style>
       </Button>
       <Label layoutX="194.0" layoutY="48.0" prefHeight="106.0" prefWidth="295.0" style="-fx-text-fill: #BA9D1F; -fx-font-size: 24px; -fx-font-weight: bold;" text="Bienvenue dans Fnart" textAlignment="CENTER">
          <font>
@@ -26,4 +32,10 @@
          </font>
       </Label>
    </children>
+   
+   <style>
+      .button:hover {
+          -fx-background-color: #8B5347 !important;
+      }
+   </style>
 </AnchorPane>

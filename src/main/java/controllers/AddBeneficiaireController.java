@@ -1,5 +1,6 @@
 package controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +17,8 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 
 public class AddBeneficiaireController implements Initializable {
-
+    @FXML
+    private Button retourHome;
     @FXML
     private ChoiceBox<String> AssociationChoice;
     @FXML
@@ -35,8 +37,6 @@ public class AddBeneficiaireController implements Initializable {
     private TextField TelephoneTextField;
     @FXML
     private TextField ValeurTextField;
-    @FXML
-    private Button retourButton;
 
     // Email validation pattern
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
@@ -77,7 +77,6 @@ public class AddBeneficiaireController implements Initializable {
 
         AjoutBoutton.setOnAction(event -> handleSubmit());
         ListeBenebutton.setOnAction(event -> handleListeBene());
-        retourButton.setOnAction(event -> handleRetour());
     }
 
     private boolean isValidEmail(String email) {
@@ -190,19 +189,6 @@ public class AddBeneficiaireController implements Initializable {
         }
     }
 
-    @FXML
-    private void handleRetour() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Home.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) retourButton.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -229,5 +215,18 @@ public class AddBeneficiaireController implements Initializable {
             alert.showAndWait();
         }
     }
-}
+
+    public void handleBack() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Home.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) retourHome.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    }
+
 

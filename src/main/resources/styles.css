@@ -1,0 +1,9 @@
+.custom-button:hover {
+    -fx-background-color: #8A4E3F;
+}
+
+.custom-button {
+    -fx-background-color: #A6695B;
+    -fx-text-fill: #F2F2F2;
+    -fx-font-weight: bold;
+} 
