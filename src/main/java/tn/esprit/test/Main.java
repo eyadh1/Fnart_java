@@ -1,22 +1,34 @@
 package tn.esprit.test;
 
+import tn.esprit.models.CommentaireF;
+import tn.esprit.models.Forum;
+import  tn.esprit.services.ServiceCommentaire_f;
+import  tn.esprit.services.ServiceForum;
+
+import java.sql.SQLException;
+import java.util.Date;
+
 public class Main {
+    public static void main(String[] args) throws SQLException {
+        // Création d'une date SQL
+        java.sql.Date sqlDate = new java.sql.Date(new Date().getTime());
+
+        // Création d'un service forum
+        // ServiceForum sp = new ServiceForum();
 
 
-    public static void main(String[] args) {
-//        Test t1 = Test.getInstance();
-//        Test t2 = Test.getInstance();
-//
-//
-//        System.out.println(t1);
-//        System.out.println(t2);
 
-        ServicePersonne sp = new ServicePersonne();
-
-        sp.add(new Personne(10,"bouhaja","omar"));
-
-
-        System.out.println(sp.getAll());
+        //sp.ajouter(forum);
+        // sp.supprimer(41);
+        // Affichage de tous les forums
+        //  System.out.println(sp.getAll());
+        ServiceCommentaire_f serviceCommentaire = new ServiceCommentaire_f();
+        Forum forum = new Forum(51);
+        CommentaireF commentaire = new CommentaireF(1, forum, sqlDate,  "Ceci est un commentaire test.");
+        CommentaireF modif = new CommentaireF(22,1, forum, sqlDate,  "modif");
+        //serviceCommentaire.ajouter(commentaire);
+        System.out.println(serviceCommentaire.getAll());
+        // serviceCommentaire.supprimer(21);
+        serviceCommentaire.modifier(modif);
     }
-
 }

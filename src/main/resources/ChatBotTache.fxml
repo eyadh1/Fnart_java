@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="chatContainer" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="377.0" prefWidth="592.0" spacing="10" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.ChatBotTacheController">
+   <children>
+      <TextArea fx:id="chatArea" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="250" prefWidth="380.0" style="-fx-background-radius: 8; -fx-border-color: #012545; -fx-border-radius: 8; -fx-border-width: 4;" wrapText="true">
+         <VBox.margin>
+            <Insets bottom="10.0" left="20.0" right="20.0" />
+         </VBox.margin>
+         <font>
+            <Font size="14.0" />
+         </font>
+      </TextArea>
+      <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+         <children>
+            <TextField fx:id="userInput" onAction="#processInput" prefHeight="58.0" prefWidth="406.0" promptText="Type here..." style="-fx-background-radius: 8; -fx-border-color: red; -fx-border-radius: 8; -fx-border-width: 2;">
+               <HBox.margin>
+                  <Insets right="15.0" />
+               </HBox.margin>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+            <Button onAction="#clearConversation" prefHeight="58.0" prefWidth="105.0" text="clear">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="back" onAction="#back" prefHeight="58.0" prefWidth="109.0" text="retour">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+         </children>
+         <VBox.margin>
+            <Insets left="20.0" right="20.0" />
+         </VBox.margin>
+      </HBox>
+   </children>
+</VBox>

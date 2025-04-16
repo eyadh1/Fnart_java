@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.AjouterForumController">
+   <children>
+      <AnchorPane layoutX="14.0" layoutY="5.0" prefHeight="400.0" prefWidth="600.0" stylesheets="@css/style.css">
+         <children>
+            <TextField fx:id="TFDescription" layoutX="106.0" layoutY="102.0" prefHeight="51.0" prefWidth="238.0" promptText="Description" />
+            <TextField fx:id="TFtitre" layoutX="105.0" layoutY="29.0" prefHeight="26.0" prefWidth="238.0" promptText="Titre" />
+            <Button fx:id="ajouterForumAction" layoutX="198.0" layoutY="343.0" mnemonicParsing="false" onAction="#ajouterForumAction" prefHeight="26.0" prefWidth="139.0" text="Ajouter" />
+            <Label layoutX="47.0" layoutY="32.0" prefHeight="26.0" prefWidth="98.0" text="Titre" />
+            <Label layoutX="14.0" layoutY="115.0" prefHeight="26.0" prefWidth="90.0" text="Description" />
+            <Label layoutX="14.0" layoutY="218.0" prefHeight="26.0" prefWidth="90.0" text="Categorie" />
+            <ComboBox fx:id="TFCategorie" layoutX="104.0" layoutY="210.0" prefHeight="26.0" prefWidth="238.0" promptText="Categorie" />
+            <Label fx:id="warningtitle" layoutX="116.0" layoutY="69.0" prefHeight="18.0" prefWidth="219.0" text="la longeur min est 4 caractères" textFill="RED" visible="false" />
+            <Label fx:id="goodtitle" layoutX="116.0" layoutY="70.0" prefHeight="18.0" prefWidth="238.0" text="bravooooooo" textFill="#13a12b" visible="false" />
+            <Label fx:id="warningDescription" layoutX="85.0" layoutY="149.0" prefHeight="18.0" prefWidth="300.0" text="la description doit etre contient 12 caractère au moins" textFill="#fa0000" visible="false" />
+            <Label fx:id="gooddescription" layoutX="110.0" layoutY="149.0" prefHeight="18.0" prefWidth="228.0" text="bravooooooo" textFill="#0c9c22" visible="false" />
+            <Button fx:id="goafficher" layoutX="385.0" layoutY="343.0" mnemonicParsing="false" onAction="#goafficherAction" prefHeight="26.0" prefWidth="139.0" text="Navigate" />
+            <Label fx:id="label" layoutX="405.0" layoutY="65.0" prefHeight="31.0" prefWidth="280.0" stylesheets="@../../../../../../3A5_DevMasters/src/main/resources/reclamationGui/css/styles.css">
+               <font>
+                  <Font name="Arial" size="14.0" />
+               </font>
+               <graphic>
+                  <Button fx:id="uploadbutton" mnemonicParsing="false" onAction="#uploadimg" prefHeight="33.0" prefWidth="40.0" style="-fx-background-color: #FFFFFF;">
+                     <graphic>
+                        <ImageView fitHeight="38.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@assets/upload.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </graphic>
+            </Label>
+            <Text layoutX="428.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Image : (optionnel)" wrappingWidth="116.80303955078125">
+               <font>
+                  <Font name="Arial" size="14.0" />
+               </font>
+            </Text>
+            <ImageView fx:id="imgView_reclamation" fitHeight="183.0" fitWidth="257.0" layoutX="416.0" layoutY="127.0" pickOnBounds="true" preserveRatio="true" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<?import javax.swing.text.html.TableView?>
+<?import java.awt.Button?>
+<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.AfficherCommentController">
+   <children>
+      <TableView fx:id="tableviewReponse" layoutX="9.0" layoutY="11.0" prefHeight="338.0" prefWidth="600.0" stylesheets="@css/style.css" />
+      <Button fx:id="gotoajoutercomment" layoutX="58.0" layoutY="369.0" mnemonicParsing="false" onAction="#gotoajoutercomment" prefHeight="41.0" prefWidth="124.0" text="Ajouter" />
+      <Button fx:id="recccccccccccccccccccccccc" layoutX="218.0" layoutY="369.0" mnemonicParsing="false" onAction="#recccccccccccccccccccccccc" prefHeight="42.0" prefWidth="150.0" text="liste forums" />
+      <Button fx:id="pdf" layoutX="392.0" layoutY="369.0" mnemonicParsing="false" onAction="#pdf" prefHeight="41.0" prefWidth="157.0" text="exporter pdf" />
+   </children>
+</AnchorPane>
