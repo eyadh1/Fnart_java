@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #F5F5F5;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ListeBeneficiairesBackController">
+    <VBox alignment="CENTER" spacing="20" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+        <Label text="Liste des Bénéficiaires" style="-fx-text-fill: #1A237E; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+        
+        <HBox spacing="10" alignment="CENTER">
+            <TextField fx:id="searchTextField" promptText="Rechercher..." style="-fx-background-color: white; -fx-text-fill: #1A237E;"/>
+        </HBox>
+        
+        <ListView fx:id="beneficiairesListView" VBox.vgrow="ALWAYS" style="-fx-background-color: white; -fx-background-radius: 5;"/>
+        
+        <HBox spacing="20" alignment="CENTER">
+            <Button fx:id="addButton" text="Ajouter" onAction="#handleAdd" style="-fx-background-color: #1A237E; -fx-text-fill: white; -fx-font-weight: bold;"/>
+            <Button fx:id="backButton" text="Retour" onAction="#handleBack" style="-fx-background-color: #1A237E; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        </HBox>
+    </VBox>
+</AnchorPane> 

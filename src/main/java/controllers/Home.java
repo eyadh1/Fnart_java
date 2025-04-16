@@ -22,11 +22,11 @@ public class Home extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Home.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/HomeBack.fxml"));
         Parent root = loader.load();
         
         Scene scene = new Scene(root);
-        primaryStage.setTitle("Fnart - Gestion des Dons");
+        primaryStage.setTitle("Fnart - Back Office");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
