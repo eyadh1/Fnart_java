@@ -172,14 +172,64 @@ public class AdminDashboardController implements Initializable {
 
     private void setupSearchListener() {
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.isEmpty()) {
+            if (newValue == null || newValue.trim().isEmpty()) {
                 loadAllUsers();
                 loadPendingUsers();
+                addActivityLog("Cleared search results");
             } else {
-                allUsersTable.setItems(FXCollections.observableArrayList(userService.searchUsers(newValue)));
-                pendingUsersTable.setItems(FXCollections.observableArrayList(userService.searchPendingUsers(newValue)));
+                String searchTerm = newValue.trim();
+
+                // Update All Users tab
+                ObservableList<User> searchResults = FXCollections.observableArrayList(userService.searchUsers(searchTerm));
+                allUsersTable.setItems(searchResults);
+
+                // Update Pending Users tab
+                ObservableList<User> pendingSearchResults = FXCollections.observableArrayList(userService.searchPendingUsers(searchTerm));
+                pendingUsersTable.setItems(pendingSearchResults);
+
+                addActivityLog("Searched for: \"" + searchTerm + "\" - Found " +
+                        searchResults.size() + " total users, " +
+                        pendingSearchResults.size() + " pending users");
             }
         });
+
+        // Add a button to clear search
+        searchField.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                searchField.clear();
+            }
+        });
+    }
+
+
+    @FXML
+    private void handleSearch(ActionEvent event) {
+        String searchTerm = searchField.getText().trim();
+
+        if (searchTerm.isEmpty()) {
+            loadAllUsers();
+            loadPendingUsers();
+            showAlert("Search Cleared", "Showing all users", Alert.AlertType.INFORMATION);
+        } else {
+            // Update All Users tab
+            ObservableList<User> searchResults = FXCollections.observableArrayList(userService.searchUsers(searchTerm));
+            allUsersTable.setItems(searchResults);
+
+            // Update Pending Users tab
+            ObservableList<User> pendingSearchResults = FXCollections.observableArrayList(userService.searchPendingUsers(searchTerm));
+            pendingUsersTable.setItems(pendingSearchResults);
+
+            addActivityLog("Searched for: \"" + searchTerm + "\"");
+
+            if (searchResults.isEmpty() && pendingSearchResults.isEmpty()) {
+                showAlert("No Results", "No users found matching: " + searchTerm, Alert.AlertType.INFORMATION);
+            } else {
+                showAlert("Search Results",
+                        "Found " + searchResults.size() + " total users and " +
+                                pendingSearchResults.size() + " pending users matching: " + searchTerm,
+                        Alert.AlertType.INFORMATION);
+            }
+        }
     }
 
     @FXML

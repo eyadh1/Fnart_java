@@ -351,13 +351,13 @@ public class UserService implements IService<User> {
 
     public List<User> searchUsers(String searchTerm) {
         List<User> users = new ArrayList<>();
-        String query = "SELECT * FROM user WHERE LOWER(name) LIKE ? OR LOWER(email) LIKE ?";
-        
+        String query = "SELECT * FROM user WHERE LOWER(nom) LIKE ? OR LOWER(email) LIKE ?";
+
         try (PreparedStatement statement = cnx.prepareStatement(query)) {
-            String searchPattern = "%" + searchTerm + "%";
+            String searchPattern = "%" + searchTerm.toLowerCase() + "%";
             statement.setString(1, searchPattern);
             statement.setString(2, searchPattern);
-            
+
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 users.add(createUserFromResultSet(resultSet));

@@ -31,10 +31,12 @@
                             </font>
                         </Label>
                         <TextField fx:id="searchField" promptText="Search users..." HBox.hgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" onAction="#handleSearch" text="Search" />
                         <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#handleRefresh" text="Refresh" />
                         <Button mnemonicParsing="false" onAction="#handleLogout" text="Logout" />
                     </children>
                 </HBox>
+
 
                 <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
                     <tabs>
