@@ -138,24 +138,57 @@ public class UserService implements IService<User> {
 
     @Override
     public void update(User user) {
-        String requete = "UPDATE user SET nom=?, email=?, password=?, roles=?, phone=?, gender=? WHERE id=?";
+        String checkQuery = "SELECT password FROM user WHERE id = ?";
+        String updateQuery = "UPDATE user SET nom=?, email=?, password=?, roles=?, phone=?, gender=?, status=? WHERE id=?";
+
         try {
             // Format the role for database insertion
             String roleString = "[\"" + user.getRole().toString() + "\"]";
 
-            PreparedStatement statement = cnx.prepareStatement(requete);
+            // Check if the password is already hashed by retrieving the current password
+            String currentPassword = null;
+            boolean passwordChanged = false;
+
+            try (PreparedStatement checkStmt = cnx.prepareStatement(checkQuery)) {
+                checkStmt.setInt(1, user.getId());
+                ResultSet rs = checkStmt.executeQuery();
+                if (rs.next()) {
+                    currentPassword = rs.getString("password");
+                    // If the password in user object is different from the current hashed password
+                    // and doesn't start with "$2a$" (BCrypt prefix), then it's a new plaintext password
+                    if (!user.getPassword().equals(currentPassword) && !user.getPassword().startsWith("$2a$")) {
+                        passwordChanged = true;
+                    }
+                }
+            }
+
+            // Prepare the update statement
+            PreparedStatement statement = cnx.prepareStatement(updateQuery);
             statement.setString(1, user.getNom());
             statement.setString(2, user.getEmail());
-            statement.setString(3, user.getPassword());
+
+            // If password changed, hash it; otherwise use the existing hash
+            if (passwordChanged) {
+                statement.setString(3, BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
+            } else {
+                statement.setString(3, user.getPassword());
+            }
+
             statement.setString(4, roleString);
             statement.setString(5, user.getPhone());
             statement.setString(6, user.getGender());
-            statement.setInt(7, user.getId());
+            statement.setString(7, user.getStatus());
+            statement.setInt(8, user.getId());
+
             statement.executeUpdate();
+            System.out.println("User updated successfully");
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error updating user: " + e.getMessage());
+            e.printStackTrace();
         }
     }
+
+
 
     @Override
     public void delete(User user) {

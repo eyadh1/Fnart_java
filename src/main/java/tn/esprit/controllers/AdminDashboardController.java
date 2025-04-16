@@ -14,7 +14,10 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.geometry.Pos;
+import javafx.stage.Modality;
 import javafx.stage.Screen;
+import javafx.scene.layout.GridPane;
+import javafx.geometry.Insets;
 import tn.esprit.models.User;
 import tn.esprit.services.UserService;
 import tn.esprit.enumerations.Role;
@@ -54,6 +57,8 @@ public class AdminDashboardController implements Initializable {
     // Buttons
     @FXML private Button approveButton;
     @FXML private Button rejectButton;
+    @FXML private Button updateButton;
+    @FXML private Button deleteButton;
 
     // Search Field
     @FXML private TextField searchField;
@@ -100,9 +105,18 @@ public class AdminDashboardController implements Initializable {
             if (rejectButton != null) rejectButton.setDisable(!hasSelection);
         });
 
+        // Add listener for the all users table to enable/disable update and delete buttons
+        allUsersTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            boolean hasSelection = newSelection != null;
+            if (updateButton != null) updateButton.setDisable(!hasSelection);
+            if (deleteButton != null) deleteButton.setDisable(!hasSelection);
+        });
+
         // Initially disable buttons until a selection is made
         if (approveButton != null) approveButton.setDisable(true);
         if (rejectButton != null) rejectButton.setDisable(true);
+        if (updateButton != null) updateButton.setDisable(true);
+        if (deleteButton != null) deleteButton.setDisable(true);
     }
 
     private void loadAllUsers() {
@@ -211,6 +225,147 @@ public class AdminDashboardController implements Initializable {
             });
         } else {
             showAlert("No Selection", "Please select a user to reject.", Alert.AlertType.WARNING);
+        }
+    }
+
+    @FXML
+    private void handleDelete(ActionEvent event) {
+        User selectedUser = allUsersTable.getSelectionModel().getSelectedItem();
+        if (selectedUser != null) {
+            // Show confirmation dialog
+            Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmAlert.setTitle("Confirm Deletion");
+            confirmAlert.setHeaderText(null);
+            confirmAlert.setContentText("Are you sure you want to delete user " + selectedUser.getNom() + "? This action cannot be undone.");
+
+            ButtonType yesButton = new ButtonType("Yes");
+            ButtonType noButton = new ButtonType("No");
+
+            confirmAlert.getButtonTypes().setAll(yesButton, noButton);
+            confirmAlert.showAndWait().ifPresent(buttonType -> {
+                if (buttonType == yesButton) {
+                    if (userService.deleteUser(selectedUser.getId())) {
+                        addActivityLog("Deleted user: " + selectedUser.getEmail());
+                        refreshDashboard();
+                        showAlert("User Deleted", "User " + selectedUser.getNom() + " has been deleted from the system.", Alert.AlertType.INFORMATION);
+                    } else {
+                        showAlert("Error", "Failed to delete user: " + selectedUser.getEmail(), Alert.AlertType.ERROR);
+                    }
+                }
+            });
+        } else {
+            showAlert("No Selection", "Please select a user to delete.", Alert.AlertType.WARNING);
+        }
+    }
+
+    @FXML
+    private void handleUpdate(ActionEvent event) {
+        User selectedUser = allUsersTable.getSelectionModel().getSelectedItem();
+        if (selectedUser != null) {
+            // Create a dialog to update user information
+            Dialog<User> dialog = new Dialog<>();
+            dialog.setTitle("Update User");
+            dialog.setHeaderText("Update information for " + selectedUser.getNom());
+
+            // Set the button types
+            ButtonType updateButtonType = new ButtonType("Update", ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().addAll(updateButtonType, ButtonType.CANCEL);
+
+            // Create the form grid
+            GridPane grid = new GridPane();
+            grid.setHgap(10);
+            grid.setVgap(10);
+            grid.setPadding(new Insets(20, 150, 10, 10));
+
+            // Create fields pre-filled with current user data
+            TextField nameField = new TextField(selectedUser.getNom());
+            TextField emailField = new TextField(selectedUser.getEmail());
+            PasswordField passwordField = new PasswordField();
+            passwordField.setPromptText("Leave blank to keep current password");
+            TextField phoneField = new TextField(selectedUser.getPhone());
+
+            // Role dropdown
+            ComboBox<Role> roleComboBox = new ComboBox<>();
+            roleComboBox.setItems(FXCollections.observableArrayList(Role.values()));
+            roleComboBox.setValue(selectedUser.getRole());
+
+            // Gender dropdown
+            ComboBox<String> genderComboBox = new ComboBox<>();
+            genderComboBox.setItems(FXCollections.observableArrayList("Male", "Female", "Other"));
+            genderComboBox.setValue(selectedUser.getGender());
+
+            // Status dropdown
+            ComboBox<String> statusComboBox = new ComboBox<>();
+            statusComboBox.setItems(FXCollections.observableArrayList("ACTIVE", "PENDING"));
+            statusComboBox.setValue(selectedUser.getStatus());
+
+            // Add fields to the grid
+            grid.add(new Label("Name:"), 0, 0);
+            grid.add(nameField, 1, 0);
+            grid.add(new Label("Email:"), 0, 1);
+            grid.add(emailField, 1, 1);
+            grid.add(new Label("Password:"), 0, 2);
+            grid.add(passwordField, 1, 2);
+            grid.add(new Label("Phone:"), 0, 3);
+            grid.add(phoneField, 1, 3);
+            grid.add(new Label("Role:"), 0, 4);
+            grid.add(roleComboBox, 1, 4);
+            grid.add(new Label("Gender:"), 0, 5);
+            grid.add(genderComboBox, 1, 5);
+            grid.add(new Label("Status:"), 0, 6);
+            grid.add(statusComboBox, 1, 6);
+
+            dialog.getDialogPane().setContent(grid);
+
+            // Convert the result to a user when the update button is clicked
+            dialog.setResultConverter(dialogButton -> {
+                if (dialogButton == updateButtonType) {
+                    // Create a copy of the selected user with updated fields
+                    User updatedUser = new User();
+                    updatedUser.setId(selectedUser.getId());
+                    updatedUser.setNom(nameField.getText());
+                    updatedUser.setEmail(emailField.getText());
+
+                    // Only update password if a new one is provided
+                    if (!passwordField.getText().isEmpty()) {
+                        updatedUser.setPassword(passwordField.getText());
+                    } else {
+                        updatedUser.setPassword(selectedUser.getPassword());
+                    }
+
+                    updatedUser.setPhone(phoneField.getText());
+                    updatedUser.setRole(roleComboBox.getValue());
+                    updatedUser.setGender(genderComboBox.getValue());
+                    updatedUser.setStatus(statusComboBox.getValue());
+
+                    return updatedUser;
+                }
+                return null;
+            });
+
+            // Show the dialog and process the result
+            dialog.showAndWait().ifPresent(updatedUser -> {
+                // Check if password was changed
+                boolean passwordChanged = !passwordField.getText().isEmpty();
+
+                // If password changed, we need to hash it before updating
+                if (passwordChanged) {
+                    // Password is already stored as plain text in the updatedUser object
+                    // UserService.update will handle the hashing
+                } else {
+                    // Use the existing password hash
+                    updatedUser.setPassword(selectedUser.getPassword());
+                }
+
+                // Update the user in the database
+                userService.update(updatedUser);
+
+                addActivityLog("Updated user: " + updatedUser.getEmail());
+                refreshDashboard();
+                showAlert("User Updated", "User " + updatedUser.getNom() + " has been updated successfully.", Alert.AlertType.INFORMATION);
+            });
+        } else {
+            showAlert("No Selection", "Please select a user to update.", Alert.AlertType.WARNING);
         }
     }
 
