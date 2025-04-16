@@ -19,7 +19,11 @@ public class Home extends Application {
 
             try {
                 Parent root = FXMLLoader.load(getClass().getResource("/login.fxml"));
+
                 Scene scene = new Scene(root);
+                // Add CSS file
+                scene.getStylesheets().add(getClass().getResource("/styles/Dashboard.css").toExternalForm());
+
                 stage.setScene(scene);
                 stage.show();
 

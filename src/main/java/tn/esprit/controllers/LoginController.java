@@ -14,6 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import tn.esprit.enumerations.Role;
 import tn.esprit.models.User;
 import tn.esprit.services.UserService;
 import org.mindrot.jbcrypt.BCrypt;
@@ -21,6 +22,9 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import static tn.esprit.enumerations.Role.ADMIN;
+import static tn.esprit.enumerations.Role.ARTIST;
 
 public class LoginController implements Initializable {
 
@@ -58,31 +62,71 @@ public class LoginController implements Initializable {
         String email = emailTF.getText().trim();
         String password = PasswordField.getText().trim();
 
-        // Validate inputs
         if (email.isEmpty() || password.isEmpty()) {
-            showError("Veuillez entrer votre email et mot de passe");
+            showError("Please enter both email and password");
             return;
         }
 
         try {
-            // Authenticate using UserService
             User authenticatedUser = userService.login(email, password);
 
             if (authenticatedUser != null) {
-                // Successful login
-                showSuccess("Connexion réussie! Bienvenue " + authenticatedUser.getNom());
-
-                // Clear the form
-                emailTF.clear();
-                PasswordField.clear();
+                redirectBasedOnRole(authenticatedUser);
             } else {
-                showError("Email ou mot de passe incorrect, ou compte inactif");
+                showError("Invalid credentials or account not active");
             }
         } catch (Exception e) {
-            showError("Erreur de connexion: " + e.getMessage());
-            e.printStackTrace();
+            showError("Login error: " + e.getMessage());
         }
     }
+
+    private void redirectBasedOnRole(User user) {
+        try {
+            String fxmlPath = determineDashboardPath(user.getRole());
+            String title = determineDashboardTitle(user.getRole());
+
+            URL resourceUrl = getClass().getResource(fxmlPath);
+            if (resourceUrl == null) {
+                throw new IOException("FXML file not found: " + fxmlPath);
+            }
+
+            FXMLLoader loader = new FXMLLoader(resourceUrl);
+            Parent root = loader.load();
+
+            // Pass user data to dashboard controller
+            if (loader.getController() instanceof UserAwareController) {
+                ((UserAwareController) loader.getController()).setUser(user);
+            }
+
+            Stage stage = (Stage) emailTF.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle(title);
+            stage.show();
+
+        } catch (IOException e) {
+            showError("Failed to load dashboard. Error: " + e.getMessage());
+            e.printStackTrace(); // Log the full error for debugging
+        }
+    }
+
+    private String determineDashboardPath(Role role) {
+        return switch (role) {
+            case ADMIN -> "/AdminDashboard.fxml";
+            case ARTIST -> "/ArtistDashboard.fxml";
+            case THERAPIST -> "/TherapistDashboard.fxml";
+            default -> "/AdminDashboard.fxml";
+        };
+    }
+
+    private String determineDashboardTitle(Role role) {
+        return switch (role) {
+            case ADMIN -> "Admin Dashboard";
+            case ARTIST -> "Artist Dashboard";
+            case THERAPIST -> "Therapist Dashboard";
+            default -> "User Dashboard";
+        };
+    }
+
 
     private void showError(String message) {
         Platform.runLater(() -> {

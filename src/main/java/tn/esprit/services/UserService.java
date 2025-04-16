@@ -20,7 +20,7 @@ public class UserService implements IService<User> {
 
     public boolean signUp(User user) {
         String checkEmailQuery = "SELECT COUNT(*) FROM user WHERE email = ?";
-        String insertQuery = "INSERT INTO user (nom, email, password, roles, phone, gender) VALUES (?, ?, ?, ?, ?, ?)";
+        String insertQuery = "INSERT INTO user (nom, email, password, roles, phone, gender, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try {
             // Check if email already exists
@@ -39,6 +39,12 @@ public class UserService implements IService<User> {
             // Format the role for database insertion
             String roleString = "[\"" + user.getRole().toString() + "\"]";
 
+            // Set status based on role
+            String status = "ACTIVE";
+            if (user.getRole() == Role.ADMIN || user.getRole() == Role.THERAPIST || user.getRole() == Role.ARTIST) {
+                status = "PENDING";
+            }
+
             // Insert the new user
             PreparedStatement insertStmt = cnx.prepareStatement(insertQuery);
             insertStmt.setString(1, user.getNom());
@@ -47,6 +53,7 @@ public class UserService implements IService<User> {
             insertStmt.setString(4, roleString);
             insertStmt.setString(5, user.getPhone());
             insertStmt.setString(6, user.getGender());
+            insertStmt.setString(7, status);
 
             int rowsAffected = insertStmt.executeUpdate();
             return rowsAffected > 0;
@@ -74,26 +81,7 @@ public class UserService implements IService<User> {
         }
     }
 
-/*
-    public boolean verifyPassword(String email, String passwordToVerify) {
-        String query = "SELECT password FROM user WHERE email = ?";
 
-        try {
-            PreparedStatement stmt = cnx.prepareStatement(query);
-            stmt.setString(1, email);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                String storedHash = rs.getString("password");
-                return BCrypt.checkpw(passwordToVerify, storedHash);
-            }
-            return false;
-        } catch (SQLException e) {
-            System.out.println("Error verifying password: " + e.getMessage());
-            return false;
-        }
-    }
-*/
     @Override
     public void add(User user) {
         String requete = "INSERT INTO user (nom, email, password, roles, phone, gender) VALUES (?, ?, ?, ?, ?, ?)";
@@ -198,7 +186,6 @@ public class UserService implements IService<User> {
     }
 
 
-
     public User login(String email, String password) {
         String query = "SELECT * FROM user WHERE email = ?";
         try (PreparedStatement statement = cnx.prepareStatement(query)) {
@@ -206,16 +193,15 @@ public class UserService implements IService<User> {
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                // 1. First check if account is active
-                String status = resultSet.getString("status");
-                if (!"ACTIVE".equals(status)) {
-                    System.out.println("Account is not active");
-                    return null;
-                }
-
-                // 2. Verify the password against the hashed version
+                // Verify the password against the hashed version
                 String storedHash = resultSet.getString("password");
                 if (BCrypt.checkpw(password, storedHash)) {
+                    String status = resultSet.getString("status");
+                    if (!"ACTIVE".equals(status)) {
+                        System.out.println("Account is not active");
+                        return null;
+                    }
+
                     User user = new User();
                     user.setId(resultSet.getInt("id"));
                     user.setNom(resultSet.getString("nom"));
@@ -233,11 +219,7 @@ public class UserService implements IService<User> {
                     }
 
                     return user;
-                } else {
-                    System.out.println("Password doesn't match");
                 }
-            } else {
-                System.out.println("No user found with this email");
             }
         } catch (SQLException e) {
             System.err.println("Error during login: " + e.getMessage());
@@ -248,8 +230,8 @@ public class UserService implements IService<User> {
 
 
 
-    public boolean createUser(User user) {
-        String query = "INSERT INTO users (name, email, password, phone, role, status) VALUES (?, ?, ?, ?, ?, ?)";
+    public boolean createUser(User user){
+        String query = "INSERT INTO user (name, email, password, phone, role, status) VALUES (?, ?, ?, ?, ?, ?)";
         
         try (PreparedStatement statement = cnx.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, user.getNom());
@@ -284,11 +266,11 @@ public class UserService implements IService<User> {
 
     public List<User> getPendingUsers() {
         List<User> users = new ArrayList<>();
-        String query = "SELECT * FROM users WHERE status = 'PENDING'";
-        
+        String query = "SELECT * FROM user WHERE status = 'PENDING'";
+
         try (Statement statement = cnx.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
-            
+
             while (resultSet.next()) {
                 users.add(createUserFromResultSet(resultSet));
             }
@@ -299,8 +281,8 @@ public class UserService implements IService<User> {
     }
 
     public boolean approveUser(int userId) {
-        String query = "UPDATE users SET status = 'ACTIVE' WHERE id = ?";
-        
+        String query = "UPDATE user SET status = 'ACTIVE' WHERE id = ?";
+
         try (PreparedStatement statement = cnx.prepareStatement(query)) {
             statement.setInt(1, userId);
             return statement.executeUpdate() > 0;
@@ -311,8 +293,8 @@ public class UserService implements IService<User> {
     }
 
     public boolean rejectUser(int userId) {
-        String query = "DELETE FROM users WHERE id = ? AND status = 'PENDING'";
-        
+        String query = "DELETE FROM user WHERE id = ?";
+
         try (PreparedStatement statement = cnx.prepareStatement(query)) {
             statement.setInt(1, userId);
             return statement.executeUpdate() > 0;
@@ -323,7 +305,7 @@ public class UserService implements IService<User> {
     }
 
     public boolean deleteUser(int userId) {
-        String query = "DELETE FROM users WHERE id = ?";
+        String query = "DELETE FROM user WHERE id = ?";
         
         try (PreparedStatement statement = cnx.prepareStatement(query)) {
             statement.setInt(1, userId);
@@ -336,7 +318,7 @@ public class UserService implements IService<User> {
 
     public List<User> searchUsers(String searchTerm) {
         List<User> users = new ArrayList<>();
-        String query = "SELECT * FROM users WHERE LOWER(name) LIKE ? OR LOWER(email) LIKE ?";
+        String query = "SELECT * FROM user WHERE LOWER(name) LIKE ? OR LOWER(email) LIKE ?";
         
         try (PreparedStatement statement = cnx.prepareStatement(query)) {
             String searchPattern = "%" + searchTerm + "%";
@@ -353,8 +335,42 @@ public class UserService implements IService<User> {
         return users;
     }
 
+    public List<User> searchPendingUsers(String searchTerm) {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT * FROM user WHERE status = 'PENDING' AND " +
+                "(LOWER(nom) LIKE ? OR LOWER(email) LIKE ?)";
+
+        try (PreparedStatement statement = cnx.prepareStatement(query)) {
+            String searchPattern = "%" + searchTerm.toLowerCase() + "%";
+            statement.setString(1, searchPattern);
+            statement.setString(2, searchPattern);
+
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                users.add(createUserFromResultSet(resultSet));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
+
+    public int getUserCountByRole(Role role) {
+        String query = "SELECT COUNT(*) FROM user WHERE roles LIKE ?";
+        try (PreparedStatement statement = cnx.prepareStatement(query)) {
+            statement.setString(1, "%\"" + role.toString() + "\"%");
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     public int getTotalUsersCount() {
-        String query = "SELECT COUNT(*) FROM users";
+        String query = "SELECT COUNT(*) FROM user";
         
         try (Statement statement = cnx.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
@@ -369,7 +385,7 @@ public class UserService implements IService<User> {
     }
 
     public int getPendingUsersCount() {
-        String query = "SELECT COUNT(*) FROM users WHERE status = 'PENDING'";
+        String query = "SELECT COUNT(*) FROM user WHERE status = 'PENDING'";
         
         try (Statement statement = cnx.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
@@ -384,7 +400,7 @@ public class UserService implements IService<User> {
     }
 
     public int getActiveUsersCount() {
-        String query = "SELECT COUNT(*) FROM users WHERE status = 'ACTIVE'";
+        String query = "SELECT COUNT(*) FROM user WHERE status = 'ACTIVE'";
         
         try (Statement statement = cnx.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
@@ -401,12 +417,20 @@ public class UserService implements IService<User> {
     private User createUserFromResultSet(ResultSet resultSet) throws SQLException {
         User user = new User();
         user.setId(resultSet.getInt("id"));
-        user.setNom(resultSet.getString("name"));
+        user.setNom(resultSet.getString("nom"));
         user.setEmail(resultSet.getString("email"));
         user.setPassword(resultSet.getString("password"));
         user.setPhone(resultSet.getString("phone"));
-        user.setRole(Role.valueOf(resultSet.getString("role")));
+        user.setGender(resultSet.getString("gender"));
         user.setStatus(resultSet.getString("status"));
+
+        // Parse the role
+        String rolesStr = resultSet.getString("roles");
+        if (rolesStr != null && !rolesStr.isEmpty()) {
+            String roleStr = rolesStr.replace("[", "").replace("]", "").replace("\"", "");
+            user.setRole(convertToRole(roleStr));
+        }
+
         return user;
     }
 }

@@ -1,14 +1,146 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="tn.esprit.controllers.LoginController"
-            prefHeight="400.0" prefWidth="600.0">
+<BorderPane prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.AdminDashboardController">
+    <center>
+        <VBox spacing="15.0" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets top="15.0" right="15.0" bottom="15.0" left="15.0"/>
+            </padding>
+            <children>
+                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                    <children>
+                        <Label text="Admin Dashboard" textFill="#2c3e50">
+                            <font>
+                                <Font name="System Bold" size="20.0" />
+                            </font>
+                        </Label>
+                        <TextField fx:id="searchField" promptText="Search users..." HBox.hgrow="ALWAYS" />
+                        <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#handleRefresh" text="Refresh" />
+                        <Button mnemonicParsing="false" onAction="#handleLogout" text="Logout" />
+                    </children>
+                </HBox>
 
-</AnchorPane>
+                <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+                    <tabs>
+                        <Tab text="All Users">
+                            <content>
+                                <BorderPane>
+                                    <center>
+                                        <TableView fx:id="allUsersTable" prefHeight="200.0" prefWidth="200.0">
+                                            <columns>
+                                                <TableColumn fx:id="allNameColumn" prefWidth="150.0" text="Name" />
+                                                <TableColumn fx:id="allEmailColumn" prefWidth="200.0" text="Email" />
+                                                <TableColumn fx:id="allRoleColumn" prefWidth="120.0" text="Role" />
+                                                <TableColumn fx:id="allStatusColumn" prefWidth="120.0" text="Status" />
+                                                <TableColumn fx:id="allPhoneColumn" prefWidth="120.0" text="Phone" />
+                                                <TableColumn fx:id="allGenderColumn" prefWidth="120.0" text="Gender" />
+                                            </columns>
+                                        </TableView>
+                                    </center>
+                                    <padding>
+                                        <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
+                                    </padding>
+                                </BorderPane>
+                            </content>
+                        </Tab>
+                        <Tab text="Pending Approvals">
+                            <content>
+                                <BorderPane>
+                                    <center>
+                                        <TableView fx:id="pendingUsersTable" prefHeight="200.0" prefWidth="200.0">
+                                            <columns>
+                                                <TableColumn fx:id="nameColumn" prefWidth="150.0" text="Name" />
+                                                <TableColumn fx:id="emailColumn" prefWidth="200.0" text="Email" />
+                                                <TableColumn fx:id="roleColumn" prefWidth="120.0" text="Role" />
+                                                <TableColumn fx:id="phoneColumn" prefWidth="114.0" text="Phone" />
+                                            </columns>
+                                        </TableView>
+                                    </center>
+                                    <right>
+                                        <VBox spacing="10.0" prefWidth="200.0" alignment="TOP_CENTER">
+                                            <padding>
+                                                <Insets top="0.0" right="0.0" bottom="0.0" left="10.0"/>
+                                            </padding>
+                                            <children>
+                                                <Button fx:id="approveButton" mnemonicParsing="false" onAction="#handleApprove" prefWidth="180.0" text="Approve Selected User" />
+                                                <Button fx:id="rejectButton" mnemonicParsing="false" onAction="#handleReject" prefWidth="180.0" text="Reject Selected User" />
+                                            </children>
+                                        </VBox>
+                                    </right>
+                                    <padding>
+                                        <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
+                                    </padding>
+                                </BorderPane>
+                            </content>
+                        </Tab>
+                    </tabs>
+                </TabPane>
+
+                <HBox spacing="20.0" VBox.vgrow="SOMETIMES">
+                    <children>
+                        <VBox spacing="10.0" prefWidth="250.0" HBox.hgrow="NEVER">
+                            <children>
+                                <Label text="User Statistics">
+                                    <font>
+                                        <Font name="System Bold" size="14.0" />
+                                    </font>
+                                </Label>
+                                <HBox>
+                                    <children>
+                                        <Label prefWidth="120.0" text="Total Users:" />
+                                        <Label fx:id="totalUsersLabel" text="0" />
+                                    </children>
+                                </HBox>
+                                <HBox>
+                                    <children>
+                                        <Label prefWidth="120.0" text="Active Users:" />
+                                        <Label fx:id="activeUsersLabel" text="0" />
+                                    </children>
+                                </HBox>
+                                <HBox>
+                                    <children>
+                                        <Label prefWidth="120.0" text="Pending Users:" />
+                                        <Label fx:id="pendingUsersLabel" text="0" />
+                                    </children>
+                                </HBox>
+                                <Label fx:id="lastUpdatedLabel" text="Last updated: ">
+                                    <font>
+                                        <Font size="11.0" />
+                                    </font>
+                                </Label>
+                            </children>
+                        </VBox>
+                        <PieChart fx:id="userRoleChart" HBox.hgrow="ALWAYS" />
+                    </children>
+                </HBox>
+
+                <VBox spacing="10.0" VBox.vgrow="SOMETIMES">
+                    <children>
+                        <Label text="Activity Log">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Label>
+                        <ListView fx:id="activityList" prefHeight="150.0" VBox.vgrow="ALWAYS" />
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+    </center>
+</BorderPane>

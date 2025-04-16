@@ -121,7 +121,13 @@ public class SignUpController implements Initializable {
         boolean success = userService.signUp(newUser);
 
         if (success) {
-            showAlert("Success", "User registered successfully!", AlertType.INFORMATION);
+            if (newUser.getRole() == Role.REGULARUSER) {
+                showAlert("Success", "Account created successfully! You can now login.", AlertType.INFORMATION);
+            } else {
+                showAlert("Pending Approval",
+                        "Your account requires admin approval. You'll be notified when your account is activated.",
+                        AlertType.INFORMATION);
+            }
             clearFields();
         } else {
             showAlert("Error", "Failed to register user. Email might already exist.", AlertType.ERROR);
