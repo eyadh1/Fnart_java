@@ -20,6 +20,11 @@
          
          <!-- Form Fields -->
          <GridPane hgap="10" vgap="10" alignment="CENTER">
+            <columnConstraints>
+                <ColumnConstraints minWidth="100" prefWidth="150" />
+                <ColumnConstraints minWidth="200" prefWidth="300" />
+            </columnConstraints>
+            
             <Label text="Nom:" style="-fx-text-fill: #ECF0F1; -fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
             <TextField fx:id="NomTextField" prefWidth="200.0" style="-fx-background-color: #34495E; -fx-text-fill: #ECF0F1; -fx-prompt-text-fill: #BDC3C7;" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
             
@@ -43,6 +48,13 @@
             
             <Label text="Statut:" style="-fx-text-fill: #ECF0F1; -fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
             <ChoiceBox fx:id="StatusChoice" prefWidth="200.0" style="-fx-background-color: #34495E; -fx-text-fill: #ECF0F1;" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+            
+            <Label text="Image:" style="-fx-text-fill: #ECF0F1; -fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+            <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="8">
+                <Button fx:id="uploadImageButton" text="Choisir une image" onAction="#handleImageUpload" 
+                        style="-fx-background-color: #34495E; -fx-text-fill: #ECF0F1;"/>
+                <Label fx:id="imagePathLabel" style="-fx-text-fill: #ECF0F1;"/>
+            </HBox>
          </GridPane>
          
          <!-- Buttons -->

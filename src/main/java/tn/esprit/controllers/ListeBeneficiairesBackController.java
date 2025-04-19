@@ -75,58 +75,40 @@ public class ListeBeneficiairesBackController implements Initializable {
                     } else {
                         HBox mainBox = new HBox(10);
                         mainBox.setStyle("-fx-background-color: white; -fx-padding: 10; -fx-background-radius: 5;");
-                        
-                        // Image container
+
                         VBox imageContainer = new VBox();
                         imageContainer.setPrefWidth(100);
                         imageContainer.setMinWidth(100);
-                        
-                        // Create image view
+
                         ImageView imageView = new ImageView();
                         imageView.setFitWidth(100);
                         imageView.setFitHeight(100);
                         imageView.setPreserveRatio(true);
                         imageView.setStyle("-fx-background-color: #f0f0f0; -fx-background-radius: 5;");
-                        
-                        // Load image
-                        String imagePath = item.getImage();
-                        if (imagePath != null && !imagePath.equals("default_image.jpg")) {
-                            try {
-                                // Try to load from resources first
-                                Image image = new Image(getClass().getResourceAsStream("/" + imagePath));
-                                imageView.setImage(image);
-                            } catch (Exception e) {
-                                // If not found in resources, try as a file
-                                try {
-                                    File imageFile = new File(imagePath);
-                                    if (imageFile.exists()) {
-                                        imageView.setImage(new Image("file:" + imagePath));
-                                    } else {
-                                        // Load default image
-                                        imageView.setImage(new Image(getClass().getResourceAsStream("/default_image.jpg")));
-                                    }
-                                } catch (Exception ex) {
-                                    // Load default image if all else fails
-                                    imageView.setImage(new Image(getClass().getResourceAsStream("/default_image.jpg")));
-                                }
-                            }
-                        } else {
-                            // Load default image
-                            imageView.setImage(new Image(getClass().getResourceAsStream("/default_image.jpg")));
-                        }
-                        
-                        imageContainer.getChildren().add(imageView);
-                        
-                        // Content container
-                        VBox contentBox = new VBox(5);
 
+                        // FIXED image loading
+                        String imagePath = item.getImage();
+                        File imageFile = new File("src/main/resources/" + imagePath);
+                        if (imagePath != null && !imagePath.equals("default_image.jpg") && imageFile.exists()) {
+                            imageView.setImage(new Image(imageFile.toURI().toString()));
+                        } else {
+                            File placeholder = new File("src/main/resources/images/placeholder.png");
+                            if (placeholder.exists()) {
+                                imageView.setImage(new Image(placeholder.toURI().toString()));
+                            } else {
+                                System.err.println("Placeholder image not found!");
+                            }
+                        }
+
+                        imageContainer.getChildren().add(imageView);
+
+                        VBox contentBox = new VBox(5);
                         HBox headerBox = new HBox(10);
                         Label nameLabel = new Label(item.getNom());
                         nameLabel.setStyle("-fx-text-fill: #34495E; -fx-font-weight: bold;");
-                        
+
                         Label statusLabel = new Label("Statut: " + (item.getStatus() != null ? item.getStatus() : "En attente"));
                         statusLabel.setStyle("-fx-text-fill: #34495E;");
-                        
                         headerBox.getChildren().addAll(nameLabel, statusLabel);
 
                         HBox contactBox = new HBox(10);
@@ -154,28 +136,24 @@ public class ListeBeneficiairesBackController implements Initializable {
                         descriptionBox.getChildren().addAll(descriptionTitle, descriptionLabel);
 
                         HBox actionBox = new HBox(10);
-                        
                         Button detailButton = new Button("Détails");
                         detailButton.setStyle("-fx-background-color: #34495E; -fx-text-fill: white; -fx-font-weight: bold;");
                         detailButton.setOnAction(event -> handleDetail(item));
                         actionBox.getChildren().add(detailButton);
-                        
+
                         Button updateButton = new Button("Modifier");
                         updateButton.setStyle("-fx-background-color: #34495E; -fx-text-fill: white; -fx-font-weight: bold;");
                         updateButton.setOnAction(event -> handleUpdate(item));
                         actionBox.getChildren().add(updateButton);
-                        
+
                         String status = item.getStatus();
-                        // Show accept button when status is "En attente" or "Refusé"
-                        if (status == null || status.isEmpty() || status.equals("En attente") || status.equals("Refusé")) {
+                        if (status == null || status.isEmpty() || status.equals("en attente") || status.equals("Refusé")) {
                             Button acceptButton = new Button("Accepter");
                             acceptButton.setStyle("-fx-background-color: #34495E; -fx-text-fill: white; -fx-font-weight: bold;");
                             acceptButton.setOnAction(event -> handleAccept(item));
                             actionBox.getChildren().add(acceptButton);
                         }
-                        
-                        // Show reject button when status is "En attente" or "Accepté"
-                        if (status == null || status.isEmpty() || status.equals("En attente") || status.equals("Accepté")) {
+                        if (status == null || status.isEmpty() || status.equals("en attente") || status.equals("Accepté")) {
                             Button rejectButton = new Button("Refuser");
                             rejectButton.setStyle("-fx-background-color: #34495E; -fx-text-fill: white; -fx-font-weight: bold;");
                             rejectButton.setOnAction(event -> handleReject(item));
@@ -183,10 +161,7 @@ public class ListeBeneficiairesBackController implements Initializable {
                         }
 
                         contentBox.getChildren().addAll(headerBox, contactBox, detailsBox, descriptionBox, actionBox);
-                        
-                        // Add both containers to the main box
                         mainBox.getChildren().addAll(imageContainer, contentBox);
-                        
                         setGraphic(mainBox);
                     }
                 }
@@ -199,6 +174,7 @@ public class ListeBeneficiairesBackController implements Initializable {
             e.printStackTrace();
         }
     }
+
 
     private void setupSearch() {
         searchTextField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -294,13 +270,14 @@ public class ListeBeneficiairesBackController implements Initializable {
     @FXML
     private void handleBack() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/HomeBack.fxml"));
+            System.out.println("Retour à l'accueil...");
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Home.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) backButton.getScene().getWindow();
             stage.setScene(new Scene(root));
-            stage.setTitle("Back Office - Administration");
             stage.show();
         } catch (IOException e) {
+            System.err.println("Erreur lors du retour à l'accueil: " + e.getMessage());
             e.printStackTrace();
             showAlert("Erreur", "Impossible de retourner à l'accueil: " + e.getMessage());
         }
@@ -309,16 +286,16 @@ public class ListeBeneficiairesBackController implements Initializable {
     @FXML
     private void handleAdd() {
         try {
+            System.out.println("Ouverture du formulaire d'ajout...");
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddBeneficiaireBack.fxml"));
             Parent root = loader.load();
-            Stage stage = new Stage();
+            Stage stage = (Stage) addButton.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
             stage.setTitle("Ajouter un bénéficiaire");
-            stage.setScene(new Scene(root));
             stage.show();
-            
-            // Refresh the list when the add form is closed
-            stage.setOnHidden(event -> loadBeneficiaires());
         } catch (IOException e) {
+            System.err.println("Erreur lors de l'ouverture du formulaire d'ajout: " + e.getMessage());
             e.printStackTrace();
             showAlert("Erreur", "Impossible d'ouvrir le formulaire d'ajout: " + e.getMessage());
         }
