@@ -10,7 +10,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/Home.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/HomeBack.fxml"));
         primaryStage.setTitle("Fnart - Gestion des Dons");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
