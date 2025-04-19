@@ -1,4 +1,4 @@
-package controllers;
+package tn.esprit.controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -52,19 +52,7 @@ public class HomeBackController {
     }
 
     @FXML
-    private void handleLogout() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Home.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) logoutButton.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Fnart - Accueil");
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Erreur", "Impossible de se déconnecter: " + e.getMessage());
-        }
-    }
+
 
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);

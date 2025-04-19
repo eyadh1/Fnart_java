@@ -1,4 +1,4 @@
-package controllers;
+package tn.esprit.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,13 +10,15 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Callback;
-import tn.esprit.models.beneficiaires;
+import tn.esprit.models.Beneficiaires;
 import tn.esprit.services.ServicesBeneficiaires;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -24,7 +26,7 @@ import java.util.ResourceBundle;
 public class ListeBeneficiairesBackController implements Initializable {
 
     @FXML
-    private ListView<beneficiaires> beneficiairesListView;
+    private ListView<Beneficiaires> beneficiairesListView;
 
 
     @FXML
@@ -40,8 +42,8 @@ public class ListeBeneficiairesBackController implements Initializable {
     private Button backButton;
 
     private final ServicesBeneficiaires servicesBeneficiaires = new ServicesBeneficiaires();
-    private ObservableList<beneficiaires> beneficiairesList;
-    private FilteredList<beneficiaires> filteredBeneficiaires;
+    private ObservableList<Beneficiaires> beneficiairesList;
+    private FilteredList<Beneficiaires> filteredBeneficiaires;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -63,16 +65,60 @@ public class ListeBeneficiairesBackController implements Initializable {
             beneficiairesList = FXCollections.observableArrayList(servicesBeneficiaires.getAll());
             filteredBeneficiaires = new FilteredList<>(beneficiairesList, p -> true);
 
-            beneficiairesListView.setCellFactory(lv -> new ListCell<beneficiaires>() {
+            beneficiairesListView.setCellFactory(lv -> new ListCell<Beneficiaires>() {
                 @Override
-                protected void updateItem(beneficiaires item, boolean empty) {
+                protected void updateItem(Beneficiaires item, boolean empty) {
                     super.updateItem(item, empty);
                     if (empty || item == null) {
                         setText(null);
                         setGraphic(null);
                     } else {
-                        VBox vbox = new VBox(5);
-                        vbox.setStyle("-fx-background-color: white; -fx-padding: 10; -fx-background-radius: 5;");
+                        HBox mainBox = new HBox(10);
+                        mainBox.setStyle("-fx-background-color: white; -fx-padding: 10; -fx-background-radius: 5;");
+                        
+                        // Image container
+                        VBox imageContainer = new VBox();
+                        imageContainer.setPrefWidth(100);
+                        imageContainer.setMinWidth(100);
+                        
+                        // Create image view
+                        ImageView imageView = new ImageView();
+                        imageView.setFitWidth(100);
+                        imageView.setFitHeight(100);
+                        imageView.setPreserveRatio(true);
+                        imageView.setStyle("-fx-background-color: #f0f0f0; -fx-background-radius: 5;");
+                        
+                        // Load image
+                        String imagePath = item.getImage();
+                        if (imagePath != null && !imagePath.equals("default_image.jpg")) {
+                            try {
+                                // Try to load from resources first
+                                Image image = new Image(getClass().getResourceAsStream("/" + imagePath));
+                                imageView.setImage(image);
+                            } catch (Exception e) {
+                                // If not found in resources, try as a file
+                                try {
+                                    File imageFile = new File(imagePath);
+                                    if (imageFile.exists()) {
+                                        imageView.setImage(new Image("file:" + imagePath));
+                                    } else {
+                                        // Load default image
+                                        imageView.setImage(new Image(getClass().getResourceAsStream("/default_image.jpg")));
+                                    }
+                                } catch (Exception ex) {
+                                    // Load default image if all else fails
+                                    imageView.setImage(new Image(getClass().getResourceAsStream("/default_image.jpg")));
+                                }
+                            }
+                        } else {
+                            // Load default image
+                            imageView.setImage(new Image(getClass().getResourceAsStream("/default_image.jpg")));
+                        }
+                        
+                        imageContainer.getChildren().add(imageView);
+                        
+                        // Content container
+                        VBox contentBox = new VBox(5);
 
                         HBox headerBox = new HBox(10);
                         Label nameLabel = new Label(item.getNom());
@@ -93,13 +139,19 @@ public class ListeBeneficiairesBackController implements Initializable {
                         HBox detailsBox = new HBox(10);
                         Label causeLabel = new Label("Cause: " + item.getCause());
                         Label associationLabel = new Label("Association: " + item.getEstElleAssociation());
+                        Label valeurLabel = new Label("Valeur Demandée: " + item.getValeurDemande() + " DT");
                         causeLabel.setStyle("-fx-text-fill: #34495E;");
                         associationLabel.setStyle("-fx-text-fill: #34495E;");
-                        detailsBox.getChildren().addAll(causeLabel, associationLabel);
+                        valeurLabel.setStyle("-fx-text-fill: #34495E; -fx-font-weight: bold;");
+                        detailsBox.getChildren().addAll(causeLabel, associationLabel, valeurLabel);
 
+                        VBox descriptionBox = new VBox(5);
+                        Label descriptionTitle = new Label("Description:");
+                        descriptionTitle.setStyle("-fx-text-fill: #34495E; -fx-font-weight: bold;");
                         Label descriptionLabel = new Label(item.getDescription());
                         descriptionLabel.setStyle("-fx-text-fill: #34495E;");
                         descriptionLabel.setWrapText(true);
+                        descriptionBox.getChildren().addAll(descriptionTitle, descriptionLabel);
 
                         HBox actionBox = new HBox(10);
                         
@@ -130,8 +182,12 @@ public class ListeBeneficiairesBackController implements Initializable {
                             actionBox.getChildren().add(rejectButton);
                         }
 
-                        vbox.getChildren().addAll(headerBox, contactBox, detailsBox, descriptionLabel, actionBox);
-                        setGraphic(vbox);
+                        contentBox.getChildren().addAll(headerBox, contactBox, detailsBox, descriptionBox, actionBox);
+                        
+                        // Add both containers to the main box
+                        mainBox.getChildren().addAll(imageContainer, contentBox);
+                        
+                        setGraphic(mainBox);
                     }
                 }
             });
@@ -161,7 +217,7 @@ public class ListeBeneficiairesBackController implements Initializable {
     }
     private void setupSorting() {
         sortChoice.valueProperty().addListener((observable, oldValue, newValue) -> {
-            SortedList<beneficiaires> sortedList = new SortedList<>(filteredBeneficiaires);
+            SortedList<Beneficiaires> sortedList = new SortedList<>(filteredBeneficiaires);
             if ("Nom (A-Z)".equals(newValue)) {
                 sortedList.setComparator((b1, b2) -> b1.getNom().compareToIgnoreCase(b2.getNom()));
             } else if ("Nom (Z-A)".equals(newValue)) {
@@ -170,7 +226,7 @@ public class ListeBeneficiairesBackController implements Initializable {
             beneficiairesListView.setItems(sortedList);
         });
     }
-    private void handleAccept(beneficiaires beneficiaire) {
+    private void handleAccept(Beneficiaires beneficiaire) {
         try {
             beneficiaire.setStatus("Accepté");
             servicesBeneficiaires.update(beneficiaire);
@@ -182,7 +238,7 @@ public class ListeBeneficiairesBackController implements Initializable {
         }
     }
 
-    private void handleReject(beneficiaires beneficiaire) {
+    private void handleReject(Beneficiaires beneficiaire) {
         try {
             beneficiaire.setStatus("Refusé");
             servicesBeneficiaires.update(beneficiaire);
@@ -194,7 +250,7 @@ public class ListeBeneficiairesBackController implements Initializable {
         }
     }
     
-    private void handleDetail(beneficiaires beneficiaire) {
+    private void handleDetail(Beneficiaires beneficiaire) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/DetailBeneficiaireBack.fxml"));
             Parent root = loader.load();
@@ -213,7 +269,7 @@ public class ListeBeneficiairesBackController implements Initializable {
         }
     }
     
-    private void handleUpdate(beneficiaires beneficiaire) {
+    private void handleUpdate(Beneficiaires beneficiaire) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/UpdateBeneficiaireBack.fxml"));
             Parent root = loader.load();

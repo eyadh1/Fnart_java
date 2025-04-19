@@ -1,9 +1,8 @@
-package controllers;
+package tn.esprit.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -18,21 +17,19 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
-import javafx.geometry.Insets;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import tn.esprit.models.dons;
+import tn.esprit.models.Dons;
 import tn.esprit.services.ServicesDons;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class ListeDonsController implements Initializable {
 
     @FXML
-    private ListView<dons> donsListView;
+    private ListView<Dons> donsListView;
 
     @FXML
     private TextField searchTextField;
@@ -44,8 +41,8 @@ public class ListeDonsController implements Initializable {
     private Button backButton;
 
     private final ServicesDons servicesDons = new ServicesDons();
-    private ObservableList<dons> donsList;
-    private FilteredList<dons> filteredDons;
+    private ObservableList<Dons> donsList;
+    private FilteredList<Dons> filteredDons;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -72,12 +69,12 @@ public class ListeDonsController implements Initializable {
             filteredDons = new FilteredList<>(donsList, p -> true);
 
             // Set up the list view cell factory
-            donsListView.setCellFactory(new Callback<ListView<dons>, ListCell<dons>>() {
+            donsListView.setCellFactory(new Callback<ListView<Dons>, ListCell<Dons>>() {
                 @Override
-                public ListCell<dons> call(ListView<dons> param) {
-                    return new ListCell<dons>() {
+                public ListCell<Dons> call(ListView<Dons> param) {
+                    return new ListCell<Dons>() {
                         @Override
-                        protected void updateItem(dons item, boolean empty) {
+                        protected void updateItem(Dons item, boolean empty) {
                             super.updateItem(item, empty);
                             if (empty || item == null) {
                                 setText(null);

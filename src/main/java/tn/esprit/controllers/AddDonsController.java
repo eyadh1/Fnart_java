@@ -1,6 +1,5 @@
-package controllers;
+package tn.esprit.controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -9,8 +8,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
-import tn.esprit.models.beneficiaires;
-import tn.esprit.models.dons;
+import tn.esprit.models.Beneficiaires;
+import tn.esprit.models.Dons;
 import tn.esprit.services.ServicesBeneficiaires;
 import tn.esprit.services.ServicesDons;
 
@@ -34,7 +33,7 @@ public class AddDonsController implements Initializable {
     private TextArea DescriptionTextArea;
 
     @FXML
-    private ChoiceBox<beneficiaires> BeneficiaireChoice;
+    private ChoiceBox<Beneficiaires> BeneficiaireChoice;
 
     @FXML
     private Button AjoutButton;
@@ -81,19 +80,19 @@ public class AddDonsController implements Initializable {
 
     private void loadBeneficiaires() {
         try {
-            List<beneficiaires> beneficiairesList = servicesBeneficiaires.getAll();
+            List<Beneficiaires> beneficiairesList = servicesBeneficiaires.getAll();
             BeneficiaireChoice.getItems().clear();
             BeneficiaireChoice.getItems().addAll(beneficiairesList);
             
             // Set converter to display beneficiaire name in the choice box
-            BeneficiaireChoice.setConverter(new StringConverter<beneficiaires>() {
+            BeneficiaireChoice.setConverter(new StringConverter<Beneficiaires>() {
                 @Override
-                public String toString(beneficiaires beneficiaire) {
+                public String toString(Beneficiaires beneficiaire) {
                     return beneficiaire == null ? "" : beneficiaire.getNom();
                 }
 
                 @Override
-                public beneficiaires fromString(String string) {
+                public Beneficiaires fromString(String string) {
                     return null; // Not needed for this use case
                 }
             });
@@ -127,14 +126,14 @@ public class AddDonsController implements Initializable {
                 return;
             }
 
-            beneficiaires selectedBeneficiaire = BeneficiaireChoice.getValue();
+            Beneficiaires selectedBeneficiaire = BeneficiaireChoice.getValue();
             if (selectedBeneficiaire == null) {
                 showAlert("Erreur", "Veuillez sélectionner un bénéficiaire");
                 return;
             }
 
             // Create new don
-            dons don = new dons();
+            Dons don = new Dons();
             don.setValeur(new BigDecimal(ValeurTextField.getText()));
             don.setType(TypeChoice.getValue());
             don.setDescription(DescriptionTextArea.getText());

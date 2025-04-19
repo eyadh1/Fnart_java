@@ -1,9 +1,9 @@
-package controllers;
+package tn.esprit.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import tn.esprit.models.beneficiaires;
+import tn.esprit.models.Beneficiaires;
 import tn.esprit.services.ServicesBeneficiaires;
 
 public class UpdateBeneficiaireBackController {
@@ -37,7 +37,7 @@ public class UpdateBeneficiaireBackController {
     @FXML
     private Button closeButton;
     
-    private beneficiaires currentBeneficiaire;
+    private Beneficiaires currentBeneficiaire;
     private ServicesBeneficiaires servicesBeneficiaires;
     
     @FXML
@@ -46,7 +46,7 @@ public class UpdateBeneficiaireBackController {
         statusChoiceBox.getItems().addAll("En attente", "Accepté", "Refusé");
     }
     
-    public void setBeneficiaire(beneficiaires beneficiaire) {
+    public void setBeneficiaire(Beneficiaires beneficiaire) {
         this.currentBeneficiaire = beneficiaire;
         displayBeneficiaireDetails();
     }

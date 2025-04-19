@@ -1,12 +1,10 @@
-package controllers;
+package tn.esprit.controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.stage.Stage;
 import java.io.IOException;
 
 public class Home {
@@ -18,11 +16,9 @@ public class Home {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddBeneficiaire.fxml"));
             Parent view = loader.load();
             
-            // Créer une nouvelle scène
-            Stage stage = new Stage();
-            stage.setTitle("Ajouter un bénéficiaire");
-            stage.setScene(new Scene(view));
-            stage.show();
+            // Remplacer le contenu actuel
+            // Cette méthode sera appelée par le MainContainerController
+            System.out.println("Navigation vers AddBeneficiaire");
         } catch (IOException e) {
             showError("Erreur", "Impossible de charger la vue AddBeneficiaire", e);
         }
@@ -35,11 +31,9 @@ public class Home {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddDons.fxml"));
             Parent view = loader.load();
             
-            // Créer une nouvelle scène
-            Stage stage = new Stage();
-            stage.setTitle("Ajouter un don");
-            stage.setScene(new Scene(view));
-            stage.show();
+            // Remplacer le contenu actuel
+            // Cette méthode sera appelée par le MainContainerController
+            System.out.println("Navigation vers AddDons");
         } catch (IOException e) {
             showError("Erreur", "Impossible de charger la vue AddDons", e);
         }
@@ -52,11 +46,9 @@ public class Home {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ListeBeneficiaires.fxml"));
             Parent view = loader.load();
             
-            // Créer une nouvelle scène
-            Stage stage = new Stage();
-            stage.setTitle("Liste des bénéficiaires");
-            stage.setScene(new Scene(view));
-            stage.show();
+            // Remplacer le contenu actuel
+            // Cette méthode sera appelée par le MainContainerController
+            System.out.println("Navigation vers ListeBeneficiaires");
         } catch (IOException e) {
             showError("Erreur", "Impossible de charger la vue ListeBeneficiaires", e);
         }
@@ -69,11 +61,9 @@ public class Home {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ListeDons.fxml"));
             Parent view = loader.load();
             
-            // Créer une nouvelle scène
-            Stage stage = new Stage();
-            stage.setTitle("Liste des dons");
-            stage.setScene(new Scene(view));
-            stage.show();
+            // Remplacer le contenu actuel
+            // Cette méthode sera appelée par le MainContainerController
+            System.out.println("Navigation vers ListeDons");
         } catch (IOException e) {
             showError("Erreur", "Impossible de charger la vue ListeDons", e);
         }
@@ -86,4 +76,4 @@ public class Home {
         alert.setContentText(content + "\n" + e.getMessage());
         alert.showAndWait();
     }
-} 
+}

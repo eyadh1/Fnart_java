@@ -2,35 +2,60 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
 
-<AnchorPane fx:id="rootPane" prefHeight="462.0" prefWidth="683.0" style="-fx-background-color: #EFDAC7;" xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Home">
+<AnchorPane fx:id="rootPane" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #EFDAC7;" xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Home">
    <children>
-      
-               <!-- Menu Buttons -->
-      <Button fx:id="addBeneficiaireButton" layoutX="182.0" layoutY="220.0" mnemonicParsing="false" onAction="#handleAddBeneficiaire" prefHeight="50.0" prefWidth="306.0" style="-fx-background-color: #A6695B; -fx-text-fill: #F2F2F2; -fx-font-weight: bold; -fx-font-size: 20px;" text="Devenir Beneficiaire">
-         <style>
-            -fx-background-color: #A6695B;
-            -fx-text-fill: #F2F2F2;
-            -fx-font-weight: bold;
-            -fx-font-size: 20px;
-         </style>
-      </Button>
-      
-               <Button fx:id="addDonsButton" layoutX="182.0" layoutY="332.0" mnemonicParsing="false" onAction="#handleAddDons" prefHeight="70.0" prefWidth="306.0" text="Faire un don" textAlignment="CENTER">
-         <style>
-            -fx-background-color: #A6695B;
-            -fx-text-fill: #F2F2F2;
-            -fx-font-weight: bold;
-            -fx-font-size: 20px;
-         </style>
-      </Button>
-      <Label layoutX="194.0" layoutY="48.0" prefHeight="106.0" prefWidth="295.0" style="-fx-text-fill: #BA9D1F; -fx-font-size: 24px; -fx-font-weight: bold;" text="Bienvenue dans Fnart" textAlignment="CENTER">
-         <font>
-            <Font size="62.0" />
-         </font>
-      </Label>
+      <VBox alignment="CENTER" spacing="20" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+         </padding>
+         
+         <Label style="-fx-text-fill: #BA9D1F; -fx-font-size: 62px; -fx-font-weight: bold;" text="Bienvenue dans Fnart" textAlignment="CENTER">
+            <font>
+               <Font size="62.0" />
+            </font>
+         </Label>
+         
+         <Button fx:id="addBeneficiaireButton" onAction="#handleAddBeneficiaire" prefHeight="50.0" prefWidth="306.0" text="Devenir Bénéficiaire">
+            <style>
+               -fx-background-color: #A6695B;
+               -fx-text-fill: #F2F2F2;
+               -fx-font-weight: bold;
+               -fx-font-size: 20px;
+            </style>
+         </Button>
+         
+         <Button fx:id="addDonsButton" onAction="#handleAddDons" prefHeight="50.0" prefWidth="306.0" text="Faire un don">
+            <style>
+               -fx-background-color: #A6695B;
+               -fx-text-fill: #F2F2F2;
+               -fx-font-weight: bold;
+               -fx-font-size: 20px;
+            </style>
+         </Button>
+         
+         <Button fx:id="listeBeneficiaireButton" onAction="#handleListeBeneficiaire" prefHeight="50.0" prefWidth="306.0" text="Liste des Bénéficiaires">
+            <style>
+               -fx-background-color: #A6695B;
+               -fx-text-fill: #F2F2F2;
+               -fx-font-weight: bold;
+               -fx-font-size: 20px;
+            </style>
+         </Button>
+         
+         <Button fx:id="listeDonsButton" onAction="#handleListeDons" prefHeight="50.0" prefWidth="306.0" text="Liste des Dons">
+            <style>
+               -fx-background-color: #A6695B;
+               -fx-text-fill: #F2F2F2;
+               -fx-font-weight: bold;
+               -fx-font-size: 20px;
+            </style>
+         </Button>
+      </VBox>
    </children>
    
    <style>

@@ -1,12 +1,10 @@
-package controllers;
+package tn.esprit.controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import tn.esprit.models.beneficiaires;
+import tn.esprit.models.Beneficiaires;
 import tn.esprit.services.ServicesBeneficiaires;
 
 import java.net.URL;
@@ -35,10 +33,10 @@ public class UpdateBeneficiaireController implements Initializable {
     @FXML
     private TextField ValeurTextField;
 
-    private beneficiaires selectedBeneficiaire;
+    private Beneficiaires selectedBeneficiaire;
     private final ServicesBeneficiaires servicesBeneficiaires = new ServicesBeneficiaires();
 
-    public void setBeneficiaire(beneficiaires beneficiaire) {
+    public void setBeneficiaire(Beneficiaires beneficiaire) {
         this.selectedBeneficiaire = beneficiaire;
         if (beneficiaire != null) {
             NomTextField.setText(beneficiaire.getNom());

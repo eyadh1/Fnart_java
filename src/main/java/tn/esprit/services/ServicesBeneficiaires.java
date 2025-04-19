@@ -1,7 +1,7 @@
 package tn.esprit.services;
 
 import tn.esprit.interfaces.IService;
-import tn.esprit.models.beneficiaires;
+import tn.esprit.models.Beneficiaires;
 import tn.esprit.utils.MyDataBase;
 
 import java.sql.Connection;
@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServicesBeneficiaires implements IService<beneficiaires> {
+public class ServicesBeneficiaires implements IService<Beneficiaires> {
 
     private final Connection connection;
 
@@ -20,8 +20,8 @@ public class ServicesBeneficiaires implements IService<beneficiaires> {
     }
 
     @Override
-    public  void add(beneficiaires b) {
-        String sql = "INSERT INTO beneficiaires (nom, email, telephone,est_elle_association, cause,valeur_demande,status, description) VALUES (?, ?, ?, ?, ?, ?, 'en attente',?)";
+    public  void add(Beneficiaires b) {
+        String sql = "INSERT INTO beneficiaires (nom, email, telephone, est_elle_association, cause, valeur_demande, status, description, image) VALUES (?, ?, ?, ?, ?, ?, 'en attente', ?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             if (b.getNom() == null || b.getNom().trim().isEmpty()) {
@@ -38,25 +38,35 @@ public class ServicesBeneficiaires implements IService<beneficiaires> {
                 ps.setNull(6, java.sql.Types.DOUBLE);
             }
             ps.setString(7, b.getDescription());
+            
+            // Handle the image path - use default if null or empty
+            String imagePath = b.getImage();
+            if (imagePath == null || imagePath.trim().isEmpty()) {
+                imagePath = "default_image.jpg";
+            }
+            ps.setString(8, imagePath);
 
             ps.executeUpdate();
             System.out.println("Beneficiaire ajouté avec succès !");
         } catch (SQLException e) {
             System.out.println("Erreur lors de l'ajout du bénéficiaire !");
-            e.printStackTrace(); // Keep this to see the full error
+            e.printStackTrace();
+            throw new RuntimeException("Erreur lors de l'ajout du bénéficiaire: " + e.getMessage());
         }
     }
 
     @Override
-    public List<beneficiaires> getAll() {
-        List<beneficiaires> beneficiairesList = new ArrayList<>();
+    public List<Beneficiaires> getAll() {
+        List<Beneficiaires> beneficiairesList = new ArrayList<>();
         String sql = "SELECT * FROM beneficiaires";
 
         try (PreparedStatement ps = connection.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             
+            System.out.println("Exécution de la requête SQL: " + sql);
+            
             while (rs.next()) {
-                beneficiaires b = new beneficiaires();
+                Beneficiaires b = new Beneficiaires();
                 b.setId(rs.getLong("id"));
                 b.setNom(rs.getString("nom"));
                 b.setEmail(rs.getString("email"));
@@ -66,20 +76,28 @@ public class ServicesBeneficiaires implements IService<beneficiaires> {
                 b.setValeurDemande(rs.getDouble("valeur_demande"));
                 b.setStatus(rs.getString("status"));
                 b.setDescription(rs.getString("description"));
+                b.setImage(rs.getString("image"));
                 
                 beneficiairesList.add(b);
+                System.out.println("Bénéficiaire chargé: " + b.getNom());
             }
+            
+            System.out.println("Nombre total de bénéficiaires chargés: " + beneficiairesList.size());
+            
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la récupération des bénéficiaires !");
+            System.err.println("Erreur lors de la récupération des bénéficiaires !");
+            System.err.println("Message d'erreur: " + e.getMessage());
+            System.err.println("Code d'erreur SQL: " + e.getSQLState());
             e.printStackTrace();
+            throw new RuntimeException("Erreur lors de la récupération des bénéficiaires: " + e.getMessage());
         }
         
         return beneficiairesList;
     }
 
     @Override
-    public void update(beneficiaires beneficiaire) {
-        String sql = "UPDATE beneficiaires SET nom = ?, email = ?, telephone = ?, est_elle_association = ?, cause = ?, valeur_demande = ?, description = ? WHERE id = ?";
+    public void update(Beneficiaires beneficiaire) {
+        String sql = "UPDATE beneficiaires SET nom = ?, email = ?, telephone = ?, est_elle_association = ?, cause = ?, valeur_demande = ?, description = ?, image = ? WHERE id = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, beneficiaire.getNom());
@@ -93,7 +111,8 @@ public class ServicesBeneficiaires implements IService<beneficiaires> {
                 ps.setNull(6, java.sql.Types.DOUBLE);
             }
             ps.setString(7, beneficiaire.getDescription());
-            ps.setLong(8, beneficiaire.getId());
+            ps.setString(8, beneficiaire.getImage());
+            ps.setLong(9, beneficiaire.getId());
 
             ps.executeUpdate();
             System.out.println("Bénéficiaire mis à jour avec succès !");
@@ -104,7 +123,7 @@ public class ServicesBeneficiaires implements IService<beneficiaires> {
     }
 
     @Override
-    public void delete(beneficiaires beneficiaire) {
+    public void delete(Beneficiaires beneficiaire) {
         String sql = "DELETE FROM beneficiaires WHERE id = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {

@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #F5F5F5;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ListeBeneficiairesBackController">
+<AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #F5F5F5;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.ListeBeneficiairesBackController">
     <VBox alignment="CENTER" spacing="20" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
         <Label text="Liste des Bénéficiaires" style="-fx-text-fill: #1A237E; -fx-font-size: 24px; -fx-font-weight: bold;"/>
         

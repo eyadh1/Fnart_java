@@ -1,6 +1,6 @@
 package tn.esprit.models;
 
-public class beneficiaires {
+public class Beneficiaires {
     private Long id;
     private String nom;
     private String email;
@@ -11,8 +11,10 @@ public class beneficiaires {
     private String status = "En attente";
     private Double valeur_demande;
 
+    private String image;
 
-    public beneficiaires(Long id, String nom, String email, String telephone, String cause, String estElleAssociation, String description, String status, Double valeur_demande) {
+
+    public Beneficiaires(Long id, String nom, String email, String telephone, String cause, String estElleAssociation, String description, String status, Double valeur_demande , String image) {
         this.id = id;
         this.nom = nom;
         this.email = email;
@@ -22,9 +24,10 @@ public class beneficiaires {
         this.description = description;
         this.status = "En attente";
         this.valeur_demande = valeur_demande;
+        this.image = image;
     }
 
-    public beneficiaires() {
+    public Beneficiaires() {
         this.nom = "";
         this.email = "";
         this.telephone = "";
@@ -33,9 +36,11 @@ public class beneficiaires {
         this.description = "";
         this.status = "En attente";
         this.valeur_demande = null;
+        this.image = image;
+
     }
 
-    public beneficiaires(String nom, String email, String telephone, String estElleAssociation, String cause, String description, Double valeurDemande) {
+    public Beneficiaires(String nom, String email, String telephone, String estElleAssociation, String cause, String description, Double valeurDemande , String image) {
         this.nom = nom;
         this.email = email;
         this.telephone = telephone;
@@ -47,7 +52,7 @@ public class beneficiaires {
     }
 
 
-    public beneficiaires(String text, String text1, String text2, String value, String text3, String text4, String text5) {
+    public Beneficiaires(String text, String text1, String text2, String value, String text3, String text4, String text5) {
     }
 
     public int getId() {
@@ -120,6 +125,14 @@ public class beneficiaires {
 
     public void setValeurDemande(Double valeurDemande) {
         this.valeur_demande = valeurDemande;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     @Override

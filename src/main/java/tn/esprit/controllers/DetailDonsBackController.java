@@ -1,11 +1,11 @@
-package controllers;
+package tn.esprit.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
-import tn.esprit.models.dons;
+import tn.esprit.models.Dons;
 import tn.esprit.services.ServicesDons;
 
 public class DetailDonsBackController {
@@ -24,7 +24,7 @@ public class DetailDonsBackController {
     @FXML
     private Button closeButton;
     
-    private dons currentDon;
+    private Dons currentDon;
     private ServicesDons servicesDons;
     
     @FXML
@@ -32,7 +32,7 @@ public class DetailDonsBackController {
         servicesDons = new ServicesDons();
     }
     
-    public void setdons(dons don) {
+    public void setdons(Dons don) {
         this.currentDon = don;
         displayDonDetails();
     }

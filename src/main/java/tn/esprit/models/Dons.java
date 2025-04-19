@@ -2,17 +2,17 @@ package tn.esprit.models;
 
 import java.math.BigDecimal;
 
-public class dons {
+public class Dons {
     private int id;
     private BigDecimal valeur;
     private String type;
     private String description;
-    private beneficiaires beneficiaire;
+    private Beneficiaires beneficiaire;
 
-    public dons() {
+    public Dons() {
     }
 
-    public dons(BigDecimal valeur, String type, String description, beneficiaires beneficiaire) {
+    public Dons(BigDecimal valeur, String type, String description, Beneficiaires beneficiaire) {
         this.valeur = valeur;
         this.type = type;
         this.description = description;
@@ -51,11 +51,11 @@ public class dons {
         this.description = description;
     }
 
-    public beneficiaires getBeneficiaire() {
+    public Beneficiaires getBeneficiaire() {
         return beneficiaire;
     }
 
-    public void setBeneficiaire(beneficiaires beneficiaire) {
+    public void setBeneficiaire(Beneficiaires beneficiaire) {
         this.beneficiaire = beneficiaire;
     }
 

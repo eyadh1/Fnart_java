@@ -4,7 +4,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<AnchorPane fx:id="rootPane" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #EFDAC7;" xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AddBeneficiaireController">
+<?import javafx.scene.image.ImageView?>
+<AnchorPane fx:id="rootPane" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #EFDAC7;" xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.AddBeneficiaireController">
    <children>
       <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="800.0" spacing="20.0">
          <padding>
@@ -40,6 +41,16 @@
             
             <Label text="Description:" style="-fx-text-fill: #BA9D1F; -fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
             <TextArea fx:id="DescriptionTextArea" prefWidth="200.0" prefHeight="100.0" style="-fx-background-color: #F2F2F2;" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+
+            
+            <Label text="Image:" style="-fx-text-fill: #ECF0F1; -fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+            <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="8">
+                <ImageView fx:id="imagePreview" fitHeight="100" fitWidth="100" preserveRatio="true" style="-fx-background-color: #34495E; -fx-background-radius: 5;"/>
+                <VBox spacing="5">
+                    <Button fx:id="uploadButton" text="Choisir une image" onAction="#handleImageUpload" style="-fx-background-color: #3498DB; -fx-text-fill: #ECF0F1; -fx-font-weight: bold;"/>
+                    <Button fx:id="clearButton" text="Effacer" onAction="#handleClearImage" style="-fx-background-color: #E74C3C; -fx-text-fill: #ECF0F1; -fx-font-weight: bold;"/>
+                </VBox>
+            </HBox>
          </GridPane>
          
          <!-- Buttons -->

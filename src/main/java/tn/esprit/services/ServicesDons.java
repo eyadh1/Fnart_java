@@ -1,7 +1,7 @@
 package tn.esprit.services;
 
-import tn.esprit.models.beneficiaires;
-import tn.esprit.models.dons;
+import tn.esprit.models.Beneficiaires;
+import tn.esprit.models.Dons;
 import tn.esprit.utils.DataSource;
 
 import java.sql.*;
@@ -15,7 +15,7 @@ public class ServicesDons {
         connection = DataSource.getInstance().getConnection();
     }
 
-    public void add(dons don) {
+    public void add(Dons don) {
         String query = "INSERT INTO dons (valeur, type, description, beneficiaire_id) VALUES (?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setBigDecimal(1, don.getValeur());
@@ -28,7 +28,7 @@ public class ServicesDons {
         }
     }
 
-    public void update(dons don) {
+    public void update(Dons don) {
         String query = "UPDATE dons SET valeur = ?, type = ?, description = ?, beneficiaire_id = ? WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setBigDecimal(1, don.getValeur());
@@ -52,22 +52,22 @@ public class ServicesDons {
         }
     }
 
-    public List<dons> getAll() {
-        List<dons> donsList = new ArrayList<>();
+    public List<Dons> getAll() {
+        List<Dons> donsList = new ArrayList<>();
         String query = "SELECT d.*, b.nom as beneficiaire_nom, b.email as beneficiaire_email, b.telephone as beneficiaire_telephone " +
                       "FROM dons d " +
                       "JOIN beneficiaires b ON d.beneficiaire_id = b.id";
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
             while (resultSet.next()) {
-                dons don = new dons();
+                Dons don = new Dons();
                 don.setId((int) resultSet.getInt("id"));
                 don.setValeur(resultSet.getBigDecimal("valeur"));
                 don.setType(resultSet.getString("type"));
                 don.setDescription(resultSet.getString("description"));
 
                 // Create and set beneficiaire
-                beneficiaires beneficiaire = new beneficiaires();
+                Beneficiaires beneficiaire = new Beneficiaires();
                 beneficiaire.setId((long) resultSet.getInt("beneficiaire_id"));
                 beneficiaire.setNom(resultSet.getString("beneficiaire_nom"));
                 beneficiaire.setEmail(resultSet.getString("beneficiaire_email"));

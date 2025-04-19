@@ -1,11 +1,11 @@
-package controllers;
+package tn.esprit.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
-import tn.esprit.models.beneficiaires;
+import tn.esprit.models.Beneficiaires;
 import tn.esprit.services.ServicesBeneficiaires;
 
 public class DetailBeneficiaireBackController {
@@ -36,7 +36,7 @@ public class DetailBeneficiaireBackController {
     @FXML
     private Button closeButton;
     
-    private beneficiaires currentBeneficiaire;
+    private Beneficiaires currentBeneficiaire;
     private ServicesBeneficiaires servicesBeneficiaire;
     
     @FXML
@@ -44,7 +44,7 @@ public class DetailBeneficiaireBackController {
         servicesBeneficiaire = new ServicesBeneficiaires();
     }
     
-    public void setBeneficiaire(beneficiaires beneficiaire) {
+    public void setBeneficiaire(Beneficiaires beneficiaire) {
         this.currentBeneficiaire = beneficiaire;
         displayBeneficiaireDetails();
     }

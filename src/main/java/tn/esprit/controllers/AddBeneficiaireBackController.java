@@ -1,4 +1,4 @@
-package controllers;
+package tn.esprit.controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -7,7 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import tn.esprit.models.beneficiaires;
+import tn.esprit.models.Beneficiaires;
 import tn.esprit.services.ServicesBeneficiaires;
 
 
@@ -72,7 +72,7 @@ public class AddBeneficiaireBackController implements Initializable {
             }
 
             // Create new beneficiaire
-            beneficiaires newBeneficiaire = new beneficiaires();
+            Beneficiaires newBeneficiaire = new Beneficiaires();
             newBeneficiaire.setNom(NomTextField.getText());
             newBeneficiaire.setEmail(EmailTextField.getText());
             newBeneficiaire.setTelephone(TelephoneTextField.getText());
