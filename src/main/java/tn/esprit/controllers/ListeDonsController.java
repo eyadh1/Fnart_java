@@ -46,6 +46,8 @@ public class ListeDonsController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        String cssPath = getClass().getResource("/css/style.css").toExternalForm();
+        System.out.println("CSS file found at: " + cssPath);
         // Initialize type filter choices
         typeFilterChoice.getItems().addAll("Tous", "Argent", "Materiel", "Locale", "Oeuvre");
         typeFilterChoice.setValue("Tous");

@@ -52,6 +52,8 @@ public class AddDonsController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        String cssPath = getClass().getResource("/css/style.css").toExternalForm();
+        System.out.println("CSS file found at: " + cssPath);
         // Initialize type choices
         TypeChoice.getItems().addAll("Argent", "Materiel", "Locale", "Oeuvre");
         TypeChoice.setValue("Argent");

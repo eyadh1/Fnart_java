@@ -43,6 +43,7 @@ public class AddBeneficiaireBackController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
         servicesBeneficiaires = new ServicesBeneficiaires();
 
         StatusChoice.getItems().addAll("en attente", "Accepté", "Rejeté");

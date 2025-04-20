@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="tn.esprit.controllers.DashboardController"
+            stylesheets="@css/style.css">
+
+    <left>
+        <VBox spacing="20" styleClass="sidebar">
+            <Label text="🎨 ArtTherapy" styleClass="title"/>
+            <Label text="🏠 Home" styleClass="menu-item"/>
+            <Label text="🖼️ My Artworks" styleClass="menu-item"/>
+            <Label text="❤️ Favorites" styleClass="menu-item"/>
+            <Label text="Devenir un beneficiaire" styleClass="menu-item" onMouseClicked="#handleListeBeneficiaire"/>
+            <Label text="Faire un don" styleClass="menu-item" onMouseClicked="#handleAddDons"/>
+            <Label text="⚙️ Settings" styleClass="menu-item"/>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="20" styleClass="content-area">
+            <Label text="Welcome to Your Art Therapy Space" styleClass="header"/>
+            <HBox spacing="20">
+                <ImageView fx:id="featuredArtwork" fitHeight="200" fitWidth="300"/>
+                <VBox>
+                    <Label text="Today's Featured Artwork" styleClass="sub-header"/>
+                    <Label fx:id="artworkTitle" styleClass="art-title"/>
+                    <Label fx:id="artworkDesc" styleClass="art-description"/>
+                </VBox>
+            </HBox>
+            <Label text="Popular Artworks" styleClass="section-title"/>
+            <ListView fx:id="artworkList" styleClass="art-list"/>
+        </VBox>
+    </center>
+</BorderPane>

@@ -70,6 +70,9 @@ public class AddBeneficiaireController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        String cssPath = getClass().getResource("/css/style.css").toExternalForm();
+        System.out.println("CSS file found at: " + cssPath);
+
         AssociationChoice.getItems().addAll("Oui", "Non");
         AssociationChoice.setValue("Non");
 
