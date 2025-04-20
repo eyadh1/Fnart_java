@@ -4,51 +4,55 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<AnchorPane fx:id="rootPane" prefHeight="600.0" prefWidth="800.0" stylesheets="@css/style.css"style="-fx-background-color: #EFDAC7;" xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.AddDonsController" stylesheets="@css/style.css">
-   <children>
-      <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="800.0" spacing="20.0">
-         <padding>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-         </padding>
-         
-         <!-- Title -->
-         <Label text="Ajouter un Don" style="-fx-text-fill: #BA9D1F; -fx-font-size: 24px; -fx-font-weight: bold;">
-            <VBox.margin>
-               <Insets bottom="20.0" />
-            </VBox.margin>
-         </Label>
-         
-         <!-- Form Fields -->
-         <GridPane hgap="10" vgap="10" alignment="CENTER">
-            <Label text="Type:" style="-fx-text-fill: #BA9D1F; -fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-            <ChoiceBox fx:id="TypeChoice" prefWidth="200.0" style="-fx-background-color: #F2F2F2;" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-            
-            <Label text="Valeur:" style="-fx-text-fill: #BA9D1F; -fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-            <TextField fx:id="ValeurTextField" prefWidth="200.0" style="-fx-background-color: #F2F2F2;" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-            
-            <Label text="Description:" style="-fx-text-fill: #BA9D1F; -fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-            <TextArea fx:id="DescriptionTextArea" prefWidth="200.0" prefHeight="100.0" style="-fx-background-color: #F2F2F2;" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-            
-            <Label text="Bénéficiaire:" style="-fx-text-fill: #BA9D1F; -fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-            <ChoiceBox fx:id="BeneficiaireChoice" prefWidth="200.0" style="-fx-background-color: #F2F2F2;" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-         </GridPane>
-         
-         <!-- Buttons -->
-         <HBox alignment="CENTER" spacing="20.0">
-            <Button fx:id="AjoutButton" mnemonicParsing="false" onAction="#handleSubmit" text="Ajouter" 
-                    style="-fx-background-color: #A6695B; -fx-text-fill: #F2F2F2; -fx-font-weight: bold; -fx-pref-width: 150; -fx-pref-height: 40;"/>
-            
-            <Button fx:id="ListeButton" mnemonicParsing="false" onAction="#handleListe" text="Liste des Dons"
-                    style="-fx-background-color: #A6695B; -fx-text-fill: #F2F2F2; -fx-font-weight: bold; -fx-pref-width: 150; -fx-pref-height: 40;"/>
-            
-            <Button fx:id="ListeBeneficiairesButton" mnemonicParsing="false" onAction="#handleListeBeneficiaires" text="Liste des Bénéficiaires"
-                    style="-fx-background-color: #A6695B; -fx-text-fill: #F2F2F2; -fx-font-weight: bold; -fx-pref-width: 150; -fx-pref-height: 40;"/>
-         </HBox>
-         <Button fx:id="retourHome" mnemonicParsing="false" onAction="#handleBack" text="Retour" style="-fx-background-color: #A6695B; -fx-text-fill: #F2F2F2; -fx-font-weight: bold;">
-            <VBox.margin>
-               <Insets top="20.0" />
-            </VBox.margin>
-         </Button>
-      </VBox>
-   </children>
-</AnchorPane> 
+<BorderPane xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.AddDonsController" stylesheets="@../css/style.css">
+   <left>
+      <fx:include source="SidebarTemplate.fxml"/>
+   </left>
+   <center>
+      <AnchorPane fx:id="rootPane" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #EFDAC7;">
+         <children>
+            <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="800.0" spacing="20.0">
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </padding>
+               
+               <!-- Title -->
+               <Label text="Ajouter un Don" styleClass="header">
+                  <VBox.margin>
+                     <Insets bottom="20.0" />
+                  </VBox.margin>
+               </Label>
+               
+               <!-- Form Fields -->
+               <GridPane hgap="10" vgap="10" alignment="CENTER">
+                  <Label text="Type:" styleClass="sub-header" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                  <ChoiceBox fx:id="TypeChoice" prefWidth="200.0" styleClass="choice-box" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                  
+                  <Label text="Valeur:" styleClass="sub-header" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                  <TextField fx:id="ValeurTextField" prefWidth="200.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                  
+                  <Label text="Description:" styleClass="sub-header" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                  <TextArea fx:id="DescriptionTextArea" prefWidth="200.0" prefHeight="100.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                  
+                  <Label text="Bénéficiaire:" styleClass="sub-header" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                  <ChoiceBox fx:id="BeneficiaireChoice" prefWidth="200.0" styleClass="choice-box" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+               </GridPane>
+               
+               <!-- Buttons -->
+               <HBox alignment="CENTER" spacing="20.0">
+                  <Button fx:id="AjoutButton" mnemonicParsing="false" onAction="#handleSubmit" text="Ajouter" styleClass="button"/>
+                  
+                  <Button fx:id="ListeButton" mnemonicParsing="false" onAction="#handleListe" text="Liste des Dons" styleClass="button"/>
+                  
+                  <Button fx:id="ListeBeneficiairesButton" mnemonicParsing="false" onAction="#handleListeBeneficiaires" text="Liste des Bénéficiaires" styleClass="button"/>
+               </HBox>
+               <Button fx:id="retourHome" mnemonicParsing="false" onAction="#handleBack" text="Retour" styleClass="button">
+                  <VBox.margin>
+                     <Insets top="20.0" />
+                  </VBox.margin>
+               </Button>
+            </VBox>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane> 

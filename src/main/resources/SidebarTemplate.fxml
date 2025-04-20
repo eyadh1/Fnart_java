@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Separator?>
+
+<VBox fx:id="sidebar" styleClass="sidebar" xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1">
+    <Label text="Fnart" styleClass="title"/>
+    <Separator style="-fx-background-color: #4d4d4d;"/>
+    <Label text="🏠 Accueil" styleClass="menu-item" onMouseClicked="#handleHome"/>
+    <Label text="👤 Devenir un bénéficiaire" styleClass="menu-item" onMouseClicked="#handleAddBeneficiaire"/>
+    <Label text="💰 Faire un don" styleClass="menu-item" onMouseClicked="#handleAddDons"/>
+    <Label text="📋 Liste des bénéficiaires" styleClass="menu-item" onMouseClicked="#handleListeBeneficiaire"/>
+    <Label text="📊 Liste des dons" styleClass="menu-item" onMouseClicked="#handleListeDons"/>
+</VBox> 
