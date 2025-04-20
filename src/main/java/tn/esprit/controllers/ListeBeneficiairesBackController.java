@@ -66,6 +66,18 @@ public class ListeBeneficiairesBackController implements Initializable {
             filteredBeneficiaires = new FilteredList<>(beneficiairesList, p -> true);
 
             beneficiairesListView.setCellFactory(lv -> new ListCell<Beneficiaires>() {
+                private final Button modifierBtn = new Button("Modifier");
+                private final Button detailsBtn = new Button("Détails");
+                private final Button accepterBtn = new Button("Accepter");
+                private final Button refuserBtn = new Button("Refuser");
+                
+                {
+                    modifierBtn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
+                    detailsBtn.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");
+                    accepterBtn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
+                    refuserBtn.setStyle("-fx-background-color: #f44336; -fx-text-fill: white;");
+                }
+
                 @Override
                 protected void updateItem(Beneficiaires item, boolean empty) {
                     super.updateItem(item, empty);
@@ -76,92 +88,59 @@ public class ListeBeneficiairesBackController implements Initializable {
                         HBox mainBox = new HBox(10);
                         mainBox.setStyle("-fx-background-color: white; -fx-padding: 10; -fx-background-radius: 5;");
 
-                        VBox imageContainer = new VBox();
-                        imageContainer.setPrefWidth(100);
-                        imageContainer.setMinWidth(100);
-
+                        // Image container
                         ImageView imageView = new ImageView();
-                        imageView.setFitWidth(100);
-                        imageView.setFitHeight(100);
+                        imageView.setFitWidth(80);
+                        imageView.setFitHeight(80);
                         imageView.setPreserveRatio(true);
-                        imageView.setStyle("-fx-background-color: #f0f0f0; -fx-background-radius: 5;");
 
-                        // FIXED image loading
-                        String imagePath = item.getImage();
-                        File imageFile = new File("src/main/resources/" + imagePath);
-                        if (imagePath != null && !imagePath.equals("default_image.jpg") && imageFile.exists()) {
-                            imageView.setImage(new Image(imageFile.toURI().toString()));
+                        // Load image
+                        if (item.getImage() != null && !item.getImage().isEmpty()) {
+                            try {
+                                File imageFile = new File(item.getImage());
+                                if (imageFile.exists()) {
+                                    Image image = new Image(imageFile.toURI().toString());
+                                    imageView.setImage(image);
+                                } else {
+                                    // Load default image if file doesn't exist
+                                    File defaultImage = new File("src/main/resources/images/default_profile.png");
+                                    if (defaultImage.exists()) {
+                                        imageView.setImage(new Image(defaultImage.toURI().toString()));
+                                    }
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         } else {
-                            File placeholder = new File("src/main/resources/images/placeholder.png");
-                            if (placeholder.exists()) {
-                                imageView.setImage(new Image(placeholder.toURI().toString()));
-                            } else {
-                                System.err.println("Placeholder image not found!");
+                            // Load default image if no image path
+                            try {
+                                File defaultImage = new File("src/main/resources/images/default_profile.png");
+                                if (defaultImage.exists()) {
+                                    imageView.setImage(new Image(defaultImage.toURI().toString()));
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }
 
-                        imageContainer.getChildren().add(imageView);
-
-                        VBox contentBox = new VBox(5);
-                        HBox headerBox = new HBox(10);
-                        Label nameLabel = new Label(item.getNom());
-                        nameLabel.setStyle("-fx-text-fill: #34495E; -fx-font-weight: bold;");
-
-                        Label statusLabel = new Label("Statut: " + (item.getStatus() != null ? item.getStatus() : "En attente"));
-                        statusLabel.setStyle("-fx-text-fill: #34495E;");
-                        headerBox.getChildren().addAll(nameLabel, statusLabel);
-
-                        HBox contactBox = new HBox(10);
+                        VBox infoBox = new VBox(5);
+                        Label nomLabel = new Label("Nom: " + item.getNom());
                         Label emailLabel = new Label("Email: " + item.getEmail());
-                        Label phoneLabel = new Label("Téléphone: " + item.getTelephone());
-                        emailLabel.setStyle("-fx-text-fill: #34495E;");
-                        phoneLabel.setStyle("-fx-text-fill: #34495E;");
-                        contactBox.getChildren().addAll(emailLabel, phoneLabel);
-
-                        HBox detailsBox = new HBox(10);
+                        Label telLabel = new Label("Tél: " + item.getTelephone());
                         Label causeLabel = new Label("Cause: " + item.getCause());
-                        Label associationLabel = new Label("Association: " + item.getEstElleAssociation());
-                        Label valeurLabel = new Label("Valeur Demandée: " + item.getValeurDemande() + " DT");
-                        causeLabel.setStyle("-fx-text-fill: #34495E;");
-                        associationLabel.setStyle("-fx-text-fill: #34495E;");
-                        valeurLabel.setStyle("-fx-text-fill: #34495E; -fx-font-weight: bold;");
-                        detailsBox.getChildren().addAll(causeLabel, associationLabel, valeurLabel);
+                        Label statusLabel = new Label("Statut: " + (item.getStatus() != null ? item.getStatus() : "En attente"));
+                        
+                        infoBox.getChildren().addAll(nomLabel, emailLabel, telLabel, causeLabel, statusLabel);
 
-                        VBox descriptionBox = new VBox(5);
-                        Label descriptionTitle = new Label("Description:");
-                        descriptionTitle.setStyle("-fx-text-fill: #34495E; -fx-font-weight: bold;");
-                        Label descriptionLabel = new Label(item.getDescription());
-                        descriptionLabel.setStyle("-fx-text-fill: #34495E;");
-                        descriptionLabel.setWrapText(true);
-                        descriptionBox.getChildren().addAll(descriptionTitle, descriptionLabel);
-
-                        HBox actionBox = new HBox(10);
-                        Button detailButton = new Button("Détails");
-                        detailButton.setStyle("-fx-background-color: #34495E; -fx-text-fill: white; -fx-font-weight: bold;");
-                        detailButton.setOnAction(event -> handleDetail(item));
-                        actionBox.getChildren().add(detailButton);
-
-                        Button updateButton = new Button("Modifier");
-                        updateButton.setStyle("-fx-background-color: #34495E; -fx-text-fill: white; -fx-font-weight: bold;");
-                        updateButton.setOnAction(event -> handleUpdate(item));
-                        actionBox.getChildren().add(updateButton);
-
-                        String status = item.getStatus();
-                        if (status == null || status.isEmpty() || status.equals("en attente") || status.equals("Refusé")) {
-                            Button acceptButton = new Button("Accepter");
-                            acceptButton.setStyle("-fx-background-color: #34495E; -fx-text-fill: white; -fx-font-weight: bold;");
-                            acceptButton.setOnAction(event -> handleAccept(item));
-                            actionBox.getChildren().add(acceptButton);
-                        }
-                        if (status == null || status.isEmpty() || status.equals("en attente") || status.equals("Accepté")) {
-                            Button rejectButton = new Button("Refuser");
-                            rejectButton.setStyle("-fx-background-color: #34495E; -fx-text-fill: white; -fx-font-weight: bold;");
-                            rejectButton.setOnAction(event -> handleReject(item));
-                            actionBox.getChildren().add(rejectButton);
-                        }
-
-                        contentBox.getChildren().addAll(headerBox, contactBox, detailsBox, descriptionBox, actionBox);
-                        mainBox.getChildren().addAll(imageContainer, contentBox);
+                        HBox buttonsBox = new HBox(5);
+                        modifierBtn.setOnAction(e -> handleUpdate(item));
+                        detailsBtn.setOnAction(e -> handleDetail(item));
+                        accepterBtn.setOnAction(e -> handleAccept(item));
+                        refuserBtn.setOnAction(e -> handleReject(item));
+                        
+                        buttonsBox.getChildren().addAll(modifierBtn, detailsBtn, accepterBtn, refuserBtn);
+                        
+                        mainBox.getChildren().addAll(imageView, infoBox, buttonsBox);
                         setGraphic(mainBox);
                     }
                 }
@@ -246,7 +225,8 @@ public class ListeBeneficiairesBackController implements Initializable {
         }
     }
     
-    private void handleUpdate(Beneficiaires beneficiaire) {
+    @FXML
+    public void handleUpdate(Beneficiaires beneficiaire) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/UpdateBeneficiaireBack.fxml"));
             Parent root = loader.load();

@@ -1,122 +1,181 @@
 package tn.esprit.controllers;
 
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
 import tn.esprit.models.Beneficiaires;
 import tn.esprit.services.ServicesBeneficiaires;
 
-public class UpdateBeneficiaireBackController {
+import java.io.File;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class UpdateBeneficiaireBackController implements Initializable {
+
     @FXML
-    private TextField nomTextField;
-    
+    private ChoiceBox<String> AssociationChoice;
     @FXML
-    private TextField emailTextField;
-    
+    private Button UpdateButton;
     @FXML
-    private TextField telephoneTextField;
-    
+    private Button DeleteButton;
     @FXML
-    private TextField causeTextField;
-    
+    private Button BackButton;
     @FXML
-    private TextField associationTextField;
-    
+    private TextField CauseTextField;
     @FXML
-    private TextField valeurTextField;
-    
+    private TextArea DescriptionTextArea;
     @FXML
-    private ChoiceBox<String> statusChoiceBox;
-    
+    private TextField EmailTextField;
     @FXML
-    private TextArea descriptionArea;
-    
+    private TextField NomTextField;
     @FXML
-    private Button updateButton;
-    
+    private TextField TelephoneTextField;
     @FXML
-    private Button closeButton;
-    
-    private Beneficiaires currentBeneficiaire;
-    private ServicesBeneficiaires servicesBeneficiaires;
-    
+    private TextField ValeurTextField;
     @FXML
-    public void initialize() {
-        servicesBeneficiaires = new ServicesBeneficiaires();
-        statusChoiceBox.getItems().addAll("En attente", "Accepté", "Refusé");
-    }
-    
+    private ImageView imagePreview;
+    @FXML
+    private Button uploadButton;
+    @FXML
+    private Button clearButton;
+
+    private Beneficiaires selectedBeneficiaire;
+    private final ServicesBeneficiaires servicesBeneficiaires = new ServicesBeneficiaires();
+    private String currentImagePath;
+
     public void setBeneficiaire(Beneficiaires beneficiaire) {
-        this.currentBeneficiaire = beneficiaire;
-        displayBeneficiaireDetails();
-    }
-    
-    private void displayBeneficiaireDetails() {
-        if (currentBeneficiaire != null) {
-            nomTextField.setText(currentBeneficiaire.getNom());
-            emailTextField.setText(currentBeneficiaire.getEmail());
-            telephoneTextField.setText(currentBeneficiaire.getTelephone());
-            causeTextField.setText(currentBeneficiaire.getCause());
-            associationTextField.setText(currentBeneficiaire.getEstElleAssociation());
-            valeurTextField.setText(String.valueOf(currentBeneficiaire.getValeurDemande()));
-            statusChoiceBox.setValue(currentBeneficiaire.getStatus());
-            descriptionArea.setText(currentBeneficiaire.getDescription());
+        this.selectedBeneficiaire = beneficiaire;
+        if (beneficiaire != null) {
+            NomTextField.setText(beneficiaire.getNom());
+            EmailTextField.setText(beneficiaire.getEmail());
+            TelephoneTextField.setText(beneficiaire.getTelephone());
+            AssociationChoice.setValue(beneficiaire.getEstElleAssociation());
+            CauseTextField.setText(beneficiaire.getCause());
+            ValeurTextField.setText(beneficiaire.getValeurDemande() != null ? beneficiaire.getValeurDemande().toString() : "");
+            DescriptionTextArea.setText(beneficiaire.getDescription());
+            
+            // Charger l'image existante si elle existe
+            if (beneficiaire.getImage() != null && !beneficiaire.getImage().isEmpty()) {
+                currentImagePath = beneficiaire.getImage();
+                try {
+                    File imageFile = new File(currentImagePath);
+                    if (imageFile.exists()) {
+                        imagePreview.setImage(new Image(imageFile.toURI().toString()));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
-    
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        AssociationChoice.getItems().addAll("Oui", "Non");
+        AssociationChoice.setValue("Non");
+
+        UpdateButton.setOnAction(event -> handleUpdate());
+        DeleteButton.setOnAction(event -> handleDelete());
+        BackButton.setOnAction(event -> handleBack());
+        uploadButton.setOnAction(event -> handleImageUpload());
+        clearButton.setOnAction(event -> handleClearImage());
+    }
+
+    @FXML
+    private void handleImageUpload() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choisir une image");
+        fileChooser.getExtensionFilters().addAll(
+            new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif")
+        );
+        
+        File selectedFile = fileChooser.showOpenDialog(imagePreview.getScene().getWindow());
+        if (selectedFile != null) {
+            currentImagePath = selectedFile.getAbsolutePath();
+            imagePreview.setImage(new Image(selectedFile.toURI().toString()));
+        }
+    }
+
+    @FXML
+    private void handleClearImage() {
+        currentImagePath = null;
+        imagePreview.setImage(null);
+    }
+
     @FXML
     private void handleUpdate() {
+        if (selectedBeneficiaire == null) {
+            showAlert("Erreur", "Aucun bénéficiaire sélectionné");
+            return;
+        }
+
+        if (NomTextField.getText().trim().isEmpty()) {
+            showAlert("Erreur", "Le champ 'Nom' est obligatoire");
+            return;
+        }
+
+        selectedBeneficiaire.setNom(NomTextField.getText());
+        selectedBeneficiaire.setEmail(EmailTextField.getText());
+        selectedBeneficiaire.setTelephone(TelephoneTextField.getText());
+        selectedBeneficiaire.setEstElleAssociation(AssociationChoice.getValue());
+        selectedBeneficiaire.setCause(CauseTextField.getText());
         try {
-            // Validate input
-            if (nomTextField.getText().isEmpty() || emailTextField.getText().isEmpty() || 
-                telephoneTextField.getText().isEmpty() || causeTextField.getText().isEmpty() || 
-                associationTextField.getText().isEmpty() || valeurTextField.getText().isEmpty() || 
-                statusChoiceBox.getValue() == null) {
-                showAlert("Erreur", "Veuillez remplir tous les champs obligatoires");
-                return;
+            if (!ValeurTextField.getText().isEmpty()) {
+                selectedBeneficiaire.setValeurDemande(Double.parseDouble(ValeurTextField.getText()));
+            } else {
+                selectedBeneficiaire.setValeurDemande(null);
             }
-            
-            // Update beneficiaire object
-            currentBeneficiaire.setNom(nomTextField.getText());
-            currentBeneficiaire.setEmail(emailTextField.getText());
-            currentBeneficiaire.setTelephone(telephoneTextField.getText());
-            currentBeneficiaire.setCause(causeTextField.getText());
-            currentBeneficiaire.setEstElleAssociation(associationTextField.getText());
-            currentBeneficiaire.setValeurDemande(Double.parseDouble(valeurTextField.getText()));
-            currentBeneficiaire.setStatus(statusChoiceBox.getValue());
-            currentBeneficiaire.setDescription(descriptionArea.getText());
-            
-            // Save to database
-            servicesBeneficiaires.update(currentBeneficiaire);
-            
-            // Show success message
-            showSuccessAlert("Succès", "Le bénéficiaire a été mis à jour avec succès");
-            
-            // Close the window
-            handleClose();
-            
         } catch (NumberFormatException e) {
             showAlert("Erreur", "La valeur demandée doit être un nombre valide");
-        } catch (Exception e) {
-            showAlert("Erreur", "Une erreur est survenue lors de la mise à jour: " + e.getMessage());
+            return;
+        }
+        selectedBeneficiaire.setDescription(DescriptionTextArea.getText());
+        
+        // Mettre à jour le chemin de l'image
+        if (currentImagePath != null) {
+            selectedBeneficiaire.setImage(currentImagePath);
+        }
+
+        servicesBeneficiaires.update(selectedBeneficiaire);
+        
+        showAlert("Succès", "Bénéficiaire modifié avec succès");
+        handleBack();
+    }
+
+    @FXML
+    private void handleDelete() {
+        if (selectedBeneficiaire == null) {
+            showAlert("Erreur", "Aucun bénéficiaire sélectionné");
+            return;
+        }
+
+        Alert confirmDialog = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmDialog.setTitle("Confirmation");
+        confirmDialog.setHeaderText("Supprimer le bénéficiaire");
+        confirmDialog.setContentText("Êtes-vous sûr de vouloir supprimer ce bénéficiaire ?");
+
+        if (confirmDialog.showAndWait().get() == ButtonType.OK) {
+            servicesBeneficiaires.delete(selectedBeneficiaire);
+            showAlert("Succès", "Bénéficiaire supprimé avec succès");
+            handleBack();
         }
     }
-    
+
     @FXML
-    private void handleClose() {
-        Stage stage = (Stage) closeButton.getScene().getWindow();
-        stage.close();
+    private void handleBack() {
+        try {
+            Stage stage = (Stage) BackButton.getScene().getWindow();
+            stage.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-    
+
     private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-    
-    private void showSuccessAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);

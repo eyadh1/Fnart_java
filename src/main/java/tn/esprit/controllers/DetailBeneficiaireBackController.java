@@ -4,9 +4,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import tn.esprit.models.Beneficiaires;
 import tn.esprit.services.ServicesBeneficiaires;
+
+import java.io.File;
 
 public class DetailBeneficiaireBackController {
     @FXML
@@ -36,6 +40,9 @@ public class DetailBeneficiaireBackController {
     @FXML
     private Button closeButton;
     
+    @FXML
+    private ImageView imageView;
+    
     private Beneficiaires currentBeneficiaire;
     private ServicesBeneficiaires servicesBeneficiaire;
     
@@ -56,9 +63,38 @@ public class DetailBeneficiaireBackController {
             telephoneLabel.setText(currentBeneficiaire.getTelephone());
             causeLabel.setText(currentBeneficiaire.getCause());
             associationLabel.setText(currentBeneficiaire.getEstElleAssociation());
-            valeurLabel.setText(String.valueOf(currentBeneficiaire.getValeurDemande()));
-            statusLabel.setText(currentBeneficiaire.getStatus());
+            valeurLabel.setText(currentBeneficiaire.getValeurDemande() != null ? currentBeneficiaire.getValeurDemande().toString() + " DT" : "Non spécifié");
+            statusLabel.setText(currentBeneficiaire.getStatus() != null ? currentBeneficiaire.getStatus() : "En attente");
             descriptionArea.setText(currentBeneficiaire.getDescription());
+
+            // Load and display the image
+            if (currentBeneficiaire.getImage() != null && !currentBeneficiaire.getImage().isEmpty()) {
+                try {
+                    File imageFile = new File(currentBeneficiaire.getImage());
+                    if (imageFile.exists()) {
+                        Image image = new Image(imageFile.toURI().toString());
+                        imageView.setImage(image);
+                    } else {
+                        loadDefaultImage();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    loadDefaultImage();
+                }
+            } else {
+                loadDefaultImage();
+            }
+        }
+    }
+    
+    private void loadDefaultImage() {
+        try {
+            File defaultImage = new File("src/main/resources/images/placehoolder.png");
+            if (defaultImage.exists()) {
+                imageView.setImage(new Image(defaultImage.toURI().toString()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     

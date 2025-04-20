@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.image.ImageView?>
 
 <AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.UpdateBeneficiaireController" style="-fx-background-color: #EFDAC7;">
    <children>
@@ -36,6 +37,15 @@
             
             <Label text="Description" GridPane.columnIndex="2" GridPane.rowIndex="1" style="-fx-text-fill: #BA9D1F; -fx-font-weight: bold;"/>
             <TextArea fx:id="DescriptionTextArea" GridPane.columnIndex="3" GridPane.rowIndex="1" prefWidth="200" prefHeight="100" style="-fx-background-color: #F2F2F2;"/>
+            
+            <Label text="Image" GridPane.columnIndex="2" GridPane.rowIndex="2" style="-fx-text-fill: #BA9D1F; -fx-font-weight: bold;"/>
+            <HBox spacing="10" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                <ImageView fx:id="imagePreview" fitHeight="100" fitWidth="100" preserveRatio="true" style="-fx-background-color: #F2F2F2; -fx-background-radius: 5;"/>
+                <VBox spacing="5">
+                    <Button fx:id="uploadButton" text="Choisir une image" onAction="#handleImageUpload" style="-fx-background-color: #A6695B; -fx-text-fill: #F2F2F2; -fx-font-weight: bold;"/>
+                    <Button fx:id="clearButton" text="Effacer" onAction="#handleClearImage" style="-fx-background-color: #A6695B; -fx-text-fill: #F2F2F2; -fx-font-weight: bold;"/>
+                </VBox>
+            </HBox>
          </GridPane>
          
          <HBox spacing="10" alignment="CENTER_RIGHT">
