@@ -189,6 +189,7 @@ public class ListeBeneficiairesBackController implements Initializable {
                        beneficiaire.getCause().toLowerCase().contains(lowerCaseFilter) ||
                        (beneficiaire.getStatus() != null && beneficiaire.getStatus().toLowerCase().contains(lowerCaseFilter));
             });
+            beneficiairesListView.setItems(filteredBeneficiaires);
         });
     }
     private void setupSorting() {
@@ -299,6 +300,27 @@ public class ListeBeneficiairesBackController implements Initializable {
             e.printStackTrace();
             showAlert("Erreur", "Impossible d'ouvrir le formulaire d'ajout: " + e.getMessage());
         }
+    }
+
+    @FXML
+    private void handleFilterEnAttente() {
+        filteredBeneficiaires.setPredicate(beneficiaire -> 
+            beneficiaire.getStatus() != null && beneficiaire.getStatus().equals("en attente"));
+        beneficiairesListView.setItems(filteredBeneficiaires);
+    }
+
+    @FXML
+    private void handleFilterAccepte() {
+        filteredBeneficiaires.setPredicate(beneficiaire -> 
+            beneficiaire.getStatus() != null && beneficiaire.getStatus().equals("Accepté"));
+        beneficiairesListView.setItems(filteredBeneficiaires);
+    }
+
+    @FXML
+    private void handleFilterRefuse() {
+        filteredBeneficiaires.setPredicate(beneficiaire -> 
+            beneficiaire.getStatus() != null && beneficiaire.getStatus().equals("Refusé"));
+        beneficiairesListView.setItems(filteredBeneficiaires);
     }
 
     private void showAlert(String title, String message) {
