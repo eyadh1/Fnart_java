@@ -22,7 +22,7 @@
     <top>
         <AnchorPane prefHeight="70.0">
             <children>
-                <!-- Main top bar HBox -->
+                <!-- Main Header -->
                 <HBox alignment="CENTER_LEFT" spacing="20.0" style="-fx-background-color: #310E10; -fx-padding: 15 25;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <children>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
@@ -41,7 +41,7 @@
                             <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#handleRefresh" text="Refresh" />
                             <Button mnemonicParsing="false" onAction="#handleLogout" text="Logout" />
 
-                            <!-- Profile Section -->
+                            <!-- Profile Image -->
                             <VBox fx:id="profileContainer" alignment="CENTER" styleClass="profile-container">
                                 <ImageView fx:id="profileImage" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" styleClass="profile-image" onMouseClicked="#toggleProfilePanel">
                                     <image>
@@ -53,9 +53,9 @@
                     </children>
                 </HBox>
 
-                <!-- Profile Panel - Now positioned absolutely in the top AnchorPane -->
+                <!-- Profile Panel (positioned absolutely) -->
                 <VBox fx:id="profilePanel" styleClass="profile-panel" visible="false" managed="false"
-                      AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="70.0">
+                      layoutX="500.0"  AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="70.0">
                     <children>
                         <ImageView fx:id="profileImageLarge" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true" styleClass="profile-image-large">
                             <image>
@@ -78,6 +78,7 @@
     </top>
 
     <center>
+        <!-- Main Content -->
         <VBox spacing="15.0" styleClass="container" BorderPane.alignment="CENTER">
             <padding>
                 <Insets top="15.0" right="15.0" bottom="15.0" left="15.0"/>
@@ -152,10 +153,8 @@
 
             <HBox spacing="20.0" VBox.vgrow="SOMETIMES" minHeight="250.0">
                 <children>
-                    <!-- Left side: User Statistics and Activity Log -->
                     <VBox spacing="10.0" HBox.hgrow="SOMETIMES" maxWidth="350.0">
                         <children>
-                            <!-- User Statistics -->
                             <VBox spacing="10.0" styleClass="statistics-container" VBox.vgrow="NEVER">
                                 <children>
                                     <Label styleClass="subtitle" text="User Statistics">
@@ -186,7 +185,6 @@
                                 </padding>
                             </VBox>
 
-                            <!-- Activity Log -->
                             <VBox spacing="5.0" VBox.vgrow="ALWAYS">
                                 <Label styleClass="subtitle" text="Activity Log">
                                     <font>
@@ -198,7 +196,6 @@
                         </children>
                     </VBox>
 
-                    <!-- Right side: Chart -->
                     <VBox styleClass="chart-container" HBox.hgrow="ALWAYS">
                         <Label styleClass="subtitle" text="User Role Distribution">
                             <font>
