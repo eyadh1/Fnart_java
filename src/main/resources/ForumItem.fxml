@@ -1,36 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.ForumController">
+<?import javafx.scene.layout.HBox?>
+<AnchorPane fx:id="forumItemPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" styleClass="forum-item" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.esprit.controllers.ForumItemController">
    <children>
-      <AnchorPane layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="404.0" prefWidth="843.0" style="-fx-border-color: #012545; -fx-border-width: 4;" stylesheets="@../../../../../../3A5_DevMasters/src/main/resources/ActualiteGui/Actualite.css">
+      <VBox alignment="CENTER" spacing="10.0" styleClass="forum-item-container">
          <children>
-            <Text fx:id="TitreForumAff" layoutX="444.0" layoutY="114.0" strokeType="OUTSIDE" strokeWidth="0.0" text="titre" wrappingWidth="392.53679847717285">
+            <Label fx:id="titleLabel" styleClass="forum-title" text="Titre du forum" wrapText="true">
                <font>
-                  <Font name="AdobeHeitiStd-Regular" size="20.0" />
+                  <Font name="System Bold" size="14.0" />
                </font>
-            </Text>
-            <Text fx:id="DescriptionActualiteAff" layoutX="438.0" layoutY="192.0" strokeType="OUTSIDE" strokeWidth="0.0" text="description" wrappingWidth="248.53687477111816">
-               <font>
-                  <Font name="Arial" size="17.0" />
-               </font>
-            </Text>
-            <Text fx:id="DateForumAff" layoutX="238.0" layoutY="350.0" strokeType="OUTSIDE" strokeWidth="0.0" text="date" wrappingWidth="162.13677406311035">
-               <font>
-                  <Font size="21.0" />
-               </font>
-            </Text>
-            <ImageView fx:id="ImageForum" fitHeight="381.0" fitWidth="475.0" layoutX="-68.0" layoutY="-70.0" pickOnBounds="true" preserveRatio="true" />
-            <Text layoutX="128.0" layoutY="350.0" strokeType="OUTSIDE" strokeWidth="0.0" text="publié le: " wrappingWidth="101.45700073242188">
-               <font>
-                  <Font name="System Bold" size="20.0" />
-               </font>
-            </Text>
+            </Label>
+            <Label fx:id="dateLabel" styleClass="forum-date" text="Date" />
+            <Label fx:id="categoryLabel" styleClass="forum-category" text="Catégorie" />
+            <Label fx:id="descriptionLabel" styleClass="forum-description" text="Description" wrapText="true" />
+            <ImageView fx:id="forumImageView" fitHeight="100.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+            <HBox alignment="CENTER" spacing="10.0">
+               <children>
+                  <Button fx:id="editButton" mnemonicParsing="false" styleClass="forum-edit-button" text="Modifier" />
+                  <Button fx:id="deleteButton" mnemonicParsing="false" styleClass="forum-delete-button" text="Supprimer" />
+               </children>
+            </HBox>
          </children>
-      </AnchorPane>
+      </VBox>
    </children>
 </AnchorPane>

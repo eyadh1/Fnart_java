@@ -1,33 +1,30 @@
 package tn.esprit.services;
 
-import tn.esprit.models.*;
+import tn.esprit.interfaces.IService;
+import tn.esprit.models.Forum;
 import tn.esprit.models.User;
 import tn.esprit.utils.MyDataBase;
-import tn.esprit.interfaces.IService;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class ServiceForum implements IService<Forum> {
     Connection cnx = MyDataBase.getInstance().getCnx();
 
-
+    @Override
     public void ajouter(Forum forum) throws SQLException {
         String req = "INSERT INTO forum (date_f, titre_f, id_user_id, categorie_f, description_f, image_f) VALUES (?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = cnx.prepareStatement(req);
         ps.setDate(1, new java.sql.Date(forum.getDate_f().getTime()));
         ps.setString(2, forum.getTitre_f());
-        ps.setInt(3, forum.getUser().getId()); // Use the user's ID here
+        ps.setInt(3, 1); // Use the user's ID here (assuming user ID 1 for now)
         ps.setString(4, forum.getCategorie_f());
         ps.setString(5, forum.getDescription_f());
         ps.setString(6, forum.getImage_f());
         ps.executeUpdate();
         System.out.println("Forum ajouté avec succès !");
     }
-
     public Forum getOneByTitle(String title) throws SQLException {
         Forum forum = null;
         String req = "SELECT * FROM forum WHERE titre_f=?";
@@ -59,7 +56,7 @@ public class ServiceForum implements IService<Forum> {
         return titles;
     }
 
-
+    @Override
     public void modifier(Forum forum) throws SQLException {
         String req = "UPDATE forum SET date_f=?, titre_f=?, categorie_f=?, description_f=?, image_f=? WHERE id=?";
         PreparedStatement ps = cnx.prepareStatement(req);
@@ -77,7 +74,7 @@ public class ServiceForum implements IService<Forum> {
         }
     }
 
-
+    @Override
     public void supprimer(int id) throws SQLException {
         String req = "DELETE FROM forum WHERE id=?";
         PreparedStatement ps = cnx.prepareStatement(req);
@@ -86,6 +83,7 @@ public class ServiceForum implements IService<Forum> {
         System.out.println("Forum supprimé avec succès !");
     }
 
+    @Override
     public Forum getOneById(int id) throws SQLException {
         Forum forum = null;
         String req = "SELECT * FROM forum WHERE id=?";
@@ -105,61 +103,21 @@ public class ServiceForum implements IService<Forum> {
         return forum;
     }
 
-    @Override
-    public void add(Forum forum) {
-        try {
-            String req = "INSERT INTO forum (date_f, titre_f, id_user_id, categorie_f, description_f, image_f) VALUES (?, ?, ?, ?, ?, ?)";
-            PreparedStatement ps = cnx.prepareStatement(req);
-            ps.setDate(1, new java.sql.Date(forum.getDate_f().getTime()));
-            ps.setString(2, forum.getTitre_f());
-            ps.setInt(3, forum.getUser().getId());
-            ps.setString(4, forum.getCategorie_f());
-            ps.setString(5, forum.getDescription_f());
-            ps.setString(6, forum.getImage_f());
-            ps.executeUpdate();
-            System.out.println("Forum ajouté avec succès !");
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to add forum", e);
-        }
-    }
-
-    @Override
-    public List<Forum> getAll() throws SQLException {
-        List<Forum> forums = new ArrayList<>();
-        String req = "SELECT * FROM forum";
-        Statement st = cnx.createStatement();
-        ResultSet res = st.executeQuery(req);
-        while (res.next()) {
-            int id = res.getInt("id");
-            Date date_f = res.getDate("date_f");
-            String titre_f = res.getString("titre_f");
-            String categorie_f = res.getString("categorie_f");
-            String description_f = res.getString("description_f");
-            String image_f = res.getString("image_f");
-            User user = new User(res.getInt("id_user_id"));
-            Forum f = new Forum(id, date_f, titre_f, user, categorie_f, description_f, image_f);
-            forums.add(f);
+    public Set<Forum> getAll() throws SQLException {
+        Set<Forum> forums = new HashSet<>();
+        String sql = "SELECT id, date_f, titre_f, categorie_f, description_f, image_f FROM forum"; // Correct SQL
+        Statement ste = cnx.createStatement();
+        ResultSet rs = ste.executeQuery(sql);
+        while (rs.next()) {
+            Forum forum = new Forum();
+            forum.setId(rs.getInt("id"));
+            forum.setDate_f(rs.getDate("date_f"));
+            forum.setTitre_f(rs.getString("titre_f"));
+            forum.setCategorie_f(rs.getString("categorie_f"));
+            forum.setDescription_f(rs.getString("description_f"));
+            forum.setImage_f(rs.getString("image_f"));
+            forums.add(forum);
         }
         return forums;
     }
-
-    @Override
-    public void update(Forum forum) {
-        try {
-            modifier(forum); // Call your existing modifier method
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void delete(Forum forum) {
-        try {
-            supprimer(forum.getId()); // Call your existing supprimer method
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
 }

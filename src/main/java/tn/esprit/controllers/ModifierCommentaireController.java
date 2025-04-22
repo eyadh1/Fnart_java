@@ -1,6 +1,6 @@
 package tn.esprit.controllers;
 
-import tn.esprit.models.CommentaireF;
+import tn.esprit.models.Commentaire_f;
 import tn.esprit.services.ServiceCommentaire_f;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,7 +18,7 @@ import java.sql.SQLException;
 
 public class ModifierCommentaireController {
     private ServiceCommentaire_f serviceCommentaire;
-    private CommentaireF selectedCommentaire;
+    private Commentaire_f selectedCommentaire;
 
     @FXML
     private TextField TFtextemodif;
@@ -39,7 +39,7 @@ public class ModifierCommentaireController {
         serviceCommentaire = new ServiceCommentaire_f();
     }
 
-    public void setData(CommentaireF commentaire) {
+    public void setData(Commentaire_f commentaire) {
         selectedCommentaire = commentaire;
 
         if (selectedCommentaire != null) {

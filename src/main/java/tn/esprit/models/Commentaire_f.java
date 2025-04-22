@@ -2,19 +2,22 @@ package tn.esprit.models;
 
 import java.util.Date;
 
-public class CommentaireF {
+public class Commentaire_f {
     private int id;
     private User user; // Association with the User class
     private Forum forum; // Association with the Forum class
     private Date date_c;
     private String texte_c;
 
-    // Default constructor
-    public CommentaireF() {
+    public Commentaire_f(int id, int userId, Forum forum, Date date_c, String texte_c) {
+        this.id = id;
+        this.user = new User(userId);  // User is created using the userId
+        this.forum = forum;
+        this.date_c = date_c;
+        this.texte_c = texte_c;
     }
-
-    // Constructor with all fields
-    public CommentaireF(int id, User user, Forum forum, Date date_c, String texte_c) {
+    // Constructor
+    public Commentaire_f(int id, User user, Forum forum, Date date_c, String texte_c) {
         this.id = id;
         this.user = user;
         this.forum = forum;
@@ -22,27 +25,10 @@ public class CommentaireF {
         this.texte_c = texte_c;
     }
 
-    // Constructor with userId instead of User object
-    public CommentaireF(int id, int userId, Forum forum, Date date_c, String texte_c) {
-        this.id = id;
-        this.user = new User(userId);  // Create User with just the ID
-        this.forum = forum;
-        this.date_c = date_c;
-        this.texte_c = texte_c;
-    }
-
-    // Constructor without id (for inserts)
-    public CommentaireF(User user, Forum forum, Date date_c, String texte_c) {
-        this.user = user;
-        this.forum = forum;
-        this.date_c = date_c;
-        this.texte_c = texte_c;
-    }
-
-    // Constructor with userId and forum (for inserts)
-    public CommentaireF(int userId, Forum forum, Date date_c, String texte_c) {
-        this.user = new User(userId);  // Create User with just the ID
-        this.forum = forum;
+    // Constructor with userId, forum and other parameters
+    public Commentaire_f(int userId, Forum forum, Date date_c, String texte_c) {
+        this.user = new User(userId);  // User is created using the userId
+        this.forum = forum;  // Direct assignment of Forum object
         this.date_c = date_c;
         this.texte_c = texte_c;
     }
@@ -87,15 +73,15 @@ public class CommentaireF {
     public void setTexte_c(String texte_c) {
         this.texte_c = texte_c;
     }
-
     @Override
     public String toString() {
         return "Commentaire_f{" +
                 "id=" + id +
-                ", user=" + (user != null ? user.getId() : "null") +
-                ", forum=" + (forum != null ? forum.getTitre_f() : "null") +
+                ", user=" + user.getId() + // assuming User class has getName() method
+                ", forum=" + forum.getTitle() + // assuming Forum class has getTitle() method
                 ", date_c=" + date_c +
                 ", texte_c='" + texte_c + '\'' +
                 '}';
     }
+
 }

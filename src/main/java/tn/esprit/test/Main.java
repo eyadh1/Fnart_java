@@ -1,9 +1,8 @@
 package tn.esprit.test;
 
-import tn.esprit.models.CommentaireF;
+import tn.esprit.models.Commentaire_f;
 import tn.esprit.models.Forum;
 import  tn.esprit.services.ServiceCommentaire_f;
-import  tn.esprit.services.ServiceForum;
 
 import java.sql.SQLException;
 import java.util.Date;
@@ -24,8 +23,8 @@ public class Main {
         //  System.out.println(sp.getAll());
         ServiceCommentaire_f serviceCommentaire = new ServiceCommentaire_f();
         Forum forum = new Forum(51);
-        CommentaireF commentaire = new CommentaireF(1, forum, sqlDate,  "Ceci est un commentaire test.");
-        CommentaireF modif = new CommentaireF(22,1, forum, sqlDate,  "modif");
+        Commentaire_f commentaire = new Commentaire_f(1, forum, sqlDate,  "Ceci est un commentaire test.");
+        Commentaire_f modif = new Commentaire_f(22,1, forum, sqlDate,  "modif");
         //serviceCommentaire.ajouter(commentaire);
         System.out.println(serviceCommentaire.getAll());
         // serviceCommentaire.supprimer(21);

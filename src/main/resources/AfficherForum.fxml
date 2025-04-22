@@ -1,50 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.AfficherForumController">
+<AnchorPane fx:id="MainAnchorPaneBaladity" prefHeight="600.0" prefWidth="900.0" stylesheets="@styles/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.esprit.controllers.AfficherForumController">
    <children>
-      <AnchorPane fx:id="MainAnchorPaneBaladity" layoutX="10.0" layoutY="10.0" prefHeight="780.0" prefWidth="949.0">
+      <VBox layoutX="14.0" layoutY="14.0" prefHeight="572.0" prefWidth="872.0" spacing="10.0">
          <children>
-            <ScrollPane fx:id="scrollAdmin" layoutX="183.0" layoutY="80.0" prefHeight="602.0" prefWidth="907.0" styleClass="transparent" stylesheets="@../../../../../../3A5_DevMasters/src/main/resources/ActualiteGui/Actualite.css">
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+               <children>
+                  <Label text="Rechercher Forum:" />
+                  <TextField fx:id="RechercherActualiteAdmin" onAction="#RechercherActualiteAdmin" prefWidth="200.0" />
+                  <Button fx:id="sortActualiteAdmin" mnemonicParsing="false" onAction="#sortActualiteAdmin" text="Trier par Date" />
+                  <!-- New Category Filter -->
+                  <Label text="Filtrer par Catégorie:" />
+                  <ComboBox fx:id="categoryFilterComboBox" onAction="#filterByCategory" prefWidth="150.0" promptText="Toutes les catégories" />
+               </children>
+            </HBox>
+            <ScrollPane fx:id="scrollAdmin" fitToWidth="true" prefHeight="400.0" VBox.vgrow="ALWAYS">
                <content>
-                  <GridPane fx:id="gridAdmin" prefHeight="0.0" prefWidth="0.0">
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" />
-                     </rowConstraints>
-                  </GridPane>
+                  <TableView fx:id="forumTableView" prefHeight="600.0" prefWidth="1000.0">
+                     <columns>
+                        <TableColumn fx:id="titleColumn" prefWidth="150.0" text="Titre" />
+                        <TableColumn fx:id="dateColumn" prefWidth="100.0" text="Date" />
+                        <TableColumn fx:id="categoryColumn" prefWidth="120.0" text="Catégorie" />
+                        <TableColumn fx:id="descriptionColumn" prefWidth="300.0" text="Description" />
+                        <TableColumn fx:id="actionsColumn" prefWidth="222.0" text="Actions" />
+                     </columns>
+                  </TableView>
                </content>
             </ScrollPane>
-            <Text fill="#012545" layoutX="108.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="La listes des Forums" wrappingWidth="349.3366241455078">
-               <font>
-                  <Font name="Arial Bold" size="32.0" />
-               </font>
-            </Text>
-            <TextField fx:id="RechercherActualiteAdmin" layoutX="457.0" layoutY="14.0" onAction="#RechercherActualiteAdmin" prefHeight="36.0" prefWidth="244.0" promptText="Rechercher..." stylesheets="@../../../../../../3A5_DevMasters/src/main/resources/ActualiteGui/Actualite.css" />
-            <Button fx:id="sortActualiteAdmin" layoutX="719.0" layoutY="14.0" mnemonicParsing="false" onAction="#sortActualiteAdmin" prefHeight="36.0" prefWidth="111.0" stylesheets="@css/style.css" text="SORT" textFill="#915757">
-               <font>
-                  <Font name="Arial Bold" size="16.0" />
-               </font>
-            </Button>
-            <Button fx:id="buttonreturnA" layoutX="52.0" layoutY="635.0" mnemonicParsing="false" onAction="#buttonreturnA" prefHeight="46.0" prefWidth="111.0" stylesheets="@css/style.css" text="Ajouter" textFill="#1b0a0a" />
-            <Button fx:id="chat" layoutX="837.0" layoutY="14.0" mnemonicParsing="false" onAction="#chat" prefHeight="36.0" prefWidth="111.0" stylesheets="@css/style.css" text="ChatBot" textFill="#915757">
-               <font>
-                  <Font name="Arial Bold" size="16.0" />
-               </font>
-            </Button>
-            <Button fx:id="stat" layoutX="954.0" layoutY="14.0" mnemonicParsing="false" onAction="#stat" prefHeight="36.0" prefWidth="111.0" stylesheets="@css/style.css" text="stats" textFill="#915757">
-               <font>
-                  <Font name="Arial Bold" size="16.0" />
-               </font>
-            </Button>
+            <HBox alignment="CENTER" spacing="20.0">
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </HBox>
          </children>
-      </AnchorPane>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </VBox>
    </children>
 </AnchorPane>

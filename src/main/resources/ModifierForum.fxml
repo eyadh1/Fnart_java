@@ -12,7 +12,7 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.ModifierForumController">
    <children>
-      <AnchorPane layoutX="10.0" layoutY="14.0" prefHeight="400.0" prefWidth="600.0" stylesheets="@css/style.css">
+      <AnchorPane layoutX="10.0" layoutY="14.0" prefHeight="400.0" prefWidth="600.0" stylesheets="@styles/style.css">
          <children>
             <TextField fx:id="TFDescriptionModif" layoutX="84.0" layoutY="81.0" prefHeight="51.0" prefWidth="238.0" promptText="Description" />
             <TextField fx:id="TFtitre" layoutX="84.0" layoutY="32.0" prefHeight="26.0" prefWidth="238.0" promptText="Titre" />

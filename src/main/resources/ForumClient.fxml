@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<?import javafx.scene.layout.HBox?>
+<AnchorPane fx:id="forumItemPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" styleClass="forum-item" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.esprit.controllers.ForumItemController">
+    <children>
+        <VBox alignment="CENTER" spacing="10.0" styleClass="forum-item-container">
+            <children>
+                <Label fx:id="titleLabel" styleClass="forum-title" text="Titre du forum" wrapText="true">
+                    <font>
+                        <Font name="System Bold" size="14.0" />
+                    </font>
+                </Label>
+                <Label fx:id="dateLabel" styleClass="forum-date" text="Date" />
+                <Label fx:id="categoryLabel" styleClass="forum-category" text="Catégorie" />
+                <Label fx:id="descriptionLabel" styleClass="forum-description" text="Description" wrapText="true" />
+                <ImageView fx:id="forumImageView" fitHeight="100.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                <HBox alignment="CENTER" spacing="10.0">
+                    <children>
+                        <Button fx:id="editButton" mnemonicParsing="false" styleClass="forum-edit-button" text="Modifier" />
+                        <Button fx:id="deleteButton" mnemonicParsing="false" styleClass="forum-delete-button" text="Supprimer" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

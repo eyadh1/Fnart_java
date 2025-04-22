@@ -1,43 +1,45 @@
 package tn.esprit.models;
 
-import tn.esprit.enumerations.Role;
-
 import java.util.Date;
+import java.util.List;
 
 public class User {
-
     private int id;
-    private String nom, email, password, phone, gender, status;
-    private Role role;
-    private Date DateOfBirth;
+    private String nom;
+    private String email;
+    private String password;
+    private List<String> roles; // ou String[] roles selon votre besoin
+    private String phone;
+    private Date dateofbirth; // ou LocalDate si vous utilisez Java 8+
+    private Gender gender; // ou List<String> si le genre peut contenir plusieurs valeurs
 
-    public User() {
-        // Default constructor
-    }
+    // Constructeur avec id seulement (peut être gardé pour la compatibilité)
     public User(int id) {
         this.id = id;
     }
 
-    public User(int id,String nom, String email, String password, String phone, String gender) {
+    public User() {
+
+    }
+
+    public enum Gender {
+        MALE, FEMALE
+    }
+
+    // Constructeur complet
+    public User(int id, String nom, String email, String password, List<String> roles,
+                String phone, Date dateofbirth, String gender) {
         this.id = id;
         this.nom = nom;
         this.email = email;
         this.password = password;
+        this.roles = roles;
         this.phone = phone;
-        this.gender = gender;
-        this.status = "PENDING";
+        this.dateofbirth = dateofbirth;
+        this.gender = Gender.valueOf(gender);
     }
 
-    public User(String nom, String email, String password, String phone, String gender, Role role) {
-        this.nom = nom;
-        this.email = email;
-        this.password = password;
-        this.phone = phone;
-        this.gender = gender;
-        this.role = role;
-        this.status = "PENDING";
-    }
-
+    // Getters et setters pour tous les attributs
     public int getId() {
         return id;
     }
@@ -70,6 +72,14 @@ public class User {
         this.password = password;
     }
 
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
+
     public String getPhone() {
         return phone;
     }
@@ -78,28 +88,20 @@ public class User {
         this.phone = phone;
     }
 
-    public String getGender() {
+    public Date getDateofbirth() {
+        return dateofbirth;
+    }
+
+    public void setDateofbirth(Date dateofbirth) {
+        this.dateofbirth = dateofbirth;
+    }
+
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     @Override
@@ -108,11 +110,12 @@ public class User {
                 "id=" + id +
                 ", nom='" + nom + '\'' +
                 ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
+                ", password='[PROTECTED]'" +
+                ", roles=" + roles +
                 ", phone='" + phone + '\'' +
+                ", dateofbirth=" + dateofbirth +
                 ", gender='" + gender + '\'' +
-                ", role=" + role +
-                ", status='" + status + '\'' +
                 '}';
     }
+
 }

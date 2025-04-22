@@ -1,14 +1,14 @@
 package tn.esprit.interfaces;
 
+
+
 import java.sql.SQLException;
-import java.util.List;
+import java.util.Set;
 
-public interface IService<T> {
-
-
-    void add(T t);
-    List<T> getAll() throws SQLException;
-    void update (T t);
-    void delete (T t);
-
+public interface IService <T> {
+    public void ajouter(T t) throws SQLException;
+    public void modifier(T t) throws SQLException;
+    public void supprimer(int id) throws SQLException;
+    public T getOneById(int id) throws SQLException;
+    public Set<T> getAll() throws SQLException;
 }

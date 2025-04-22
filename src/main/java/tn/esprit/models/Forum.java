@@ -8,44 +8,36 @@ public class Forum {
     private int id;
     private Date date_f;
     private String titre_f;
-    private User user; // Association avec la classe User
+    private User user; // Jointure avec User (composition)
     private String categorie_f;
     private String description_f;
-    private String image_f; // Ajout de l'attribut image_f pour stocker le chemin ou l'URL de l'image
-    public Forum(Date date_f, String description_f, String categorie_f, String titre_f) {
-        this.date_f = date_f;
-        this.description_f = description_f;
-        this.categorie_f = categorie_f;
-        this.titre_f = titre_f;
-    }
-
-    public String getFormattedDate() {
-        if (date_f != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            return sdf.format(date_f);  // Retourner la date formatée
-        }
-        return "";
-    }
+    private String image_f;
 
     // Constructeur par défaut
-    public Forum(int id, String titre_f, String categorie_f) {
+    public Forum() {
+        this.user = new User(); // Initialisation par défaut
+    }
+
+    // Constructeur avec ID seul
+    public Forum(int id) {
         this.id = id;
+        this.user = new User(); // Initialisation par défaut
+    }
+
+    // Constructeur pour création sans ID (insertion BD)
+    public Forum(Date date_f, String titre_f, User user, String categorie_f,
+                 String description_f, String image_f) {
         this.date_f = date_f;
         this.titre_f = titre_f;
+        this.user = user;
         this.categorie_f = categorie_f;
         this.description_f = description_f;
         this.image_f = image_f;
-        this.user = new User(1); // ID utilisateur statique
     }
 
-    // Constructeur avec ID
-    public Forum(int id) {
-        this.id = id;
-        this.user = new User(1); // ID utilisateur statique
-    }
-
-    // Constructeur avec tous les attributs
-    public Forum(int id, Date date_f, String titre_f, User user, String categorie_f, String description_f, String image_f) {
+    // Constructeur complet avec ID
+    public Forum(int id, Date date_f, String titre_f, User user,
+                 String categorie_f, String description_f, String image_f) {
         this.id = id;
         this.date_f = date_f;
         this.titre_f = titre_f;
@@ -55,28 +47,28 @@ public class Forum {
         this.image_f = image_f;
     }
 
-    // Constructeur avec ID sans User
-    public Forum(int id, Date date_f, String titre_f, String categorie_f, String description_f, String image_f) {
-        this.id = id;
-        this.date_f = date_f;
-        this.titre_f = titre_f;
-        this.categorie_f = categorie_f;
-        this.description_f = description_f;
-        this.image_f = image_f;
-        this.user = new User(1);
-    }
+    // Constructeur simplifié for ajouterForumAction  pour ajouter forum
 
-    // Constructeur sans ID (pour insertion en BD)
     public Forum(Date date_f, String titre_f, String categorie_f, String description_f, String image_f) {
         this.date_f = date_f;
         this.titre_f = titre_f;
         this.categorie_f = categorie_f;
         this.description_f = description_f;
         this.image_f = image_f;
-        this.user = new User(1);
+    }
+    // Constructeur simplifié pour tests
+    public Forum(String titre_f, String categorie_f, String description_f) {
+        this.titre_f = titre_f;
+        this.categorie_f = categorie_f;
+        this.description_f = description_f;
+        this.user = new User(); // Initialisation par défaut
+        this.date_f = new Date(); // Date courante
     }
 
-    // Getters et Setters
+    public Forum(int id, String titreF, String descriptionF) {
+    }
+
+    // Getters & Setters
     public int getId() {
         return id;
     }
@@ -106,6 +98,9 @@ public class Forum {
     }
 
     public void setUser(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
         this.user = user;
     }
 
@@ -133,7 +128,15 @@ public class Forum {
         this.image_f = image_f;
     }
 
-    // Méthodes supplémentaires pour liaison avec TableView
+    // Méthode utilitaire pour la date formatée
+    public String getFormattedDate() {
+        if (date_f != null) {
+            return new SimpleDateFormat("dd/MM/yyyy").format(date_f);
+        }
+        return "";
+    }
+
+    // Méthodes pour affichage dans TableView
     public String getTitle() {
         return titre_f;
     }
@@ -146,6 +149,11 @@ public class Forum {
         return categorie_f;
     }
 
+    public String getAuthorName() {
+        return user != null ? user.getNom() : "Unknown";
+    }
+
+    // Equals & HashCode basés sur l'ID
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -163,12 +171,12 @@ public class Forum {
     public String toString() {
         return "Forum{" +
                 "id=" + id +
-                ", date_f=" + date_f +
+                ", date_f=" + getFormattedDate() +
                 ", titre_f='" + titre_f + '\'' +
-                ", user=" + (user != null ? user.getId() : "null") +
+                ", user=" + (user != null ? user.getNom() + " (ID:" + user.getId() + ")" : "null") +
                 ", categorie_f='" + categorie_f + '\'' +
-                ", description_f='" + description_f + '\'' +
-                ", image_f='" + image_f + '\'' +
+                ", description_f='" + (description_f != null ? description_f.substring(0, Math.min(description_f.length(), 30)) + "..." : "null") +
+                ", image_f='" + (image_f != null ? "[" + image_f.length() + " chars]" : "null") +
                 '}';
     }
 }

@@ -1,6 +1,6 @@
 package tn.esprit.services;
 
-import tn.esprit.models.CommentaireF;
+import tn.esprit.models.Commentaire_f;
 import tn.esprit.models.User;
 import tn.esprit.models.Forum;
 import tn.esprit.utils.MyDataBase;
@@ -14,11 +14,11 @@ public class ServiceCommentaire_f {
     private Connection conn;
 
     public ServiceCommentaire_f() {
-        this.conn = MyDataBase.getInstance().getCnx(); // Correct initialization using MyDataBase
+        this.conn = MyDataBase.getInstance().getCnx(); // Correct initialization of conn
     }
 
     // **Add a Comment**
-    public void ajouter(CommentaireF commentaire) {
+    public void ajouter(Commentaire_f commentaire) {
         String query = "INSERT INTO commentaire_f (id_user_id, id_forum_id, date_c, texte_c) VALUES (?, ?, ?, ?)";
         try {
             PreparedStatement pst = conn.prepareStatement(query);
@@ -35,7 +35,7 @@ public class ServiceCommentaire_f {
     }
 
     // **Modify a Comment**
-    public void modifier(CommentaireF commentaire) {
+    public void modifier(Commentaire_f commentaire) {
         String query = "UPDATE commentaire_f SET texte_c = ?, date_c = ? WHERE id = ?";
         try {
             PreparedStatement pst = conn.prepareStatement(query);
@@ -63,16 +63,17 @@ public class ServiceCommentaire_f {
         }
     }
 
+
     // **Retrieve all Comments**
-    public List<CommentaireF> afficher() {
-        List<CommentaireF> commentaires = new ArrayList<>();
+    public List<Commentaire_f> afficher() {
+        List<Commentaire_f> commentaires = new ArrayList<>();
         String query = "SELECT * FROM commentaire_f";
         try {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
 
             while (rs.next()) {
-                CommentaireF commentaire = new CommentaireF(
+                Commentaire_f commentaire = new Commentaire_f(
                         rs.getInt("id"),
                         this.getUserById(rs.getInt("id_user_id")),  // Fetch user by ID
                         this.getForumById(rs.getInt("id_forum_id")), // Fetch forum by ID
@@ -88,13 +89,13 @@ public class ServiceCommentaire_f {
     }
 
     // **Retrieve all Comments using getAll()**
-    public List<CommentaireF> getAll() {
+    public List<Commentaire_f> getAll() {
         return afficher(); // Reusing the afficher() method
     }
 
     // **Retrieve Comments by Forum ID**
-    public List<CommentaireF> getCommentairesByForumId(int forumId) {
-        List<CommentaireF> commentaires = new ArrayList<>();
+    public List<Commentaire_f> getCommentairesByForumId(int forumId) {
+        List<Commentaire_f> commentaires = new ArrayList<>();
         String query = "SELECT * FROM commentaire_f WHERE id_forum_id = ?";
         try {
             PreparedStatement pst = conn.prepareStatement(query);
@@ -102,7 +103,7 @@ public class ServiceCommentaire_f {
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
-                CommentaireF commentaire = new CommentaireF(
+                Commentaire_f commentaire = new Commentaire_f(
                         rs.getInt("id"),
                         this.getUserById(rs.getInt("id_user_id")),  // Fetch user by ID
                         this.getForumById(rs.getInt("id_forum_id")), // Fetch forum by ID
@@ -127,16 +128,12 @@ public class ServiceCommentaire_f {
             ResultSet rs = pst.executeQuery();
 
             if (rs.next()) {
-                user = new User();
-                user.setId(rs.getInt("id"));
-                user.setNom(rs.getString("nom"));
-                user.setEmail(rs.getString("email"));
-                // Set other user properties as needed
+                user = new User(rs.getInt("id")); // Only using the ID, you can add more attributes if needed
             }
         } catch (SQLException e) {
             System.err.println("Error fetching user: " + e.getMessage());
         }
-        return user != null ? user : new User(userId); // Fall back to simple ID-only User if not found
+        return user;
     }
 
     // **Helper method to get Forum by ID**
@@ -149,19 +146,11 @@ public class ServiceCommentaire_f {
             ResultSet rs = pst.executeQuery();
 
             if (rs.next()) {
-                forum = new Forum(
-                        rs.getInt("id"),
-                        rs.getDate("date_f"),
-                        rs.getString("titre_f"),
-                        new User(rs.getInt("id_user_id")),
-                        rs.getString("categorie_f"),
-                        rs.getString("description_f"),
-                        rs.getString("image_f")
-                );
+                forum = new Forum(rs.getInt("id"), rs.getString("titre_f"), rs.getString("description_f"));
             }
         } catch (SQLException e) {
             System.err.println("Error fetching forum: " + e.getMessage());
         }
-        return forum != null ? forum : new Forum(forumId); // Fall back to simple ID-only Forum if not found
+        return forum;
     }
 }
