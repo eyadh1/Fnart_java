@@ -16,6 +16,9 @@ public class DashboardController {
     private VBox contentArea;
 
     @FXML
+    private BorderPane mainBorderPane;
+
+    @FXML
     public void initialize() {
         // Vérification du chargement du CSS
         try {
@@ -30,40 +33,72 @@ public class DashboardController {
     @FXML
     private void handleAddBeneficiaire() {
         try {
-            // Charger la nouvelle vue
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddBeneficiaire.fxml"));
             Parent view = loader.load();
-            
-            // Récupérer le BorderPane parent
-            BorderPane borderPane = (BorderPane) contentArea.getParent();
-            if (borderPane != null) {
-                borderPane.setCenter(view);
+
+            if (mainBorderPane != null) {
+                mainBorderPane.setCenter(view);
                 System.out.println("Navigation vers AddBeneficiaire");
             } else {
-                showError("Erreur", "Impossible de trouver le conteneur principal", null);
+                showError("Erreur", "Le conteneur principal est null", null);
             }
         } catch (IOException e) {
             showError("Erreur", "Impossible de charger la vue AddBeneficiaire", e);
         }
     }
 
+
     @FXML
     private void handleAddDons() {
         try {
-            // Charger la nouvelle vue
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddDons.fxml"));
             Parent view = loader.load();
+
+            if (mainBorderPane != null) {
+                mainBorderPane.setCenter(view);
+                System.out.println("Navigation vers AddDons");
+            } else {
+                showError("Erreur", "Le conteneur principal est null", null);
+            }
+        } catch (IOException e) {
+            showError("Erreur", "Impossible de charger la vue AddDons", e);
+        }
+    }
+
+
+    @FXML
+    private void handleListeBeneficiaire() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ListeBeneficiaires.fxml"));
+            Parent view = loader.load();
             
-            // Récupérer le BorderPane parent
             BorderPane borderPane = (BorderPane) contentArea.getParent();
             if (borderPane != null) {
                 borderPane.setCenter(view);
-                System.out.println("Navigation vers AddDons");
+                System.out.println("Navigation vers ListeBeneficiaires");
             } else {
                 showError("Erreur", "Impossible de trouver le conteneur principal", null);
             }
         } catch (IOException e) {
-            showError("Erreur", "Impossible de charger la vue AddDons", e);
+            showError("Erreur", "Impossible de charger la vue ListeBeneficiaires", e);
+        }
+    }
+
+    @FXML
+    private void handleListeDons() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ListeDons.fxml"));
+            Parent view = loader.load();
+            
+            BorderPane borderPane = (BorderPane) contentArea.getParent();
+            if (borderPane != null) {
+                borderPane.setCenter(view);
+                System.out.println("Navigation vers ListeDons");
+            } else {
+                showError("Erreur", "Impossible de trouver le conteneur principal", null);
+            }
+        } catch (IOException e) {
+            showError("Erreur", "Impossible de charger la vue ListeDons", e);
         }
     }
 

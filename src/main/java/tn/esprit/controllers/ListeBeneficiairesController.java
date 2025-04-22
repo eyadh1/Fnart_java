@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -40,14 +41,15 @@ public class ListeBeneficiairesController implements Initializable {
     @FXML
     private Button backButton;
 
+    @FXML
+    private AnchorPane rootPane;
+
     private final ServicesBeneficiaires servicesBeneficiaires = new ServicesBeneficiaires();
     private ObservableList<Beneficiaires> beneficiairesList;
     private FilteredList<Beneficiaires> filteredBeneficiaires;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        String cssPath = getClass().getResource("/css/style.css").toExternalForm();
-        System.out.println("CSS file found at: " + cssPath);
         sortChoice.getItems().addAll("Nom (A-Z)", "Nom (Z-A)");
         sortChoice.setValue("Nom (A-Z)");
 
@@ -85,7 +87,6 @@ public class ListeBeneficiairesController implements Initializable {
                                 setGraphic(null);
                             } else {
                                 HBox mainBox = new HBox(10);
-                                mainBox.setStyle("-fx-background-color: #A6695B; -fx-padding: 10; -fx-background-radius: 5;");
 
                                 VBox imageContainer = new VBox();
                                 imageContainer.setPrefWidth(100);
@@ -112,35 +113,28 @@ public class ListeBeneficiairesController implements Initializable {
                                 VBox contentBox = new VBox(5);
 
                                 Label nameLabel = new Label(item.getNom());
-                                nameLabel.setStyle("-fx-text-fill: #BA9D1F; -fx-font-weight: bold;");
 
                                 HBox contactBox = new HBox(10);
                                 Label emailLabel = new Label("Email: " + item.getEmail());
                                 Label phoneLabel = new Label("Téléphone: " + item.getTelephone());
-                                emailLabel.setStyle("-fx-text-fill: #F2F2F2;");
-                                phoneLabel.setStyle("-fx-text-fill: #F2F2F2;");
+
                                 contactBox.getChildren().addAll(emailLabel, phoneLabel);
 
                                 HBox detailsBox = new HBox(10);
                                 Label causeLabel = new Label("Cause: " + item.getCause());
                                 Label associationLabel = new Label("Association: " + item.getEstElleAssociation());
                                 Label valeurLabel = new Label("Valeur Demandée: " + item.getValeurDemande() + " DT");
-                                causeLabel.setStyle("-fx-text-fill: #34495E;");
-                                associationLabel.setStyle("-fx-text-fill: #34495E;");
-                                valeurLabel.setStyle("-fx-text-fill: #34495E; -fx-font-weight: bold;");
+
                                 detailsBox.getChildren().addAll(causeLabel, associationLabel, valeurLabel);
 
                                 VBox descriptionBox = new VBox(5);
                                 Label descriptionTitle = new Label("Description:");
-                                descriptionTitle.setStyle("-fx-text-fill: #34495E; -fx-font-weight: bold;");
                                 Label descriptionLabel = new Label(item.getDescription());
-                                descriptionLabel.setStyle("-fx-text-fill: #34495E;");
                                 descriptionLabel.setWrapText(true);
                                 descriptionBox.getChildren().addAll(descriptionTitle, descriptionLabel);
 
                                 HBox actionBox = new HBox(10);
                                 Button updateButton = new Button("Modifier");
-                                updateButton.setStyle("-fx-background-color: #BA9D1F; -fx-text-fill: #F2F2F2; -fx-padding: 5; -fx-background-radius: 5;");
                                 updateButton.setOnAction(event -> openUpdateForm(item));
                                 actionBox.getChildren().add(updateButton);
 
@@ -190,11 +184,9 @@ public class ListeBeneficiairesController implements Initializable {
     @FXML
     private void handleBack() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Dashboard.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) backButton.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
+            Parent fxml = FXMLLoader.load(getClass().getResource("/AddBeneficiaire.fxml"));
+            rootPane.getChildren().removeAll();
+            rootPane.getChildren().setAll(fxml);
         } catch (IOException e) {
             showAlert("Erreur", "Impossible de retourner à l'accueil: " + e.getMessage());
             e.printStackTrace();

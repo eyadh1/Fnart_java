@@ -15,6 +15,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -40,6 +41,9 @@ public class ListeDonsController implements Initializable {
     @FXML
     private Button backButton;
 
+    @FXML
+    private AnchorPane rootPane;
+
     private final ServicesDons servicesDons = new ServicesDons();
     private ObservableList<Dons> donsList;
     private FilteredList<Dons> filteredDons;
@@ -48,30 +52,15 @@ public class ListeDonsController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         String cssPath = getClass().getResource("/css/style.css").toExternalForm();
         System.out.println("CSS file found at: " + cssPath);
-        // Initialize type filter choices
-        typeFilterChoice.getItems().addAll("Tous", "Argent", "Materiel", "Locale", "Oeuvre");
-        typeFilterChoice.setValue("Tous");
 
-        // Load dons
         loadDons();
-
-        // Set up search functionality
-        setupSearch();
-
-        // Set up type filtering
-        setupTypeFilter();
-
-        // Set up back button
         backButton.setOnAction(event -> handleBack());
     }
 
     private void loadDons() {
         try {
             donsList = FXCollections.observableArrayList(servicesDons.getAll());
-            filteredDons = new FilteredList<>(donsList, p -> true);
-
-            // Set up the list view cell factory
-            donsListView.setCellFactory(new Callback<ListView<Dons>, ListCell<Dons>>() {
+           donsListView.setCellFactory(new Callback<ListView<Dons>, ListCell<Dons>>() {
                 @Override
                 public ListCell<Dons> call(ListView<Dons> param) {
                     return new ListCell<Dons>() {
@@ -83,21 +72,16 @@ public class ListeDonsController implements Initializable {
                                 setGraphic(null);
                             } else {
                                 VBox vbox = new VBox(5);
-                                vbox.setStyle("-fx-background-color: #A6695B; -fx-padding: 10; -fx-background-radius: 5;");
 
                                 Label typeLabel = new Label("Type: " + item.getType());
-                                typeLabel.setStyle("-fx-text-fill: #BA9D1F; -fx-font-weight: bold;");
 
                                 HBox valueBox = new HBox(10);
                                 Label valeurLabel = new Label("Valeur: " + item.getValeur());
-                                valeurLabel.setStyle("-fx-text-fill: #F2F2F2;");
                                 valueBox.getChildren().add(valeurLabel);
 
                                 Label beneficiaireLabel = new Label("Bénéficiaire: " + item.getBeneficiaire().getNom());
-                                beneficiaireLabel.setStyle("-fx-text-fill: #F2F2F2;");
 
                                 Label descriptionLabel = new Label(item.getDescription());
-                                descriptionLabel.setStyle("-fx-text-fill: #F2F2F2;");
                                 descriptionLabel.setWrapText(true);
 
                                 vbox.getChildren().addAll(typeLabel, valueBox, beneficiaireLabel, descriptionLabel);
@@ -117,40 +101,15 @@ public class ListeDonsController implements Initializable {
         }
     }
 
-    private void setupSearch() {
-        searchTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredDons.setPredicate(don -> {
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
-                String lowerCaseFilter = newValue.toLowerCase();
-                return don.getType().toLowerCase().contains(lowerCaseFilter) ||
-                       don.getDescription().toLowerCase().contains(lowerCaseFilter) ||
-                       don.getBeneficiaire().getNom().toLowerCase().contains(lowerCaseFilter) ||
-                       don.getValeur().toString().contains(lowerCaseFilter);
-            });
-        });
-    }
 
-    private void setupTypeFilter() {
-        typeFilterChoice.valueProperty().addListener((observable, oldValue, newValue) -> {
-            filteredDons.setPredicate(don -> {
-                if ("Tous".equals(newValue)) {
-                    return true;
-                }
-                return don.getType().equals(newValue);
-            });
-        });
-    }
+
 
     @FXML
     private void handleBack() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddDons.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) backButton.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
+            Parent fxml = FXMLLoader.load(getClass().getResource("/AddDons.fxml"));
+            rootPane.getChildren().removeAll();
+            rootPane.getChildren().setAll(fxml);
         } catch (IOException e) {
             e.printStackTrace();
         }

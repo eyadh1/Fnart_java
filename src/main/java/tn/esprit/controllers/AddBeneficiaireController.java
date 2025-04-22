@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import tn.esprit.models.Beneficiaires;
 import tn.esprit.services.ServicesBeneficiaires;
@@ -55,6 +56,8 @@ public class AddBeneficiaireController implements Initializable {
     private Button uploadButton;
     @FXML
     private Button clearButton;
+    @FXML
+    private AnchorPane rootPane;
 
     // Email validation pattern
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
@@ -237,12 +240,11 @@ public class AddBeneficiaireController implements Initializable {
     @FXML
     private void handleListeBene() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ListeBeneficiaires.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) ListeBenebutton.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
+            Parent fxml = FXMLLoader.load(getClass().getResource("/ListeBeneficiaires.fxml"));
+            rootPane.getChildren().removeAll();
+            rootPane.getChildren().setAll(fxml);
         } catch (IOException e) {
+            showAlert("Erreur", "Impossible de charger la vue ListeBeneficiaires", Alert.AlertType.ERROR);
             e.printStackTrace();
         }
     }

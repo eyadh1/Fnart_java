@@ -41,7 +41,6 @@
                   
                   <Button fx:id="ListeButton" mnemonicParsing="false" onAction="#handleListe" text="Liste des Dons" styleClass="button"/>
                   
-                  <Button fx:id="ListeBeneficiairesButton" mnemonicParsing="false" onAction="#handleListeBeneficiaires" text="Liste des Bénéficiaires" styleClass="button"/>
                </HBox>
                <Button fx:id="retourHome" mnemonicParsing="false" onAction="#handleBack" text="Retour" styleClass="button">
                   <VBox.margin>

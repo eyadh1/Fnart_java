@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import tn.esprit.models.Beneficiaires;
@@ -43,6 +44,10 @@ public class AddDonsController implements Initializable {
 
     @FXML
     private Button ListeBeneficiairesButton;
+
+    @FXML
+    private AnchorPane rootPane;
+
 
     private final ServicesDons servicesDons = new ServicesDons();
     private final ServicesBeneficiaires servicesBeneficiaires = new ServicesBeneficiaires();
@@ -172,11 +177,10 @@ public class AddDonsController implements Initializable {
     @FXML
     private void handleListe() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ListeDons.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) ListeButton.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
+            Parent fxml = FXMLLoader.load(getClass().getResource("/ListeDons.fxml"));
+            rootPane.getChildren().removeAll();
+            rootPane.getChildren().setAll(fxml);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -185,11 +189,9 @@ public class AddDonsController implements Initializable {
     @FXML
     private void handleListeBeneficiaires() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ListeBeneficiaires.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) ListeBeneficiairesButton.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
+            Parent fxml = FXMLLoader.load(getClass().getResource("/ListeBeneficiaires.fxml"));
+            rootPane.getChildren().removeAll();
+            rootPane.getChildren().setAll(fxml);
         } catch (IOException e) {
             e.printStackTrace();
         }
