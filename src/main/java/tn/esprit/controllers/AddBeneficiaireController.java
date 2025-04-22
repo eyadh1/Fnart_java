@@ -276,7 +276,7 @@ public class AddBeneficiaireController implements Initializable {
 
     public void handleBack() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Home.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Dashboard.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) retourHome.getScene().getWindow();
             stage.setScene(new Scene(root));

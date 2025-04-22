@@ -19,14 +19,14 @@
             <Label text="🏠 Home" styleClass="menu-item"/>
             <Label text="🖼️ My Artworks" styleClass="menu-item"/>
             <Label text="❤️ Favorites" styleClass="menu-item"/>
-            <Label text="Devenir un beneficiaire" styleClass="menu-item" onMouseClicked="#handleListeBeneficiaire"/>
+            <Label text="Devenir un beneficiaire" styleClass="menu-item" onMouseClicked="#handleAddBeneficiaire"/>
             <Label text="Faire un don" styleClass="menu-item" onMouseClicked="#handleAddDons"/>
             <Label text="⚙️ Settings" styleClass="menu-item"/>
         </VBox>
     </left>
 
     <center>
-        <VBox spacing="20" styleClass="content-area">
+        <VBox fx:id="contentArea" spacing="20" styleClass="content-area">
             <Label text="Welcome to Your Art Therapy Space" styleClass="header"/>
             <HBox spacing="20">
                 <ImageView fx:id="featuredArtwork" fitHeight="200" fitWidth="300"/>

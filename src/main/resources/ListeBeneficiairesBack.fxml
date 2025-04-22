@@ -4,27 +4,27 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #F5F5F5;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.ListeBeneficiairesBackController">
-    <VBox alignment="CENTER" spacing="20" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
-        <MenuBar style="-fx-background-color: #1A237E;">
-            <Menu text="Statut" style="-fx-text-fill: white;">
-                <MenuItem text="En attente" onAction="#handleFilterEnAttente" style="-fx-text-fill: #1A237E;"/>
-                <MenuItem text="Accepté" onAction="#handleFilterAccepte" style="-fx-text-fill: #1A237E;"/>
-                <MenuItem text="Refusé" onAction="#handleFilterRefuse" style="-fx-text-fill: #1A237E;"/>
+<AnchorPane prefHeight="600.0" prefWidth="800.0"  xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.ListeBeneficiairesBackController">
+    <VBox alignment="CENTER" spacing="20" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0" stylesheets="@css/style.css">
+        <MenuBar stylesheets="@css/style.css">
+            <Menu text="Statut" >
+                <MenuItem text="En attente" onAction="#handleFilterEnAttente" />
+                <MenuItem text="Accepté" onAction="#handleFilterAccepte" />
+                <MenuItem text="Refusé" onAction="#handleFilterRefuse"/>
             </Menu>
         </MenuBar>
         
-        <Label text="Liste des Bénéficiaires" style="-fx-text-fill: #1A237E; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+        <Label text="Liste des Bénéficiaires" />
         
         <HBox spacing="10" alignment="CENTER">
-            <TextField fx:id="searchTextField" promptText="Rechercher..." style="-fx-background-color: white; -fx-text-fill: #1A237E;"/>
+            <TextField fx:id="searchTextField" promptText="Rechercher..."/>
         </HBox>
         
-        <ListView fx:id="beneficiairesListView" VBox.vgrow="ALWAYS" style="-fx-background-color: white; -fx-background-radius: 5;"/>
+        <ListView fx:id="beneficiairesListView" VBox.vgrow="ALWAYS" />
         
         <HBox spacing="20" alignment="CENTER">
-            <Button fx:id="addButton" text="Ajouter" onAction="#handleAdd" style="-fx-background-color: #1A237E; -fx-text-fill: white; -fx-font-weight: bold;"/>
-            <Button fx:id="backButton" text="Retour" onAction="#handleBack" style="-fx-background-color: #1A237E; -fx-text-fill: white; -fx-font-weight: bold;"/>
+            <Button fx:id="addButton" text="Ajouter" onAction="#handleAdd"/>
+            <Button fx:id="backButton" text="Retour" onAction="#handleBack" />
         </HBox>
     </VBox>
 </AnchorPane> 

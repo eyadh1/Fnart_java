@@ -252,7 +252,7 @@ public class ListeBeneficiairesBackController implements Initializable {
     private void handleBack() {
         try {
             System.out.println("Retour à l'accueil...");
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Home.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/HomeBack.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) backButton.getScene().getWindow();
             stage.setScene(new Scene(root));

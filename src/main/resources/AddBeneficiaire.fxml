@@ -5,12 +5,9 @@
 <?import javafx.geometry.Insets?>
 
 <?import javafx.scene.image.ImageView?>
-<BorderPane xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.AddBeneficiaireController" stylesheets="@../css/style.css">
-   <left>
-      <fx:include source="SidebarTemplate.fxml"/>
-   </left>
+<BorderPane xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.AddBeneficiaireController" stylesheets="@css/style.css">
    <center>
-      <AnchorPane fx:id="rootPane" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #EFDAC7;">
+      <AnchorPane fx:id="rootPane" prefHeight="600.0" prefWidth="800.0" >
          <children>
             <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="800.0" spacing="20.0">
                <padding>
