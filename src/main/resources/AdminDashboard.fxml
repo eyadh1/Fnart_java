@@ -15,145 +15,209 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 
-<BorderPane prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.AdminDashboardController">
-    <center>
-        <VBox spacing="15.0" BorderPane.alignment="CENTER">
-            <padding>
-                <Insets top="15.0" right="15.0" bottom="15.0" left="15.0"/>
-            </padding>
+<BorderPane stylesheets="@/styles/AdminDashboard.css" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.AdminDashboardController">
+    <top>
+        <AnchorPane prefHeight="70.0">
             <children>
-                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                <!-- Main top bar HBox -->
+                <HBox alignment="CENTER_LEFT" spacing="20.0" style="-fx-background-color: #310E10; -fx-padding: 15 25;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <children>
-                        <Label text="Admin Dashboard" textFill="#2c3e50">
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@assets/paintingofawoman.jpeg" />
+                            </image>
+                        </ImageView>
+                        <Label text="Art Therapy Admin" textFill="WHITE">
                             <font>
-                                <Font name="System Bold" size="20.0" />
+                                <Font name="System Bold" size="22.0" />
                             </font>
                         </Label>
-                        <TextField fx:id="searchField" promptText="Search users..." HBox.hgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" onAction="#handleSearch" text="Search" />
-                        <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#handleRefresh" text="Refresh" />
-                        <Button mnemonicParsing="false" onAction="#handleLogout" text="Logout" />
+                        <HBox alignment="CENTER_RIGHT" spacing="15.0" HBox.hgrow="ALWAYS">
+                            <TextField fx:id="searchField" promptText="Search users..." prefWidth="250.0" />
+                            <Button mnemonicParsing="false" onAction="#handleSearch" text="Search" />
+                            <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#handleRefresh" text="Refresh" />
+                            <Button mnemonicParsing="false" onAction="#handleLogout" text="Logout" />
+
+                            <!-- Profile Section -->
+                            <VBox fx:id="profileContainer" alignment="CENTER" styleClass="profile-container">
+                                <ImageView fx:id="profileImage" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" styleClass="profile-image" onMouseClicked="#toggleProfilePanel">
+                                    <image>
+                                        <Image url="@assets/paintingofawoman.jpeg" />
+                                    </image>
+                                </ImageView>
+                            </VBox>
+                        </HBox>
                     </children>
                 </HBox>
 
-
-                <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
-                    <tabs>
-                        <Tab text="All Users">
-                            <content>
-                                <BorderPane>
-                                    <center>
-                                        <TableView fx:id="allUsersTable" prefHeight="200.0" prefWidth="200.0">
-                                            <columns>
-                                                <TableColumn fx:id="allNameColumn" prefWidth="150.0" text="Name" />
-                                                <TableColumn fx:id="allEmailColumn" prefWidth="200.0" text="Email" />
-                                                <TableColumn fx:id="allRoleColumn" prefWidth="120.0" text="Role" />
-                                                <TableColumn fx:id="allStatusColumn" prefWidth="120.0" text="Status" />
-                                                <TableColumn fx:id="allPhoneColumn" prefWidth="120.0" text="Phone" />
-                                                <TableColumn fx:id="allGenderColumn" prefWidth="120.0" text="Gender" />
-                                            </columns>
-                                        </TableView>
-                                    </center>
-                                    <right>
-                                        <VBox spacing="10.0" prefWidth="200.0" alignment="TOP_CENTER">
-                                            <padding>
-                                                <Insets top="0.0" right="0.0" bottom="0.0" left="10.0"/>
-                                            </padding>
-                                            <children>
-                                                <Button fx:id="updateButton" mnemonicParsing="false" onAction="#handleUpdate" prefWidth="180.0" text="Update Selected User" />
-                                                <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDelete" prefWidth="180.0" text="Delete Selected User" />
-                                            </children>
-                                        </VBox>
-                                    </right>
-                                    <padding>
-                                        <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
-                                    </padding>
-                                </BorderPane>
-                            </content>
-                        </Tab>
-                        <Tab text="Pending Approvals">
-                            <content>
-                                <BorderPane>
-                                    <center>
-                                        <TableView fx:id="pendingUsersTable" prefHeight="200.0" prefWidth="200.0">
-                                            <columns>
-                                                <TableColumn fx:id="nameColumn" prefWidth="150.0" text="Name" />
-                                                <TableColumn fx:id="emailColumn" prefWidth="200.0" text="Email" />
-                                                <TableColumn fx:id="roleColumn" prefWidth="120.0" text="Role" />
-                                                <TableColumn fx:id="phoneColumn" prefWidth="114.0" text="Phone" />
-                                            </columns>
-                                        </TableView>
-                                    </center>
-                                    <right>
-                                        <VBox spacing="10.0" prefWidth="200.0" alignment="TOP_CENTER">
-                                            <padding>
-                                                <Insets top="0.0" right="0.0" bottom="0.0" left="10.0"/>
-                                            </padding>
-                                            <children>
-                                                <Button fx:id="approveButton" mnemonicParsing="false" onAction="#handleApprove" prefWidth="180.0" text="Approve Selected User" />
-                                                <Button fx:id="rejectButton" mnemonicParsing="false" onAction="#handleReject" prefWidth="180.0" text="Reject Selected User" />
-                                            </children>
-                                        </VBox>
-                                    </right>
-                                    <padding>
-                                        <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
-                                    </padding>
-                                </BorderPane>
-                            </content>
-                        </Tab>
-                    </tabs>
-                </TabPane>
-
-                <HBox spacing="20.0" VBox.vgrow="SOMETIMES">
+                <!-- Profile Panel - Now positioned absolutely in the top AnchorPane -->
+                <VBox fx:id="profilePanel" styleClass="profile-panel" visible="false" managed="false"
+                      AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="70.0">
                     <children>
-                        <VBox spacing="10.0" prefWidth="250.0" HBox.hgrow="NEVER">
-                            <children>
-                                <Label text="User Statistics">
+                        <ImageView fx:id="profileImageLarge" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true" styleClass="profile-image-large">
+                            <image>
+                                <Image url="@assets/paintingofawoman.jpeg" />
+                            </image>
+                        </ImageView>
+                        <Label fx:id="adminNameLabel" text="Admin User" styleClass="profile-name" />
+                        <Label fx:id="adminEmailLabel" text="admin@arttherapy.com" styleClass="profile-email" />
+                        <HBox spacing="10.0" alignment="CENTER">
+                            <Button mnemonicParsing="false" onAction="#handleEditProfile" text="Edit Profile" />
+                            <Button mnemonicParsing="false" onAction="#handleLogout" text="Sign Out" styleClass="sign-out-button" />
+                        </HBox>
+                    </children>
+                    <padding>
+                        <Insets top="15.0" right="15.0" bottom="15.0" left="15.0"/>
+                    </padding>
+                </VBox>
+            </children>
+        </AnchorPane>
+    </top>
+
+    <center>
+        <VBox spacing="15.0" styleClass="container" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets top="15.0" right="15.0" bottom="15.0" left="15.0"/>
+            </padding>
+
+            <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+                <tabs>
+                    <Tab text="All Users">
+                        <content>
+                            <BorderPane>
+                                <center>
+                                    <TableView fx:id="allUsersTable" prefHeight="450.0" prefWidth="200.0">
+                                        <columns>
+                                            <TableColumn fx:id="allNameColumn" prefWidth="120.0" text="Name" />
+                                            <TableColumn fx:id="allEmailColumn" prefWidth="150.0" text="Email" />
+                                            <TableColumn fx:id="allRoleColumn" prefWidth="120.0" text="Role" />
+                                            <TableColumn fx:id="allStatusColumn" prefWidth="120.0" text="Status" />
+                                            <TableColumn fx:id="allPhoneColumn" prefWidth="120.0" text="Phone" />
+                                            <TableColumn fx:id="allGenderColumn" prefWidth="120.0" text="Gender" />
+                                        </columns>
+                                    </TableView>
+                                </center>
+                                <right>
+                                    <VBox spacing="10.0" prefWidth="200.0" alignment="TOP_CENTER">
+                                        <padding>
+                                            <Insets top="0.0" right="0.0" bottom="0.0" left="10.0"/>
+                                        </padding>
+                                        <children>
+                                            <Button fx:id="updateButton" mnemonicParsing="false" onAction="#handleUpdate" prefWidth="180.0" text="Update Selected User" />
+                                            <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDelete" prefWidth="180.0" text="Delete Selected User" />
+                                        </children>
+                                    </VBox>
+                                </right>
+                                <padding>
+                                    <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
+                                </padding>
+                            </BorderPane>
+                        </content>
+                    </Tab>
+                    <Tab text="Pending Approvals">
+                        <content>
+                            <BorderPane>
+                                <center>
+                                    <TableView fx:id="pendingUsersTable" prefHeight="450.0" prefWidth="200.0">
+                                        <columns>
+                                            <TableColumn fx:id="nameColumn" prefWidth="120.0" text="Name" />
+                                            <TableColumn fx:id="emailColumn" prefWidth="150.0" text="Email" />
+                                            <TableColumn fx:id="roleColumn" prefWidth="120.0" text="Role" />
+                                            <TableColumn fx:id="phoneColumn" prefWidth="114.0" text="Phone" />
+                                        </columns>
+                                    </TableView>
+                                </center>
+                                <right>
+                                    <VBox spacing="10.0" prefWidth="200.0" alignment="TOP_CENTER">
+                                        <padding>
+                                            <Insets top="0.0" right="0.0" bottom="0.0" left="10.0"/>
+                                        </padding>
+                                        <children>
+                                            <Button fx:id="approveButton" mnemonicParsing="false" onAction="#handleApprove" prefWidth="180.0" text="Approve Selected User" />
+                                            <Button fx:id="rejectButton" mnemonicParsing="false" onAction="#handleReject" prefWidth="180.0" text="Reject Selected User" />
+                                        </children>
+                                    </VBox>
+                                </right>
+                                <padding>
+                                    <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
+                                </padding>
+                            </BorderPane>
+                        </content>
+                    </Tab>
+                </tabs>
+            </TabPane>
+
+            <HBox spacing="20.0" VBox.vgrow="SOMETIMES" minHeight="250.0">
+                <children>
+                    <!-- Left side: User Statistics and Activity Log -->
+                    <VBox spacing="10.0" HBox.hgrow="SOMETIMES" maxWidth="350.0">
+                        <children>
+                            <!-- User Statistics -->
+                            <VBox spacing="10.0" styleClass="statistics-container" VBox.vgrow="NEVER">
+                                <children>
+                                    <Label styleClass="subtitle" text="User Statistics">
+                                        <font>
+                                            <Font name="System Bold" size="14.0" />
+                                        </font>
+                                    </Label>
+                                    <HBox styleClass="stat-row" alignment="CENTER_LEFT" spacing="10.0">
+                                        <Label styleClass="stat-label" prefWidth="120.0" text="Total Users:" />
+                                        <Label fx:id="totalUsersLabel" styleClass="stat-value" text="0" />
+                                    </HBox>
+                                    <HBox styleClass="stat-row" alignment="CENTER_LEFT" spacing="10.0">
+                                        <Label styleClass="stat-label" prefWidth="120.0" text="Active Users:" />
+                                        <Label fx:id="activeUsersLabel" styleClass="stat-value" text="0" />
+                                    </HBox>
+                                    <HBox styleClass="stat-row" alignment="CENTER_LEFT" spacing="10.0">
+                                        <Label styleClass="stat-label" prefWidth="120.0" text="Pending Users:" />
+                                        <Label fx:id="pendingUsersLabel" styleClass="stat-value" text="0" />
+                                    </HBox>
+                                    <Label fx:id="lastUpdatedLabel" text="Last updated: ">
+                                        <font>
+                                            <Font size="11.0" />
+                                        </font>
+                                    </Label>
+                                </children>
+                                <padding>
+                                    <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
+                                </padding>
+                            </VBox>
+
+                            <!-- Activity Log -->
+                            <VBox spacing="5.0" VBox.vgrow="ALWAYS">
+                                <Label styleClass="subtitle" text="Activity Log">
                                     <font>
                                         <Font name="System Bold" size="14.0" />
                                     </font>
                                 </Label>
-                                <HBox>
-                                    <children>
-                                        <Label prefWidth="120.0" text="Total Users:" />
-                                        <Label fx:id="totalUsersLabel" text="0" />
-                                    </children>
-                                </HBox>
-                                <HBox>
-                                    <children>
-                                        <Label prefWidth="120.0" text="Active Users:" />
-                                        <Label fx:id="activeUsersLabel" text="0" />
-                                    </children>
-                                </HBox>
-                                <HBox>
-                                    <children>
-                                        <Label prefWidth="120.0" text="Pending Users:" />
-                                        <Label fx:id="pendingUsersLabel" text="0" />
-                                    </children>
-                                </HBox>
-                                <Label fx:id="lastUpdatedLabel" text="Last updated: ">
-                                    <font>
-                                        <Font size="11.0" />
-                                    </font>
-                                </Label>
-                            </children>
-                        </VBox>
-                        <PieChart fx:id="userRoleChart" HBox.hgrow="ALWAYS" />
-                    </children>
-                </HBox>
+                                <ListView fx:id="activityList" VBox.vgrow="ALWAYS" />
+                            </VBox>
+                        </children>
+                    </VBox>
 
-                <VBox spacing="10.0" VBox.vgrow="SOMETIMES">
-                    <children>
-                        <Label text="Activity Log">
+                    <!-- Right side: Chart -->
+                    <VBox styleClass="chart-container" HBox.hgrow="ALWAYS">
+                        <Label styleClass="subtitle" text="User Role Distribution">
                             <font>
                                 <Font name="System Bold" size="14.0" />
                             </font>
                         </Label>
-                        <ListView fx:id="activityList" prefHeight="150.0" VBox.vgrow="ALWAYS" />
-                    </children>
-                </VBox>
-            </children>
+                        <PieChart fx:id="userRoleChart" VBox.vgrow="ALWAYS" legendVisible="true" />
+                        <padding>
+                            <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
+                        </padding>
+                    </VBox>
+                </children>
+            </HBox>
         </VBox>
     </center>
+
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" style="-fx-background-color: #F9F5F0; -fx-padding: 5 15;">
+            <Label text="© 2025 Art Therapy Platform. All rights reserved." />
+        </HBox>
+    </bottom>
 </BorderPane>

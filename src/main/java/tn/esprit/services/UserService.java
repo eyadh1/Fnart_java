@@ -5,6 +5,7 @@ import tn.esprit.models.User;
 
 import tn.esprit.utils.MyDataBase;
 import org.mindrot.jbcrypt.BCrypt;
+import tn.esprit.utils.SessionManager;
 
 
 import java.sql.*;
@@ -20,7 +21,7 @@ public class UserService implements IService<User> {
 
     public boolean signUp(User user) {
         String checkEmailQuery = "SELECT COUNT(*) FROM user WHERE email = ?";
-        String insertQuery = "INSERT INTO user (nom, email, password, roles, phone, gender, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String insertQuery = "INSERT INTO user (nom, email, password, roles, phone, gender, image,status) VALUES (?,?, ?, ?, ?, ?, ?, ?)";
 
         try {
             // Check if email already exists
@@ -53,7 +54,8 @@ public class UserService implements IService<User> {
             insertStmt.setString(4, roleString);
             insertStmt.setString(5, user.getPhone());
             insertStmt.setString(6, user.getGender());
-            insertStmt.setString(7, status);
+            insertStmt.setString(7, user.getImagePath());
+            insertStmt.setString(8, status);
 
             int rowsAffected = insertStmt.executeUpdate();
             return rowsAffected > 0;
@@ -63,15 +65,102 @@ public class UserService implements IService<User> {
         }
     }
 
+    public User login(String email, String password) {
+        String query = "SELECT * FROM user WHERE email = ?";
+        try (PreparedStatement statement = cnx.prepareStatement(query)) {
+            statement.setString(1, email);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                // Verify the password against the hashed version
+                String storedHash = resultSet.getString("password");
+                if (BCrypt.checkpw(password, storedHash)) {
+                    String status = resultSet.getString("status");
+                    if (!"ACTIVE".equals(status)) {
+                        System.out.println("Account is not active");
+                        return null;
+                    }
+
+                    User user = new User();
+                    user.setId(resultSet.getInt("id"));
+                    user.setNom(resultSet.getString("nom"));
+                    user.setEmail(resultSet.getString("email"));
+                    user.setPassword(storedHash);
+                    user.setPhone(resultSet.getString("phone"));
+                    user.setGender(resultSet.getString("gender"));
+                    user.setStatus(status);
+
+                    // Parse the role
+                    String rolesStr = resultSet.getString("roles");
+                    if (rolesStr != null && !rolesStr.isEmpty()) {
+                        String roleStr = rolesStr.replace("[", "").replace("]", "").replace("\"", "");
+                        user.setRole(convertToRole(roleStr));
+                    }
+
+                    // Store the current user in the session
+                    SessionManager.setCurrentUser(user);
+
+                    return user;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error during login: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /*public User login(String email, String password) {
+        String query = "SELECT * FROM user WHERE email = ?";
+        try (PreparedStatement statement = cnx.prepareStatement(query)) {
+            statement.setString(1, email);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                // Verify the password against the hashed version
+                String storedHash = resultSet.getString("password");
+                if (BCrypt.checkpw(password, storedHash)) {
+                    String status = resultSet.getString("status");
+                    if (!"ACTIVE".equals(status)) {
+                        System.out.println("Account is not active");
+                        return null;
+                    }
+
+                    User user = new User();
+                    user.setId(resultSet.getInt("id"));
+                    user.setNom(resultSet.getString("nom"));
+                    user.setEmail(resultSet.getString("email"));
+                    user.setPassword(storedHash);
+                    user.setPhone(resultSet.getString("phone"));
+                    user.setGender(resultSet.getString("gender"));
+                    user.setStatus(status);
+
+                    // Parse the role
+                    String rolesStr = resultSet.getString("roles");
+                    if (rolesStr != null && !rolesStr.isEmpty()) {
+                        String roleStr = rolesStr.replace("[", "").replace("]", "").replace("\"", "");
+                        user.setRole(convertToRole(roleStr));
+                    }
+
+                    return user;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error during login: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }*/
+
     public boolean resetPassword(String email, String newPassword) {
         String query = "UPDATE user SET password = ? WHERE email = ?";
         try (PreparedStatement statement = cnx.prepareStatement(query)) {
             // Hash the new password
             String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
-            
+
             statement.setString(1, hashedPassword);
             statement.setString(2, email);
-            
+
             int rowsAffected = statement.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
@@ -81,6 +170,12 @@ public class UserService implements IService<User> {
         }
     }
 
+
+    //Gets the currently logged-in user
+    public User getCurrentAdmin() {
+        // Simply retrieve the current user from our session manager
+        return SessionManager.getCurrentUser();
+    }
 
     @Override
     public void add(User user) {
@@ -105,6 +200,20 @@ public class UserService implements IService<User> {
     @Override
     public List<User> getAll() {
         List<User> users = new ArrayList<>();
+        String requete = "SELECT * FROM user WHERE status = 'ACTIVE'"; // Only active users
+        try {
+            Statement statement = cnx.createStatement();
+            ResultSet resultSet = statement.executeQuery(requete);
+            while (resultSet.next()) {
+                users.add(createUserFromResultSet(resultSet));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return users;
+    }
+   /* public List<User> getAll() {
+        List<User> users = new ArrayList<>();
         String requete = "SELECT * FROM user";
         try {
             Statement statement = cnx.createStatement();
@@ -116,7 +225,7 @@ public class UserService implements IService<User> {
                 user.setEmail(resultSet.getString("email"));
                 user.setPassword(resultSet.getString("password"));
                 user.setPhone(resultSet.getString("phone"));
-                
+
                 // Parse the role from the database format
                 String rolesStr = resultSet.getString("roles");
                 if (rolesStr != null && !rolesStr.isEmpty()) {
@@ -126,7 +235,7 @@ public class UserService implements IService<User> {
                     Role role = convertToRole(roleStr);
                     user.setRole(role);
                 }
-                
+
                 user.setGender(resultSet.getString("gender"));
                 users.add(user);
             }
@@ -134,7 +243,7 @@ public class UserService implements IService<User> {
             System.out.println(e.getMessage());
         }
         return users;
-    }
+    }*/
 
     @Override
     public void update(User user) {
@@ -188,8 +297,6 @@ public class UserService implements IService<User> {
         }
     }
 
-
-
     @Override
     public void delete(User user) {
         String requete = "DELETE FROM user WHERE id=?";
@@ -218,60 +325,15 @@ public class UserService implements IService<User> {
         }
     }
 
-
-    public User login(String email, String password) {
-        String query = "SELECT * FROM user WHERE email = ?";
-        try (PreparedStatement statement = cnx.prepareStatement(query)) {
-            statement.setString(1, email);
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                // Verify the password against the hashed version
-                String storedHash = resultSet.getString("password");
-                if (BCrypt.checkpw(password, storedHash)) {
-                    String status = resultSet.getString("status");
-                    if (!"ACTIVE".equals(status)) {
-                        System.out.println("Account is not active");
-                        return null;
-                    }
-
-                    User user = new User();
-                    user.setId(resultSet.getInt("id"));
-                    user.setNom(resultSet.getString("nom"));
-                    user.setEmail(resultSet.getString("email"));
-                    user.setPassword(storedHash);
-                    user.setPhone(resultSet.getString("phone"));
-                    user.setGender(resultSet.getString("gender"));
-                    user.setStatus(status);
-
-                    // Parse the role
-                    String rolesStr = resultSet.getString("roles");
-                    if (rolesStr != null && !rolesStr.isEmpty()) {
-                        String roleStr = rolesStr.replace("[", "").replace("]", "").replace("\"", "");
-                        user.setRole(convertToRole(roleStr));
-                    }
-
-                    return user;
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("Error during login: " + e.getMessage());
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-
-
     public boolean createUser(User user){
         String query = "INSERT INTO user (name, email, password, phone, role, status) VALUES (?, ?, ?, ?, ?, ?)";
-        
+
         try (PreparedStatement statement = cnx.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, user.getNom());
             statement.setString(2, user.getEmail());
             statement.setString(3, user.getPassword());
             statement.setString(4, user.getPhone());
-            
+
             // If the role is ADMIN, THERAPIST, or ARTIST, set status to PENDING
             if (user.getRole() == Role.ADMIN || user.getRole() == Role.THERAPIST || user.getRole() == Role.ARTIST) {
                 statement.setString(5, user.getRole().name());
@@ -282,7 +344,7 @@ public class UserService implements IService<User> {
             }
 
             int affectedRows = statement.executeUpdate();
-            
+
             if (affectedRows > 0) {
                 try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
@@ -339,7 +401,7 @@ public class UserService implements IService<User> {
 
     public boolean deleteUser(int userId) {
         String query = "DELETE FROM user WHERE id = ?";
-        
+
         try (PreparedStatement statement = cnx.prepareStatement(query)) {
             statement.setInt(1, userId);
             return statement.executeUpdate() > 0;
@@ -349,6 +411,14 @@ public class UserService implements IService<User> {
         return false;
     }
 
+    public List<User> searchUsers(String searchTerm) {
+        String loweredTerm = searchTerm.toLowerCase();
+        return getAll().stream()
+                .filter(u -> u.getNom().toLowerCase().contains(loweredTerm) ||
+                        u.getEmail().toLowerCase().contains(loweredTerm))
+                .toList();
+    }
+/*
     public List<User> searchUsers(String searchTerm) {
         List<User> users = new ArrayList<>();
         String query = "SELECT * FROM user WHERE LOWER(nom) LIKE ? OR LOWER(email) LIKE ?";
@@ -366,9 +436,22 @@ public class UserService implements IService<User> {
             e.printStackTrace();
         }
         return users;
-    }
+}*/
 
+public List<User> searchPendingUsers(String searchTerm) {
+    String loweredTerm = searchTerm.toLowerCase();
+    return getPendingUsers().stream()
+            .filter(u -> (u.getNom().toLowerCase().contains(loweredTerm) ||
+                    u.getEmail().toLowerCase().contains(loweredTerm)) &&
+                    "PENDING".equalsIgnoreCase(u.getStatus()))
+            .toList();
+}/*
     public List<User> searchPendingUsers(String searchTerm) {
+        /*String loweredTerm = searchTerm.toLowerCase();
+        return getAll().stream()
+                .filter(u -> "PENDING".equalsIgnoreCase(u.getStatus()))
+                .filter(u -> u.getNom().toLowerCase().contains(loweredTerm) || u.getEmail().toLowerCase().contains(loweredTerm))
+                .toList();
         List<User> users = new ArrayList<>();
         String query = "SELECT * FROM user WHERE status = 'PENDING' AND " +
                 "(LOWER(nom) LIKE ? OR LOWER(email) LIKE ?)";
@@ -387,7 +470,7 @@ public class UserService implements IService<User> {
         }
         return users;
     }
-
+*/
     public int getUserCountByRole(Role role) {
         String query = "SELECT COUNT(*) FROM user WHERE roles LIKE ?";
         try (PreparedStatement statement = cnx.prepareStatement(query)) {
@@ -404,10 +487,10 @@ public class UserService implements IService<User> {
 
     public int getTotalUsersCount() {
         String query = "SELECT COUNT(*) FROM user";
-        
+
         try (Statement statement = cnx.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
-            
+
             if (resultSet.next()) {
                 return resultSet.getInt(1);
             }
@@ -419,10 +502,10 @@ public class UserService implements IService<User> {
 
     public int getPendingUsersCount() {
         String query = "SELECT COUNT(*) FROM user WHERE status = 'PENDING'";
-        
+
         try (Statement statement = cnx.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
-            
+
             if (resultSet.next()) {
                 return resultSet.getInt(1);
             }
@@ -434,10 +517,10 @@ public class UserService implements IService<User> {
 
     public int getActiveUsersCount() {
         String query = "SELECT COUNT(*) FROM user WHERE status = 'ACTIVE'";
-        
+
         try (Statement statement = cnx.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
-            
+
             if (resultSet.next()) {
                 return resultSet.getInt(1);
             }

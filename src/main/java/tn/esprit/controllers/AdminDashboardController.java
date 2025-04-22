@@ -1,5 +1,6 @@
 package tn.esprit.controllers;
 
+import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,8 +14,8 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import javafx.geometry.Pos;
-import javafx.stage.Modality;
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
 import javafx.stage.Screen;
 import javafx.scene.layout.GridPane;
 import javafx.geometry.Insets;
@@ -27,6 +28,13 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+
+import javafx.animation.TranslateTransition;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.image.ImageView;
+import javafx.util.Duration;
+import tn.esprit.utils.SessionManager;
 
 public class AdminDashboardController implements Initializable {
 
@@ -63,10 +71,20 @@ public class AdminDashboardController implements Initializable {
     // Search Field
     @FXML private TextField searchField;
 
+    //profile components
+    @FXML private VBox profilePanel;
+    @FXML private VBox profileContainer;
+    @FXML private ImageView profileImage;
+    @FXML private ImageView profileImageLarge;
+    @FXML private Label adminNameLabel;
+    @FXML private Label adminEmailLabel;
+
     private final UserService userService = new UserService();
+    //private boolean isProfilePanelVisible = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         setupTableColumns();
         loadAllUsers();
         loadPendingUsers();
@@ -74,7 +92,87 @@ public class AdminDashboardController implements Initializable {
         initializeChart();
         setupSearchListener();
         setupTableSelectionListeners();
+        initializeProfileSection(); // Add this line
         addActivityLog("Admin dashboard initialized");
+    }
+
+    private void initializeProfileSection() {
+        // Set up the admin info
+        User currentAdmin = userService.getCurrentAdmin();
+        if (currentAdmin != null) {
+            adminNameLabel.setText(currentAdmin.getNom());
+            adminEmailLabel.setText(currentAdmin.getEmail());
+        }
+    }
+
+    @FXML
+    private void toggleProfilePanel() {
+        profilePanel.setVisible(!profilePanel.isVisible());
+        profilePanel.setManaged(profilePanel.isVisible());
+    }
+
+
+    //  handling edit profile
+    @FXML
+    private void handleEditProfile() {
+        // Create a dialog to edit the admin's profile
+        Dialog<User> dialog = new Dialog<>();
+        dialog.setTitle("Edit Profile");
+        dialog.setHeaderText("Update your profile information");
+
+        // Set the button types
+        ButtonType updateButtonType = new ButtonType("Update", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(updateButtonType, ButtonType.CANCEL);
+
+        // Create the form grid
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        // Get current admin info
+        User currentAdmin = userService.getCurrentAdmin(); // You'd need to implement this method
+
+        // Create fields pre-filled with current admin data
+        TextField nameField = new TextField(currentAdmin != null ? currentAdmin.getNom() : "Admin User");
+        TextField emailField = new TextField(currentAdmin != null ? currentAdmin.getEmail() : "admin@arttherapy.com");
+        PasswordField passwordField = new PasswordField();
+        passwordField.setPromptText("Leave blank to keep current password");
+
+        // Add image upload option if needed
+        Button uploadImageButton = new Button("Upload Profile Picture");
+        uploadImageButton.setOnAction(e -> {
+            // Implement file chooser for profile picture
+            // This is just a placeholder
+            showAlert("Upload", "Profile picture upload functionality would go here", Alert.AlertType.INFORMATION);
+        });
+
+        // Add fields to the grid
+        grid.add(new Label("Name:"), 0, 0);
+        grid.add(nameField, 1, 0);
+        grid.add(new Label("Email:"), 0, 1);
+        grid.add(emailField, 1, 1);
+        grid.add(new Label("New Password:"), 0, 2);
+        grid.add(passwordField, 1, 2);
+        grid.add(uploadImageButton, 1, 3);
+
+        dialog.getDialogPane().setContent(grid);
+
+        // Process the result
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == updateButtonType) {
+                // Update admin profile logic would go here
+                // This is just a placeholder
+                adminNameLabel.setText(nameField.getText());
+                adminEmailLabel.setText(emailField.getText());
+
+                addActivityLog("Updated admin profile");
+                showAlert("Profile Updated", "Your profile has been updated successfully.", Alert.AlertType.INFORMATION);
+            }
+            return null;
+        });
+
+        dialog.showAndWait();
     }
 
     private void setupTableColumns() {
@@ -172,64 +270,55 @@ public class AdminDashboardController implements Initializable {
 
     private void setupSearchListener() {
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == null || newValue.trim().isEmpty()) {
-                loadAllUsers();
-                loadPendingUsers();
-                addActivityLog("Cleared search results");
-            } else {
-                String searchTerm = newValue.trim();
+            String searchTerm = (newValue == null) ? "" : newValue.trim().toLowerCase();
 
-                // Update All Users tab
-                ObservableList<User> searchResults = FXCollections.observableArrayList(userService.searchUsers(searchTerm));
-                allUsersTable.setItems(searchResults);
+            // Filter all users
+            ObservableList<User> filteredAllUsers = FXCollections.observableArrayList(
+                    userService.getAll().stream()
+                            .filter(u -> u.getNom().toLowerCase().contains(searchTerm) ||
+                                    u.getEmail().toLowerCase().contains(searchTerm))
+                            .toList()
+            );
 
-                // Update Pending Users tab
-                ObservableList<User> pendingSearchResults = FXCollections.observableArrayList(userService.searchPendingUsers(searchTerm));
-                pendingUsersTable.setItems(pendingSearchResults);
+            // Filter pending users
+            ObservableList<User> filteredPendingUsers = FXCollections.observableArrayList(
+                    userService.getPendingUsers().stream()
+                            .filter(u -> u.getNom().toLowerCase().contains(searchTerm) ||
+                                    u.getEmail().toLowerCase().contains(searchTerm))
+                            .toList()
+            );
 
-                addActivityLog("Searched for: \"" + searchTerm + "\" - Found " +
-                        searchResults.size() + " total users, " +
-                        pendingSearchResults.size() + " pending users");
-            }
-        });
-
-        // Add a button to clear search
-        searchField.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) {
-                searchField.clear();
-            }
+            allUsersTable.setItems(filteredAllUsers);
+            pendingUsersTable.setItems(filteredPendingUsers);
         });
     }
-
-
     @FXML
     private void handleSearch(ActionEvent event) {
-        String searchTerm = searchField.getText().trim();
+        String searchTerm = searchField.getText().trim().toLowerCase();
 
         if (searchTerm.isEmpty()) {
             loadAllUsers();
             loadPendingUsers();
-            showAlert("Search Cleared", "Showing all users", Alert.AlertType.INFORMATION);
-        } else {
-            // Update All Users tab
-            ObservableList<User> searchResults = FXCollections.observableArrayList(userService.searchUsers(searchTerm));
-            allUsersTable.setItems(searchResults);
-
-            // Update Pending Users tab
-            ObservableList<User> pendingSearchResults = FXCollections.observableArrayList(userService.searchPendingUsers(searchTerm));
-            pendingUsersTable.setItems(pendingSearchResults);
-
-            addActivityLog("Searched for: \"" + searchTerm + "\"");
-
-            if (searchResults.isEmpty() && pendingSearchResults.isEmpty()) {
-                showAlert("No Results", "No users found matching: " + searchTerm, Alert.AlertType.INFORMATION);
-            } else {
-                showAlert("Search Results",
-                        "Found " + searchResults.size() + " total users and " +
-                                pendingSearchResults.size() + " pending users matching: " + searchTerm,
-                        Alert.AlertType.INFORMATION);
-            }
+            return;
         }
+
+        // Filter with exact same logic as the listener
+        ObservableList<User> filteredAllUsers = FXCollections.observableArrayList(
+                userService.getAll().stream()
+                        .filter(u -> u.getNom().toLowerCase().contains(searchTerm) ||
+                                u.getEmail().toLowerCase().contains(searchTerm))
+                        .toList()
+        );
+
+        ObservableList<User> filteredPendingUsers = FXCollections.observableArrayList(
+                userService.getPendingUsers().stream()
+                        .filter(u -> u.getNom().toLowerCase().contains(searchTerm) ||
+                                u.getEmail().toLowerCase().contains(searchTerm))
+                        .toList()
+        );
+
+        allUsersTable.setItems(filteredAllUsers);
+        pendingUsersTable.setItems(filteredPendingUsers);
     }
 
     @FXML
@@ -419,9 +508,21 @@ public class AdminDashboardController implements Initializable {
         }
     }
 
+
+
+    private boolean confirmAction(String message) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm Action");
+        alert.setHeaderText(message);
+        alert.setContentText("This cannot be undone.");
+        return alert.showAndWait().filter(response -> response == ButtonType.OK).isPresent();
+    }
     @FXML
     private void handleLogout(ActionEvent event) {
         try {
+            // Clear the user session
+            SessionManager.clearSession();
+
             Parent root = FXMLLoader.load(getClass().getResource("/Login.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene = new Scene(root);
@@ -435,6 +536,7 @@ public class AdminDashboardController implements Initializable {
             showAlert("Error", "Failed to load login screen: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
+
 
     @FXML
     private void handleRefresh(ActionEvent event) {
@@ -450,9 +552,26 @@ public class AdminDashboardController implements Initializable {
         initializeChart();
     }
 
+    // Update the addActivityLog method
     private void addActivityLog(String message) {
-        activityList.getItems().add(0, LocalDateTime.now()
-                .format(DateTimeFormatter.ofPattern("HH:mm")) + " - " + message);
+        String logEntry = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm")) + " - " + message;
+
+        // Add to the top of the list
+        activityList.getItems().add(0, logEntry);
+
+        // Optional: Apply fade-in animation to the first cell
+        if (activityList.lookup(".list-cell") != null) {
+            Node cell = activityList.lookup(".list-cell");
+            FadeTransition ft = new FadeTransition(Duration.millis(500), cell);
+            ft.setFromValue(0.0);
+            ft.setToValue(1.0);
+            ft.play();
+        }
+
+        // Limit the log size to prevent memory issues (optional)
+        if (activityList.getItems().size() > 100) {
+            activityList.getItems().remove(100, activityList.getItems().size());
+        }
     }
 
     private void showAlert(String title, String message, Alert.AlertType alertType) {

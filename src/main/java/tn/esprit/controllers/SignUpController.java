@@ -4,12 +4,30 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.shape.Circle;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.scene.layout.AnchorPane;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
 import tn.esprit.enumerations.Role;
 import tn.esprit.models.User;
 import tn.esprit.services.UserService;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ResourceBundle;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class SignUpController implements Initializable {
@@ -41,12 +59,32 @@ public class SignUpController implements Initializable {
     @FXML
     private TextField nameTF;
 
+    @FXML
+    private Circle profileImageCircle;
+
+    @FXML
+    private ImageView profileImageView;
+
+    @FXML
+    private Button uploadImageButton;
+
+    @FXML
+    private Hyperlink loginLink;
+
     private ToggleGroup genderToggleGroup;
     private UserService userService;
+    private File selectedImageFile;
+    private String imagePath;
+
+    // Directory to save profile images
+    private final String IMAGE_DIRECTORY = "src/main/resources/tn/esprit/assets/profiles/";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         userService = new UserService();
+
+        // Set up clip for profile image to make it circular
+        profileImageView.setClip(new Circle(55, 55, 55));
 
         // Initialize role combo box
         RoleComboBox.getItems().addAll(Role.values());
@@ -59,44 +97,103 @@ public class SignUpController implements Initializable {
         // Add input validation listeners
         addValidationListeners();
 
+        // Set up image upload button action
+        uploadImageButton.setOnAction(event -> handleImageUpload());
+
         // Set up sign up button action
         SignupButton.setOnAction(event -> handleSignUp());
+
+        // Set up login link action
+        loginLink.setOnAction(event -> navigateToLogin());
+
+        // Add styling classes to form elements
+        applyStyles();
+    }
+
+    private void applyStyles() {
+        // Add CSS classes to the form elements for styling
+        nameTF.getStyleClass().add("modern-field");
+        emailTF.getStyleClass().add("modern-field");
+        PasswordField.getStyleClass().add("modern-field");
+        confimPasswordField.getStyleClass().add("modern-field");
+        PhoneField.getStyleClass().add("modern-field");
+        RoleComboBox.getStyleClass().add("modern-choice");
+        alphaRadio.getStyleClass().add("modern-radio");
+        deltaRadio.getStyleClass().add("modern-radio");
+    }
+
+    private void navigateToLogin() {
+        Parent root = null;
+        try {
+            root = FXMLLoader.load(getClass().getResource("/login.fxml"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Stage stage = (Stage) loginLink.getScene().getWindow();
+        stage.setScene(new Scene(root));
+        stage.show();
+    }
+
+
+
+    private void handleImageUpload() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Profile Image");
+        fileChooser.getExtensionFilters().addAll(
+                new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
+        );
+
+        selectedImageFile = fileChooser.showOpenDialog(uploadImageButton.getScene().getWindow());
+
+        if (selectedImageFile != null) {
+            try {
+                Image image = new Image(selectedImageFile.toURI().toString());
+                profileImageView.setImage(image);
+
+                // Generate unique image name
+                String uniqueID = UUID.randomUUID().toString();
+                String extension = selectedImageFile.getName().substring(selectedImageFile.getName().lastIndexOf('.'));
+                imagePath = uniqueID + extension;
+            } catch (Exception e) {
+                showAlert("Error", "Failed to load image: " + e.getMessage(), AlertType.ERROR);
+            }
+        }
     }
 
     private void addValidationListeners() {
         // Email validation
         emailTF.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!isValidEmail(newValue)) {
-                emailTF.setStyle("-fx-border-color: red;");
+                emailTF.setStyle("-fx-border-color: red; -fx-background-radius: 20; -fx-border-radius: 20;");
             } else {
-                emailTF.setStyle("-fx-border-color: green;");
+                emailTF.setStyle("-fx-border-color: green; -fx-background-radius: 20; -fx-border-radius: 20;");
             }
         });
 
         // Phone validation
         PhoneField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!isValidPhone(newValue)) {
-                PhoneField.setStyle("-fx-border-color: red;");
+                PhoneField.setStyle("-fx-border-color: red; -fx-background-radius: 20; -fx-border-radius: 20;");
             } else {
-                PhoneField.setStyle("-fx-border-color: green;");
+                PhoneField.setStyle("-fx-border-color: green; -fx-background-radius: 20; -fx-border-radius: 20;");
             }
         });
 
         // Password validation
         PasswordField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!isValidPassword(newValue)) {
-                PasswordField.setStyle("-fx-border-color: red;");
+                PasswordField.setStyle("-fx-border-color: red; -fx-background-radius: 20; -fx-border-radius: 20;");
             } else {
-                PasswordField.setStyle("-fx-border-color: green;");
+                PasswordField.setStyle("-fx-border-color: green; -fx-background-radius: 20; -fx-border-radius: 20;");
             }
         });
 
         // Confirm password validation
         confimPasswordField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.equals(PasswordField.getText())) {
-                confimPasswordField.setStyle("-fx-border-color: red;");
+                confimPasswordField.setStyle("-fx-border-color: red; -fx-background-radius: 20; -fx-border-radius: 20;");
             } else {
-                confimPasswordField.setStyle("-fx-border-color: green;");
+                confimPasswordField.setStyle("-fx-border-color: green; -fx-background-radius: 20; -fx-border-radius: 20;");
             }
         });
     }
@@ -117,6 +214,25 @@ public class SignUpController implements Initializable {
         newUser.setGender(selectedRadio != null ? selectedRadio.getText() : "other");
 
         newUser.setRole(RoleComboBox.getValue());
+
+        // Save the profile image if one was selected
+        if (selectedImageFile != null) {
+            try {
+                // Ensure directory exists
+                Files.createDirectories(Paths.get(IMAGE_DIRECTORY));
+
+                // Copy the image to our directory
+                Path destination = Paths.get(IMAGE_DIRECTORY + imagePath);
+                Files.copy(selectedImageFile.toPath(), destination, StandardCopyOption.REPLACE_EXISTING);
+
+                // You might want to store the image path in the user's record
+                // This would require adding an 'imagePath' field to your User class and database
+                // newUser.setImagePath(imagePath);
+            } catch (IOException e) {
+                showAlert("Error", "Failed to save profile image: " + e.getMessage(), AlertType.ERROR);
+                return;
+            }
+        }
 
         boolean success = userService.signUp(newUser);
 
@@ -203,5 +319,8 @@ public class SignUpController implements Initializable {
         PhoneField.clear();
         genderToggleGroup.selectToggle(null);
         RoleComboBox.getSelectionModel().clearSelection();
+        profileImageView.setImage(null);
+        selectedImageFile = null;
+        imagePath = null;
     }
 }

@@ -8,6 +8,7 @@ public class User {
 
     private int id;
     private String nom, email, password, phone, gender, status;
+    private String imagePath; // New field for profile image
     private Role role;
     private Date DateOfBirth;
 
@@ -31,6 +32,17 @@ public class User {
         this.phone = phone;
         this.gender = gender;
         this.role = role;
+        this.status = "PENDING";
+    }
+
+    public User(String nom, String email, String password, String phone, String gender, Role role, String imagePath) {
+        this.nom = nom;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        this.gender = gender;
+        this.role = role;
+        this.imagePath = imagePath;
         this.status = "PENDING";
     }
 
@@ -98,6 +110,14 @@ public class User {
         this.status = status;
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -109,6 +129,7 @@ public class User {
                 ", gender='" + gender + '\'' +
                 ", role=" + role +
                 ", status='" + status + '\'' +
+                ", imagePath='" + imagePath + '\'' +
                 '}';
     }
 }
