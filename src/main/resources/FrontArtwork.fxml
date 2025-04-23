@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import java.net.URL?>
+<?import javafx.scene.text.Text?>
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="tn.esprit.controllers.FrontArtworkController"
+      VBox.vgrow="ALWAYS">
+
+    <HBox VBox.vgrow="ALWAYS">
+        <!-- Sidebar -->
+        <VBox styleClass="sidebar" minWidth="200" maxWidth="250">
+            <!-- Logo dans le sidebar -->
+            <Label text="ArtHeals" styleClass="sidebar-logo"/>
+            
+            <VBox styleClass="menu-list" spacing="15" VBox.vgrow="ALWAYS">
+                <HBox styleClass="menu-item" onMouseClicked="#handleOeuvres">
+                    <Label text="🎨" styleClass="menu-icon"/>
+                    <Label text="Oeuvres" HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <HBox styleClass="menu-item" onMouseClicked="#handleAtelier">
+                    <Label text="🏭" styleClass="menu-icon"/>
+                    <Label text="Atelier" HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <HBox styleClass="menu-item" onMouseClicked="#handleDons">
+                    <Label text="🎁" styleClass="menu-icon"/>
+                    <Label text="Dons" HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <HBox styleClass="menu-item" onMouseClicked="#handleBeneficiaire">
+                    <Label text="👥" styleClass="menu-icon"/>
+                    <Label text="Bénéficiaire" HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <HBox styleClass="menu-item" onMouseClicked="#handleForum">
+                    <Label text="💬" styleClass="menu-icon"/>
+                    <Label text="Forum" HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <HBox styleClass="menu-item" onMouseClicked="#handleSettings">
+                    <Label text="⚙️" styleClass="menu-icon"/>
+                    <Label text="Settings" HBox.hgrow="ALWAYS"/>
+                </HBox>
+            </VBox>
+        </VBox>
+
+        <!-- Contenu principal avec ScrollPane -->
+        <ScrollPane fitToWidth="true" fitToHeight="true" HBox.hgrow="ALWAYS" styleClass="main-scroll-pane">
+            <VBox styleClass="main-content" spacing="20">
+                <!-- Boutons de connexion en haut à droite -->
+                <HBox alignment="CENTER_RIGHT" spacing="10">
+                    <Button text="Se connecter" styleClass="nav-button"/>
+                    <Button text="S'inscrire" styleClass="nav-button"/>
+                </HBox>
+
+                <!-- Barre de recherche -->
+                <HBox styleClass="search-bar-container" alignment="CENTER" spacing="10">
+                    <TextField fx:id="searchField" promptText="Rechercher des œuvres..." styleClass="search-field" HBox.hgrow="ALWAYS"/>
+                    <ComboBox fx:id="filterComboBox" styleClass="filter-combo"/>
+                </HBox>
+
+                <!-- Featured Artwork Card -->
+                <VBox styleClass="featured-artwork-container">
+                    <HBox fx:id="featuredArtworkCard" styleClass="featured-artwork-card" spacing="20">
+                        <ImageView fx:id="featuredImage" styleClass="featured-image" 
+                                 fitWidth="300" fitHeight="300" preserveRatio="true"/>
+                        <VBox styleClass="featured-info" HBox.hgrow="ALWAYS">
+                            <Label fx:id="featuredTitle" styleClass="featured-title"/>
+                            <Label fx:id="featuredArtist" styleClass="featured-artist"/>
+                            <Label fx:id="featuredDescription" styleClass="featured-description" wrapText="true"/>
+                            <Button fx:id="featuredFavorite" styleClass="favorite-button"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <!-- Popular Artworks Section -->
+                <Label text="Popular Artworks" styleClass="section-title"/>
+
+                <!-- Grid des œuvres -->
+                <GridPane fx:id="artworkGrid" styleClass="artwork-grid" VBox.vgrow="ALWAYS">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="33.33" halignment="CENTER"/>
+                        <ColumnConstraints percentWidth="33.33" halignment="CENTER"/>
+                        <ColumnConstraints percentWidth="33.33" halignment="CENTER"/>
+                    </columnConstraints>
+                </GridPane>
+            </VBox>
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+        </ScrollPane>
+    </HBox>
+
+    <stylesheets>
+        <URL value="@styles/frontartwork.css" />
+    </stylesheets>
+</VBox>

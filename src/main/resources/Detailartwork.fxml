@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.Text?>
+<?import java.net.URL?>
+
+<ScrollPane fitToWidth="true" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="tn.esprit.controllers.DetailartworkController">
+    <VBox spacing="20" styleClass="detail-container">
+        <!-- En-tête avec l'image et les informations principales -->
+        <HBox spacing="30" styleClass="header-section">
+            <!-- Image de l'œuvre -->
+            <VBox styleClass="image-container" alignment="CENTER">
+                <ImageView fx:id="artworkImage" fitWidth="400" fitHeight="400" 
+                          preserveRatio="true" styleClass="artwork-image"/>
+            </VBox>
+            
+            <!-- Informations principales -->
+            <VBox spacing="15" HBox.hgrow="ALWAYS" styleClass="info-container">
+                <Label fx:id="titleLabel" styleClass="title-label"/>
+                <Label fx:id="artistLabel" styleClass="artist-label"/>
+                <Label fx:id="yearLabel" styleClass="detail-label"/>
+                <Label fx:id="techniqueLabel" styleClass="detail-label"/>
+                <Label fx:id="dimensionsLabel" styleClass="detail-label"/>
+                <Label fx:id="priceLabel" styleClass="price-label"/>
+                <Label fx:id="statusLabel" styleClass="status-label"/>
+                <Label fx:id="locationLabel" styleClass="detail-label"/>
+            </VBox>
+        </HBox>
+
+        <!-- Description -->
+        <VBox spacing="10" styleClass="description-section">
+            <Label text="Description" styleClass="section-title"/>
+            <Label fx:id="descriptionLabel" styleClass="description-text" wrapText="true"/>
+        </VBox>
+
+        <!-- Conteneur pour les détails supplémentaires -->
+        <VBox fx:id="detailsContainer" spacing="15" styleClass="details-section"/>
+        
+        <stylesheets>
+            <URL value="@styles/detailartwork.css"/>
+        </stylesheets>
+        
+        <padding>
+            <Insets top="30" right="40" bottom="30" left="40"/>
+        </padding>
+    </VBox>
+</ScrollPane> 

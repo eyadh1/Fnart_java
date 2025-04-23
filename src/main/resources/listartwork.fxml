@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+<AnchorPane fx:id="tableview" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.listartwork"> <!-- 💡 Ton package doit être complet ici -->
+    <children>
+        <HBox layoutX="10.0" layoutY="10.0" spacing="10.0">
+            <TextField fx:id="searchField" promptText="Rechercher..." prefWidth="200.0" />
+            <ComboBox fx:id="triComboBox" promptText="Trier par..." prefWidth="150.0" />
+            <TextField fx:id="minPrixField" promptText="Prix min" prefWidth="100.0" />
+            <TextField fx:id="maxPrixField" promptText="Prix max" prefWidth="100.0" />
+            <Button fx:id="btnFilter" text="Filtrer" onAction="#filterByPrice" />
+            <Button fx:id="btnExportPDF" text="Exporter PDF" onAction="#exportToPDF" />
+        </HBox>
+        
+        <TableView fx:id="tableView" layoutX="10.0" layoutY="50.0" prefHeight="308.0" prefWidth="680.0">
+            <columns>
+                <TableColumn fx:id="titreTableColumn" prefWidth="100.0" text="Titre" />
+                <TableColumn fx:id="descriptionTableColumn" prefWidth="100.0" text="Description" />
+                <TableColumn fx:id="prixTableColumn" prefWidth="75.0" text="Prix" />
+                <TableColumn fx:id="imageTableCollumn" prefWidth="100.0" text="Image" />
+                <TableColumn fx:id="artistenomTableColumn" prefWidth="100.0" text="Artiste" />
+                <TableColumn fx:id="statusTableColumn" prefWidth="75.0" text="Status" />
+                <TableColumn fx:id="commanderTableColumn" prefWidth="75.0" text="Commander" />
+            </columns>
+        </TableView>
+        
+        <PieChart fx:id="statisticsChart" layoutX="700.0" layoutY="50.0" prefHeight="300.0" prefWidth="300.0" title="Statistiques des prix" />
+        
+        <Text fx:id="listartwork" layoutX="236.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Liste des Œuvres d'Art" />
+        <HBox layoutX="10.0" layoutY="370.0" spacing="10.0">
+            <Button fx:id="btnAdd" mnemonicParsing="false" text="Ajouter" onAction="#addArtwork" />
+            <Button fx:id="btnupdate" mnemonicParsing="false" text="Modifier" onAction="#btnupdate" />
+            <Button fx:id="btndelete" mnemonicParsing="false" text="Supprimer" onAction="#deleteart" />
+            <Button fx:id="btnVisualiser" mnemonicParsing="false" text="👁" onAction="#visualiserToutesCommandes" styleClass="button-transparent" />
+        </HBox>
+    </children>
+</AnchorPane>

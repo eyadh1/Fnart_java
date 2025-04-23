@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane prefHeight="600.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="tn.esprit.controllers.ajouterartworkController" stylesheets="@styles/ajouterartwork.css">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+    <children>
+        <Text fx:id="ArtworkText" layoutX="20.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" 
+              text="Ajouter une œuvre d'art" styleClass="text-title" />
+              
+        <VBox spacing="15" layoutX="20.0" layoutY="60.0" prefWidth="460.0">
+            <padding>
+                <Insets top="20" right="0" bottom="20" left="0"/>
+            </padding>
+            <children>
+                <Label text="Titre" />
+                <TextField fx:id="titreTextField" />
+
+                <Label text="Description" />
+                <TextField fx:id="descriptionTextField" styleClass="description-field" />
+
+                <Label text="Prix" />
+                <TextField fx:id="prixTextField" />
+
+                <Label text="Nom de l'artiste" />
+                <TextField fx:id="artistenomTextField" />
+
+                <Label text="Image" />
+                <HBox spacing="10">
+                    <children>
+                        <TextField fx:id="imageTextField" editable="false" prefWidth="340" promptText="Aucune image sélectionnée" />
+                        <Button fx:id="btnUpload" text="Parcourir..." onAction="#uploadImage" styleClass="button-upload" prefWidth="110" />
+                    </children>
+                </HBox>
+                <ImageView fx:id="imagePreview" fitHeight="150.0" fitWidth="200.0" preserveRatio="true" styleClass="image-preview" />
+
+                <HBox alignment="CENTER" spacing="10">
+                    <padding>
+                        <Insets top="20" />
+                    </padding>
+                    <children>
+                        <Button fx:id="btnSave" onAction="#creatartwork" text="Enregistrer" styleClass="button-save" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>
