@@ -1,5 +1,6 @@
 package tn.esprit.services;
 
+import javafx.collections.ObservableList;
 import tn.esprit.interfaces.IService;
 import tn.esprit.models.Beneficiaires;
 import tn.esprit.utils.MyDataBase;
@@ -134,5 +135,13 @@ public class ServicesBeneficiaires implements IService<Beneficiaires> {
             System.out.println("Erreur lors de la suppression du bénéficiaire !");
             e.printStackTrace();
         }
+    }
+
+    public ObservableList<Beneficiaires> getByStatus(String enAttente) {
+        return null;
+    }
+
+    public Beneficiaires search(String newValue) {
+        return null;
     }
 }

@@ -81,30 +81,26 @@ public class ListeDonsBackController implements Initializable {
                                 setGraphic(null);
                             } else {
                                 VBox vbox = new VBox(5);
-                                vbox.setStyle("-fx-background-color: #34495E; -fx-padding: 10; -fx-background-radius: 5;");
+
 
                                 HBox headerBox = new HBox(10);
                                 Label typeLabel = new Label("Type: " + item.getType());
-                                typeLabel.setStyle("-fx-text-fill: #ECF0F1; -fx-font-weight: bold;");
-                                
+
                                 Label valeurLabel = new Label("Valeur: " + item.getValeur());
-                                valeurLabel.setStyle("-fx-text-fill: #ECF0F1;");
-                                
+
                                 headerBox.getChildren().addAll(typeLabel, valeurLabel);
 
                                 Label descriptionLabel = new Label("Description: " + item.getDescription());
-                                descriptionLabel.setStyle("-fx-text-fill: #ECF0F1;");
                                 descriptionLabel.setWrapText(true);
 
                                 HBox beneficiaireBox = new HBox(10);
                                 Label beneficiaireLabel = new Label("Bénéficiaire: " + 
                                     (item.getBeneficiaire() != null ? item.getBeneficiaire().getNom() : "Non spécifié"));
-                                beneficiaireLabel.setStyle("-fx-text-fill: #ECF0F1;");
+
                                 beneficiaireBox.getChildren().add(beneficiaireLabel);
 
                                 // Add detail button
                                 Button detailButton = new Button("Détails");
-                                detailButton.setStyle("-fx-background-color: #3498DB; -fx-text-fill: #ECF0F1; -fx-font-weight: bold;");
                                 detailButton.setOnAction(event -> handleDetail(item));
                                 
                                 HBox buttonBox = new HBox(10);

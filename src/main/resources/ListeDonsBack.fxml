@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<AnchorPane fx:id="rootPane" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #2C3E50;" xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.ListeDonsBackController">
+<AnchorPane fx:id="rootPane" prefHeight="600.0" prefWidth="800.0"  stylesheets="@css/AdminDashboard.css" xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.AdminDashboardController">
    <children>
       <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="800.0" spacing="20.0">
          <padding>
@@ -12,32 +12,23 @@
          </padding>
          
          <!-- Title -->
-         <Label text="Gestion des Dons" style="-fx-text-fill: #ECF0F1; -fx-font-size: 24px; -fx-font-weight: bold;">
+         <Label text="Gestion des Dons">
             <VBox.margin>
                <Insets bottom="20.0" />
             </VBox.margin>
          </Label>
          
          <!-- Search and Filter Controls -->
-         <HBox alignment="CENTER" spacing="20.0">
-            <TextField fx:id="searchTextField" promptText="Rechercher..." prefWidth="300.0" 
-                      style="-fx-background-color: #34495E; -fx-text-fill: #ECF0F1; -fx-prompt-text-fill: #BDC3C7;"/>
-            
-            <ChoiceBox fx:id="typeFilterChoice" prefWidth="200.0"
-                       style="-fx-background-color: #34495E; -fx-text-fill: #ECF0F1;"/>
-         </HBox>
+
          
          <!-- List View -->
-         <ListView fx:id="donsListView" prefHeight="400.0" prefWidth="700.0" 
-                   style="-fx-background-color: #34495E; -fx-text-fill: #ECF0F1;"/>
-         
+         <ListView fx:id="donsListView" prefHeight="400.0" prefWidth="700.0" ></ListView>
+
          <!-- Buttons -->
          <HBox alignment="CENTER" spacing="20.0">
-            <Button fx:id="addButton" mnemonicParsing="false" onAction="#handleAdd" text="Ajouter un don" 
-                    style="-fx-background-color: #27AE60; -fx-text-fill: #ECF0F1; -fx-font-weight: bold; -fx-pref-width: 150; -fx-pref-height: 40;"/>
-            
-            <Button fx:id="backButton" mnemonicParsing="false" onAction="#handleBack" text="Retour" 
-                    style="-fx-background-color: #7F8C8D; -fx-text-fill: #ECF0F1; -fx-font-weight: bold; -fx-pref-width: 150; -fx-pref-height: 40;"/>
+            <Button fx:id="addButton" mnemonicParsing="false"  text="Ajouter un don" ></Button>
+
+            <Button fx:id="backButton" mnemonicParsing="false"  text="Retour" ></Button>
          </HBox>
       </VBox>
    </children>

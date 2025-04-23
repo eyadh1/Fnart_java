@@ -141,7 +141,7 @@ public class AddDonsController implements Initializable {
 
             // Create new don
             Dons don = new Dons();
-            don.setValeur(new BigDecimal(ValeurTextField.getText()));
+            don.setValeur(Double.parseDouble(ValeurTextField.getText()));
             don.setType(TypeChoice.getValue());
             don.setDescription(DescriptionTextArea.getText());
             don.setBeneficiaire(selectedBeneficiaire);

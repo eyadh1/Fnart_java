@@ -1,5 +1,6 @@
 package tn.esprit.services;
 
+import javafx.collections.ObservableList;
 import tn.esprit.models.Beneficiaires;
 import tn.esprit.models.Dons;
 import tn.esprit.utils.DataSource;
@@ -18,7 +19,7 @@ public class ServicesDons {
     public void add(Dons don) {
         String query = "INSERT INTO dons (valeur, type, description, beneficiaire_id) VALUES (?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setBigDecimal(1, don.getValeur());
+            statement.setDouble(1, don.getValeur());
             statement.setString(2, don.getType());
             statement.setString(3, don.getDescription());
             statement.setInt(4, don.getBeneficiaire().getId());
@@ -31,7 +32,7 @@ public class ServicesDons {
     public void update(Dons don) {
         String query = "UPDATE dons SET valeur = ?, type = ?, description = ?, beneficiaire_id = ? WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setBigDecimal(1, don.getValeur());
+            statement.setDouble(1, don.getValeur());
             statement.setString(2, don.getType());
             statement.setString(3, don.getDescription());
             statement.setInt(4, don.getBeneficiaire().getId());
@@ -52,7 +53,7 @@ public class ServicesDons {
         }
     }
 
-    public List<Dons> getAll() {
+    public ObservableList<Dons> getAll() {
         List<Dons> donsList = new ArrayList<>();
         String query = "SELECT d.*, b.nom as beneficiaire_nom, b.email as beneficiaire_email, b.telephone as beneficiaire_telephone " +
                       "FROM dons d " +
@@ -62,7 +63,7 @@ public class ServicesDons {
             while (resultSet.next()) {
                 Dons don = new Dons();
                 don.setId((int) resultSet.getInt("id"));
-                don.setValeur(resultSet.getBigDecimal("valeur"));
+                don.setValeur(resultSet.getDouble("valeur"));
                 don.setType(resultSet.getString("type"));
                 don.setDescription(resultSet.getString("description"));
 
@@ -79,6 +80,6 @@ public class ServicesDons {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return donsList;
+        return javafx.collections.FXCollections.observableArrayList(donsList);
     }
 }

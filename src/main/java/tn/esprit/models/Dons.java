@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public class Dons {
     private int id;
-    private BigDecimal valeur;
+    private double valeur;
     private String type;
     private String description;
     private Beneficiaires beneficiaire;
@@ -12,7 +12,7 @@ public class Dons {
     public Dons() {
     }
 
-    public Dons(BigDecimal valeur, String type, String description, Beneficiaires beneficiaire) {
+    public Dons(double valeur, String type, String description, Beneficiaires beneficiaire) {
         this.valeur = valeur;
         this.type = type;
         this.description = description;
@@ -27,11 +27,11 @@ public class Dons {
         this.id = id;
     }
 
-    public BigDecimal getValeur() {
+    public double getValeur() {
         return valeur;
     }
 
-    public void setValeur(BigDecimal valeur) {
+    public void setValeur(double valeur) {
         this.valeur = valeur;
     }
 
