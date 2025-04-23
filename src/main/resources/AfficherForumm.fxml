@@ -15,7 +15,7 @@
    <children>
       <AnchorPane fx:id="MainAnchorPaneBaladity" layoutY="14.0" prefHeight="780.0" prefWidth="949.0">
          <children>
-            <ScrollPane fx:id="scrollAdmin" layoutX="167.0" layoutY="78.0" prefHeight="602.0" prefWidth="907.0" styleClass="transparent" stylesheets="@../../../../../../3A5_DevMasters/src/main/resources/ActualiteGui/Actualite.css">
+            <ScrollPane fx:id="scrollAdmin" layoutX="167.0" layoutY="78.0" prefHeight="602.0" prefWidth="907.0" styleClass="transparent" stylesheets="@/styles/style.css">
                <content>
                   <GridPane fx:id="gridAdmin" prefHeight="0.0" prefWidth="0.0">
                      <rowConstraints>
@@ -29,24 +29,24 @@
                   <Font name="Arial Bold" size="32.0" />
                </font>
             </Text>
-            <TextField fx:id="RechercherActualiteAdmin" layoutX="558.0" layoutY="14.0" onAction="#RechercherActualiteAdmin" prefHeight="36.0" prefWidth="244.0" promptText="Rechercher..." stylesheets="@../../../../../../3A5_DevMasters/src/main/resources/ActualiteGui/Actualite.css" />
-            <Button fx:id="sortActualiteAdmin" layoutX="820.0" layoutY="-3.0" mnemonicParsing="false" onAction="#sortActualiteAdmin" prefHeight="70.0" prefWidth="80.0" style="-fx-background-color: #ffffff;" stylesheets="@../../../../../../3A5_DevMasters/src/main/resources/ActualiteGui/Actualite.css" textFill="WHITE">
+            <TextField fx:id="RechercherActualiteAdmin" layoutX="558.0" layoutY="14.0" onAction="#RechercherActualiteAdmin" prefHeight="36.0" prefWidth="244.0" promptText="Rechercher..." stylesheets="@/styles/style.css" />
+            <Button fx:id="sortActualiteAdmin" layoutX="820.0" layoutY="-3.0" mnemonicParsing="false" onAction="#sortActualiteAdmin" prefHeight="70.0" prefWidth="80.0" style="-fx-background-color: #ffffff;" stylesheets="@/styles/style.css" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="16.0" />
                </font>
                <graphic>
                   <ImageView fitHeight="45.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../../3A5_DevMasters/src/main/resources/ActualiteGui/assets/sortActualite.png" />
+                        <Image url="@/assets/sort.png" />
                      </image>
                   </ImageView>
                </graphic>
             </Button>
-            <Button fx:id="buttonreturnA" layoutX="103.0" layoutY="627.0" mnemonicParsing="false" onAction="#buttonreturnA" prefHeight="54.0" prefWidth="79.0" style="-fx-background-color: #FFFFFF;" stylesheets="@../../../../../../3A5_DevMasters/src/main/resources/reclamationGui/css/styles.css">
+            <Button fx:id="buttonreturnA" layoutX="103.0" layoutY="627.0" mnemonicParsing="false" onAction="#buttonreturnA" prefHeight="54.0" prefWidth="79.0" style="-fx-background-color: #FFFFFF;" stylesheets="@/styles/style.css">
                <graphic>
                   <ImageView fitHeight="55.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../../../3A5_DevMasters/src/main/resources/reclamationGui/assets/left-arrow.png" />
+                        <Image url="@/assets/left-arrow.png" />
                      </image>
                   </ImageView>
                </graphic>

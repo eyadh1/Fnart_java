@@ -8,7 +8,7 @@
 <?import javafx.scene.image.*?>
 
 <?import java.lang.String?>
-<BorderPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.esprit.controllers.MainController">
+<BorderPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.MainController">
     <stylesheets>
         <String fx:value="/styles/style.css" />
     </stylesheets>
@@ -35,7 +35,7 @@
             <Button onAction="#afficherChatBot" maxWidth="Infinity" styleClass="sidebar-button">
                 <graphic>
                     <ImageView fitWidth="20" fitHeight="20" preserveRatio="false">
-                        <Image url="@assets/chatbot-icon.png" />
+                        <Image url="@assets/chatbot.png" />
                     </ImageView>
                 </graphic>
             </Button>

@@ -68,11 +68,13 @@ public class ModifierForumController implements Initializable {
         if (forum != null && serviceForum != null) {
             String nouveauTitre = TFtitre.getText();
             String nouvelleDescription = TFDescriptionModif.getText();
+            String nouvelleCategorie = TFCategorieModif.getValue();
 
             // Validate title and description
             if (nouveauTitre.length() >= 4 && nouvelleDescription.length() >= 12) {
                 forum.setTitre_f(nouveauTitre);
                 forum.setDescription_f(nouvelleDescription);
+                forum.setCategorie_f(nouvelleCategorie);
 
                 // Update image if selected
                 if (imagePath != null) {
@@ -99,18 +101,21 @@ public class ModifierForumController implements Initializable {
                     errorAlert.show();
                 }
             } else {
-                // Show validation message for title and description
+                // Show validation errors
                 if (nouveauTitre.length() < 4) {
                     warningtitle.setVisible(true);
-                    TFtitre.requestFocus();
+                    goodtitle.setVisible(false);
                 } else {
                     warningtitle.setVisible(false);
+                    goodtitle.setVisible(true);
                 }
+
                 if (nouvelleDescription.length() < 12) {
                     warningDescription.setVisible(true);
-                    TFDescriptionModif.requestFocus();
+                    gooddescription.setVisible(false);
                 } else {
                     warningDescription.setVisible(false);
+                    gooddescription.setVisible(true);
                 }
             }
         } else {
@@ -157,20 +162,17 @@ public class ModifierForumController implements Initializable {
 
     public void setData(Forum forum) {
         this.forum = forum;
-        if (forum != null) {
-            TFtitre.setText(forum.getTitre_f());
-            TFDescriptionModif.setText(forum.getDescription_f());
-            String imageUrl = forum.getImage_f();
-            if (imageUrl != null && !imageUrl.isEmpty()) {
-                try {
-                    File file = new File(imageUrl);
-                    String fileUrl = file.toURI().toURL().toString();
-                    Image image = new Image(fileUrl);
-                    imgView_reclamationmodifffffff.setImage(image);
-                } catch (MalformedURLException e) {
-                    System.err.println("Malformed URL: " + e.getMessage());
-                    e.printStackTrace();
-                }
+        TFtitre.setText(forum.getTitre_f());
+        TFDescriptionModif.setText(forum.getDescription_f());
+        TFCategorieModif.setValue(forum.getCategorie_f());
+        
+        // Set the image if it exists
+        if (forum.getImage_f() != null && !forum.getImage_f().isEmpty()) {
+            try {
+                Image image = new Image("file:" + forum.getImage_f());
+                imgView_reclamationmodifffffff.setImage(image);
+            } catch (Exception e) {
+                System.err.println("Error loading image: " + e.getMessage());
             }
         }
     }

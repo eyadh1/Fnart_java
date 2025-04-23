@@ -122,13 +122,19 @@ public class AjouterForumController implements Initializable {
     public void ajouterForumAction(ActionEvent actionEvent) {
         // Vérifier les longueurs minimales des champs
         if (TFDescription.getText().length() < 12 || TFtitre.getText().length() < 4 || TFCategorie.getValue() == null || TFCategorie.getValue().isEmpty()) {
-            showAnimatedErrorAlert("Erreur", "Veuillez vous assurer que tous les champs ont la longueur requise ou sont remplis !");
+            showAnimatedErrorAlert("Erreur de validation", "Veuillez vous assurer que :\n- Le titre contient au moins 4 caractères\n- La description contient au moins 12 caractères\n- Une catégorie est sélectionnée");
             return;
         }
 
         try {
-            // Ajouter le nouveau Forum avec le chemin de l'image
-            serviceForum.ajouter(new Forum(sqlDate, TFtitre.getText(), TFCategorie.getValue(), TFDescription.getText(), imagePath));
+            // Créer un nouvel utilisateur (à remplacer par l'utilisateur connecté)
+            User currentUser = new User(1); // Assurez-vous que cet ID existe dans votre base de données
+            
+            // Créer le nouveau forum avec l'utilisateur
+            Forum newForum = new Forum(sqlDate, TFtitre.getText(), currentUser, TFCategorie.getValue(), TFDescription.getText(), imagePath);
+            
+            // Ajouter le forum
+            serviceForum.ajouter(newForum);
 
             // Recharger la liste des forums
             if (afficherForumController != null) {
@@ -146,11 +152,18 @@ public class AjouterForumController implements Initializable {
             showSuccessMessage(actionEvent);
 
         } catch (SQLException e) {
-            showAlert("Erreur", "Erreur lors de l'ajout du forum", "Une erreur s'est produite: " + e.getMessage(), Alert.AlertType.ERROR);
+            String errorMessage;
+            if (e.getMessage().contains("L'utilisateur avec l'ID")) {
+                errorMessage = "Erreur : Aucun utilisateur trouvé dans la base de données.\nVeuillez vous connecter ou créer un compte d'abord.";
+            } else if (e.getMessage().contains("foreign key constraint fails")) {
+                errorMessage = "Erreur : Problème avec l'ID utilisateur.\nVeuillez vous reconnecter.";
+            } else {
+                errorMessage = "Erreur lors de l'ajout du forum : " + e.getMessage();
+            }
+            showAnimatedErrorAlert("Erreur", errorMessage);
+            e.printStackTrace();
         }
     }
-
-
 
     private void showSuccessMessage(ActionEvent actionEvent) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

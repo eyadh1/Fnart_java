@@ -28,7 +28,7 @@
             <Button fx:id="goafficher" layoutX="195.0" layoutY="267.0" mnemonicParsing="false" onAction="#goafficherAction" prefHeight="26.0" prefWidth="139.0" text="Navigate" />
          </children>
       </AnchorPane>
-      <Label fx:id="label" layoutX="415.0" layoutY="75.0" prefHeight="31.0" prefWidth="280.0" stylesheets="@../../../../../../3A5_DevMasters/src/main/resources/reclamationGui/css/styles.css">
+      <Label fx:id="label" layoutX="415.0" layoutY="75.0" prefHeight="31.0" prefWidth="280.0" stylesheets="@/styles/style.css">
          <font>
             <Font name="Arial" size="14.0" />
          </font>

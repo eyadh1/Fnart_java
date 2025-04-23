@@ -14,17 +14,41 @@ public class ServiceForum implements IService<Forum> {
 
     @Override
     public void ajouter(Forum forum) throws SQLException {
+        // Vérifier si l'utilisateur existe
+        int userId = (forum.getUser() != null) ? forum.getUser().getId() : getCurrentUserId();
+        if (!userExists(userId)) {
+            throw new SQLException("L'utilisateur avec l'ID " + userId + " n'existe pas. Veuillez créer un utilisateur d'abord.");
+        }
+
         String req = "INSERT INTO forum (date_f, titre_f, id_user_id, categorie_f, description_f, image_f) VALUES (?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = cnx.prepareStatement(req);
         ps.setDate(1, new java.sql.Date(forum.getDate_f().getTime()));
         ps.setString(2, forum.getTitre_f());
-        ps.setInt(3, 1); // Use the user's ID here (assuming user ID 1 for now)
+        ps.setInt(3, userId);
         ps.setString(4, forum.getCategorie_f());
         ps.setString(5, forum.getDescription_f());
         ps.setString(6, forum.getImage_f());
         ps.executeUpdate();
         System.out.println("Forum ajouté avec succès !");
     }
+
+    private int getCurrentUserId() {
+        // TODO: Implement proper user session management
+        // For now, return a valid user ID from your database
+        return 1; // Make sure this ID exists in your user table
+    }
+
+    private boolean userExists(int userId) throws SQLException {
+        String req = "SELECT COUNT(*) FROM user WHERE id = ?";
+        PreparedStatement ps = cnx.prepareStatement(req);
+        ps.setInt(1, userId);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1) > 0;
+        }
+        return false;
+    }
+
     public Forum getOneByTitle(String title) throws SQLException {
         Forum forum = null;
         String req = "SELECT * FROM forum WHERE titre_f=?";
