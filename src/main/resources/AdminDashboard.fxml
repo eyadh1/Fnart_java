@@ -3,29 +3,31 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
-
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane stylesheets="@/css/AdminDashboard.css" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.AdminDashboardController">
+<?import javafx.scene.control.ToggleGroup?>
+<BorderPane prefHeight="700.0" prefWidth="900.0" stylesheets="@/css/AdminDashboard.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.AdminDashboardController">
     <top>
         <AnchorPane>
             <children>
@@ -42,7 +44,7 @@
                             </font>
                         </Label>
                         <HBox alignment="CENTER_RIGHT" spacing="15.0" HBox.hgrow="ALWAYS">
-                            <TextField fx:id="searchField" promptText="Search users..." prefWidth="250.0" />
+                            <TextField fx:id="searchField" prefWidth="250.0" promptText="Search users..." />
                             <Button mnemonicParsing="false" text="Search" />
                             <Button fx:id="refreshButton" mnemonicParsing="false" text="Refresh" />
                             <Button mnemonicParsing="false" text="Logout" />
@@ -58,18 +60,18 @@
                     </children>
                 </HBox>
 
-                <AnchorPane fx:id="profilePanel" styleClass="profile-panel" visible="false" managed="false" AnchorPane.topAnchor="70.0" AnchorPane.rightAnchor="0.0">
-                    <VBox spacing="10.0" alignment="TOP_CENTER" styleClass="profile-panel-content">
+                <AnchorPane fx:id="profilePanel" managed="false" styleClass="profile-panel" visible="false" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
+                    <VBox alignment="TOP_CENTER" spacing="10.0" styleClass="profile-panel-content">
                         <ImageView fx:id="profileImageLarge" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true" styleClass="profile-image-large">
                             <image>
                                 <Image url="@assets/paintingofawoman.jpg" />
                             </image>
                         </ImageView>
-                        <Label fx:id="adminNameLabel" text="Admin User" styleClass="profile-name" />
-                        <Label fx:id="adminEmailLabel" text="admin@arttherapy.com" styleClass="profile-email" />
-                        <HBox spacing="10.0" alignment="CENTER">
+                        <Label fx:id="adminNameLabel" styleClass="profile-name" text="Admin User" />
+                        <Label fx:id="adminEmailLabel" styleClass="profile-email" text="admin@arttherapy.com" />
+                        <HBox alignment="CENTER" spacing="10.0">
                             <Button mnemonicParsing="false" text="Edit Profile" />
-                            <Button mnemonicParsing="false" text="Sign Out" styleClass="sign-out-button" />
+                            <Button mnemonicParsing="false" styleClass="sign-out-button" text="Sign Out" />
                         </HBox>
                     </VBox>
                 </AnchorPane>
@@ -80,7 +82,7 @@
     <center>
         <VBox spacing="15.0" styleClass="container" BorderPane.alignment="CENTER">
             <padding>
-                <Insets top="15.0" right="15.0" bottom="15.0" left="15.0"/>
+                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
             </padding>
 
             <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
@@ -89,23 +91,22 @@
                         <content>
                             <AnchorPane fx:id="beneficiairesPane" prefHeight="600.0" prefWidth="800.0">
                                 <VBox alignment="CENTER" spacing="20" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
-                                    <MenuBar>
+                                    <MenuBar prefHeight="36.0" prefWidth="348.0">
                                         <Menu text="Statut">
-                                            <MenuItem text="En attente" onAction="#handleFilterEnAttente" />
-                                            <MenuItem text="Accepté" onAction="#handleFilterAccepte" />
-                                            <MenuItem text="Refusé" onAction="#handleFilterRefuse"/>
+                                            <MenuItem onAction="#handleFilterEnAttente" text="En attente" />
+                                            <MenuItem onAction="#handleFilterAccepte" text="Accepté" />
+                                            <MenuItem onAction="#handleFilterRefuse" text="Refusé" />
                                         </Menu>
                                     </MenuBar>
                                     
-                                    <Label text="Liste des Bénéficiaires" />
-                                    
-                                    <HBox spacing="10" alignment="CENTER">
-                                        <TextField fx:id="searchTextField" promptText="Rechercher..."/>
-                                        <Label text="Trier par:"/>
-                                        <ChoiceBox fx:id="sortOrderChoice"/>
+                                    <HBox alignment="CENTER" spacing="20">
+                                        <VBox alignment="CENTER" spacing="10">
+                                           <ChoiceBox fx:id="sortOrderChoice" />
+                                        </VBox>
+                                        <PieChart fx:id="beneficiairesChart" title="Répartition des Bénéficiaires" />
                                     </HBox>
                                     
-                                    <ListView fx:id="beneficiairesListView" VBox.vgrow="ALWAYS" />
+                                    <ListView fx:id="beneficiairesListView" prefHeight="734.0" prefWidth="830.0" VBox.vgrow="ALWAYS" />
                                 </VBox>
                             </AnchorPane>
                         </content>
@@ -113,20 +114,79 @@
                     <Tab text="Liste des Dons">
                         <content>
                             <AnchorPane fx:id="donsPane" prefHeight="600.0" prefWidth="800.0">
-                                <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="800.0" spacing="20.0">
+                                <VBox alignment="TOP_CENTER" prefHeight="601.0" prefWidth="870.0" spacing="20.0">
                                     <padding>
                                         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                                     </padding>
                                     
-                                    <Label text="Gestion des Dons" />
-                                    
-                                    <HBox spacing="10" alignment="CENTER">
-                                        <TextField fx:id="searchTextField" promptText="Rechercher..."/>
-                                        <Label text="Filtrer par type:"/>
-                                        <ChoiceBox fx:id="typeFilterChoice"/>
+                                    <HBox alignment="CENTER" spacing="20">
+                                        <VBox alignment="CENTER" spacing="10">
+                                           <TextField fx:id="searchTextField" promptText="Rechercher..." />
+                                           <ChoiceBox fx:id="typeFilterChoice" />
+                                        </VBox>
+                                        <PieChart fx:id="donsChart" title="Répartition des Dons" />
                                     </HBox>
                                     
-                                    <ListView fx:id="donsListView" prefHeight="400.0" prefWidth="700.0" />
+                                    <ListView fx:id="donsListView" prefHeight="736.0" prefWidth="779.0" />
+                                </VBox>
+                            </AnchorPane>
+                        </content>
+                    </Tab>
+                    <Tab text="Statistiques">
+                        <content>
+                            <AnchorPane prefHeight="600.0" prefWidth="800.0">
+                                <VBox alignment="TOP_CENTER" spacing="20" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+                                    <Label styleClass="title" text="Statistiques Générales" />
+                                    
+                                    <HBox alignment="CENTER" spacing="20">
+                                        <VBox alignment="CENTER" spacing="10">
+                                            <Label styleClass="section-title" text="Statistiques Bénéficiaires" />
+                                            <FlowPane hgap="10" prefWrapLength="400" vgap="10">
+                                                <VBox styleClass="stat-box">
+                                                    <Label styleClass="stat-label" text="Total Bénéficiaires" />
+                                                    <Label fx:id="totalBeneficiairesLabel" styleClass="stat-value" text="0" />
+                                                </VBox>
+                                                <VBox styleClass="stat-box">
+                                                    <Label styleClass="stat-label" text="En Attente" />
+                                                    <Label fx:id="enAttenteLabel" styleClass="stat-value" text="0" />
+                                                </VBox>
+                                                <VBox styleClass="stat-box">
+                                                    <Label styleClass="stat-label" text="Acceptés" />
+                                                    <Label fx:id="acceptesLabel" styleClass="stat-value" text="0" />
+                                                </VBox>
+                                                <VBox styleClass="stat-box">
+                                                    <Label styleClass="stat-label" text="Refusés" />
+                                                    <Label fx:id="refusesLabel" styleClass="stat-value" text="0" />
+                                                </VBox>
+                                            </FlowPane>
+                                        </VBox>
+                                        <PieChart fx:id="beneficiairesStatsChart" title="Répartition des Bénéficiaires" />
+                                    </HBox>
+                                    
+                                    <HBox alignment="CENTER" spacing="20">
+                                        <VBox alignment="CENTER" spacing="10">
+                                            <Label styleClass="section-title" text="Statistiques Dons" />
+                                            <FlowPane hgap="10" prefWrapLength="400" vgap="10">
+                                                <VBox styleClass="stat-box">
+                                                    <Label styleClass="stat-label" text="Total Dons" />
+                                                    <Label fx:id="totalDonsLabel" styleClass="stat-value" text="0" />
+                                                </VBox>
+                                                <VBox styleClass="stat-box">
+                                                    <Label styleClass="stat-label" text="Valeur Totale" />
+                                                    <Label fx:id="valeurTotaleLabel" styleClass="stat-value" text="0" />
+                                                </VBox>
+                                                <VBox styleClass="stat-box">
+                                                    <Label styleClass="stat-label" text="Dons en Nature" />
+                                                    <Label fx:id="donsNatureLabel" styleClass="stat-value" text="0" />
+                                                </VBox>
+                                                <VBox styleClass="stat-box">
+                                                    <Label styleClass="stat-label" text="Dons Financiers" />
+                                                    <Label fx:id="donsFinanciersLabel" styleClass="stat-value" text="0" />
+                                                </VBox>
+                                            </FlowPane>
+                                        </VBox>
+                                        <PieChart fx:id="donsStatsChart" title="Répartition des Dons" />
+                                    </HBox>
                                 </VBox>
                             </AnchorPane>
                         </content>
@@ -142,41 +202,89 @@
                                     <Label text="Ajouter un Bénéficiaire" />
                                     
                                     <GridPane hgap="10" vgap="10">
-                                        <Label text="Nom:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                                        <TextField fx:id="nomTextField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-                                        
-                                        <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                                        <TextField fx:id="emailTextField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                                        
-                                        <Label text="Téléphone:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                                        <TextField fx:id="telephoneTextField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-                                        
-                                        <Label text="Association:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-                                        <ChoiceBox fx:id="associationChoice" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-                                        
-                                        <Label text="Cause:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-                                        <TextField fx:id="causeTextField" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-                                        
-                                        <Label text="Valeur Demandée:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-                                        <TextField fx:id="valeurTextField" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
-                                        
-                                        <Label text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
-                                        <TextArea fx:id="descriptionTextArea" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
-                                        
-                                        <Label text="Statut:" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
-                                        <ChoiceBox fx:id="statusChoice" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
-
-                                        <Label text="Image:" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
-                                        <VBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="8">
-                                            <Button fx:id="uploadImageButton" text="Choisir une image" onAction="#handleImageUpload"/>
-                                            <ImageView fx:id="imagePreview" fitWidth="100" fitHeight="100" preserveRatio="true"/>
+                                        <fx:define>
+                                            <ToggleGroup fx:id="associationToggleGroup" />
+                                        </fx:define>
+                                        <Label text="Nom:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                        <VBox GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                            <TextField fx:id="nomTextField" styleClass="validatable-field" editable="true" />
+                                            <Label fx:id="nomErrorLabel" styleClass="error-label" />
                                         </VBox>
-                                    </GridPane>
+                                        
+                                        <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                        <VBox GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                            <TextField fx:id="emailTextField" styleClass="validatable-field" />
+                                            <Label fx:id="emailErrorLabel" styleClass="error-label" />
+                                        </VBox>
+                                        
+                                        <Label text="Téléphone:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                        <VBox GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                            <TextField fx:id="telephoneTextField" styleClass="validatable-field" />
+                                            <Label fx:id="telephoneErrorLabel" styleClass="error-label" />
+                                        </VBox>
 
-                                    <HBox alignment="CENTER" spacing="20.0">
-                                        <Button fx:id="ajoutButton" mnemonicParsing="false" onAction="#handleSubmit" text="Ajouter"/>
-                                    </HBox>
+
+
+                                        <Label text="Association:" GridPane.rowIndex="3" />
+                                        <Label text="Cause:" GridPane.rowIndex="5" />
+                                        <VBox GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                            <Label fx:id="associationErrorLabel" styleClass="error-label" textFill="red" />
+                                        </VBox>
+                                        <VBox GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                            <TextField fx:id="causeTextField" styleClass="validatable-field" />
+                                            <Label fx:id="causeErrorLabel" styleClass="error-label" />
+                                        </VBox>
+                                        
+                                        <Label text="Valeur Demandée:" GridPane.rowIndex="6" />
+                                        <VBox GridPane.columnIndex="1" GridPane.rowIndex="6">
+                                            <TextField fx:id="valeurTextField" styleClass="validatable-field" />
+                                            <Label fx:id="valeurErrorLabel" styleClass="error-label" />
+                                        </VBox>
+                                        
+                                        <Label text="Description:" GridPane.rowIndex="7" />
+                                        <VBox GridPane.columnIndex="1" GridPane.rowIndex="7">
+                                            <TextArea fx:id="descriptionTextArea" styleClass="validatable-field" />
+                                            <Label fx:id="descriptionErrorLabel" styleClass="error-label" />
+                                        </VBox>
+                                        
+                                        <Label text="Statut:" GridPane.rowIndex="8" />
+                                        <VBox GridPane.columnIndex="1" GridPane.rowIndex="8">
+                                            <ChoiceBox fx:id="statusChoice" styleClass="validatable-field" />
+                                            <Label fx:id="statusErrorLabel" styleClass="error-label" />
+                                        </VBox>
+
+                                        <Label text="Photo" GridPane.rowIndex="9" />
+                                        <VBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="9">
+                                            <Button fx:id="uploadImageButton" onAction="#handleImageUpload" text="Choisir une image" />
+                                            <ImageView fx:id="imagePreview" fitHeight="100" fitWidth="100" preserveRatio="true" />
+                                            <Label fx:id="imageErrorLabel" styleClass="error-label" />
+                                        </VBox>
+                                         <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                             <RadioButton fx:id="associationOui" styleClass="validatable-field" text="Oui" toggleGroup="${associationToggleGroup}" />
+                                             <RadioButton fx:id="associationNon" styleClass="validatable-field" text="Non" toggleGroup="${associationToggleGroup}" />
+                                         </HBox>
+                              <columnConstraints>
+                                 <ColumnConstraints />
+                                 <ColumnConstraints />
+                              </columnConstraints>
+                              <rowConstraints>
+                                 <RowConstraints />
+                                 <RowConstraints />
+                                 <RowConstraints />
+                                 <RowConstraints />
+                                 <RowConstraints />
+                                 <RowConstraints />
+                                 <RowConstraints />
+                                 <RowConstraints />
+                                 <RowConstraints />
+                                 <RowConstraints />
+                              </rowConstraints>
+                                    </GridPane>
                                 </VBox>
+
+                                    <HBox alignment="CENTER" layoutX="780.0" layoutY="203.0" spacing="20.0">
+                                     <Button fx:id="ajoutButton" mnemonicParsing="false" onAction="#handleSubmit" text="Ajouter" />
+                                 </HBox>
                             </AnchorPane>
                         </content>
                     </Tab>
@@ -184,28 +292,52 @@
                         <content>
                             <AnchorPane prefHeight="600.0" prefWidth="800.0">
                                 <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="800.0" spacing="20.0">
-                                <padding>
+                                    <padding>
                                         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                                </padding>
+                                    </padding>
                                     
                                     <Label text="Ajouter un Don" />
                                     
                                     <GridPane hgap="10" vgap="10">
-                                        <Label text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                                        <TextArea fx:id="descriptionDonTextArea" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                                        <Label text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                        <VBox GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                            <TextArea fx:id="descriptionDonTextArea" styleClass="validatable-field" />
+                                            <Label fx:id="descriptionDonErrorLabel" styleClass="error-label" />
+                                        </VBox>
                                         
-                                        <Label text="Valeur:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                                        <TextField fx:id="valeurDonTextField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                                        <Label text="Valeur:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                        <VBox GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                            <TextField fx:id="valeurDonTextField" styleClass="validatable-field" />
+                                            <Label fx:id="valeurDonErrorLabel" styleClass="error-label" />
+                                        </VBox>
                                         
-                                        <Label text="Type:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                                        <ChoiceBox fx:id="typeDonChoice" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                                        <Label text="Type:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                        <VBox GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                            <ChoiceBox fx:id="typeDonChoice" styleClass="validatable-field" />
+                                            <Label fx:id="typeDonErrorLabel" styleClass="error-label" />
+                                        </VBox>
                                         
-                                        <Label text="Bénéficiaire:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-                                        <ChoiceBox fx:id="beneficiaireChoice" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                                        <Label text="Bénéficiaire:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                                        <VBox GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                            <ChoiceBox fx:id="beneficiaireChoice" styleClass="validatable-field" />
+                                            <Label fx:id="beneficiaireErrorLabel" styleClass="error-label" />
+                                        </VBox>
+                              <columnConstraints>
+                                 <ColumnConstraints />
+                                 <ColumnConstraints />
+                              </columnConstraints>
+                              <rowConstraints>
+                                 <RowConstraints />
+                                 <RowConstraints />
+                                 <RowConstraints />
+                                 <RowConstraints />
+                                 <RowConstraints />
+                              </rowConstraints>
                                     </GridPane>
 
                                     <HBox alignment="CENTER" spacing="20.0">
-                                        <Button fx:id="ajoutDonButton" mnemonicParsing="false" onAction="#handleDonSubmit" text="Ajouter"/>
+                                        <Button fx:id="ajoutDonButton" mnemonicParsing="false" onAction="#handleDonSubmit" text="Ajouter" />
                                     </HBox>
                                 </VBox>
                             </AnchorPane>
@@ -217,7 +349,7 @@
     </center>
 
     <bottom>
-        <HBox alignment="CENTER_RIGHT" style="-fx-background-color: #F9F5F0; -fx-padding: 5 15;">
+        <HBox alignment="CENTER_RIGHT" prefHeight="0.0" prefWidth="900.0" style="-fx-background-color: #F9F5F0; -fx-padding: 5 15;">
             <Label text="© 2025 Art Therapy Platform. All rights reserved." />
         </HBox>
     </bottom>

@@ -66,41 +66,6 @@ public class DashboardController {
     }
 
 
-    @FXML
-    private void handleListeBeneficiaire() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ListeBeneficiaires.fxml"));
-            Parent view = loader.load();
-            
-            BorderPane borderPane = (BorderPane) contentArea.getParent();
-            if (borderPane != null) {
-                borderPane.setCenter(view);
-                System.out.println("Navigation vers ListeBeneficiaires");
-            } else {
-                showError("Erreur", "Impossible de trouver le conteneur principal", null);
-            }
-        } catch (IOException e) {
-            showError("Erreur", "Impossible de charger la vue ListeBeneficiaires", e);
-        }
-    }
-
-    @FXML
-    private void handleListeDons() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ListeDons.fxml"));
-            Parent view = loader.load();
-            
-            BorderPane borderPane = (BorderPane) contentArea.getParent();
-            if (borderPane != null) {
-                borderPane.setCenter(view);
-                System.out.println("Navigation vers ListeDons");
-            } else {
-                showError("Erreur", "Impossible de trouver le conteneur principal", null);
-            }
-        } catch (IOException e) {
-            showError("Erreur", "Impossible de charger la vue ListeDons", e);
-        }
-    }
 
     private void showError(String title, String content, Exception e) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
