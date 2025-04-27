@@ -14,6 +14,10 @@ REM Set Maven path
 set MAVEN_HOME=%~dp0apache-maven-3.9.9
 set PATH=%MAVEN_HOME%\bin;%PATH%
 
+REM Set JavaFX path
+set JAVAFX_PATH=%USERPROFILE%\.m2\repository\org\openjfx
+set PATH_TO_FX=%JAVAFX_PATH%\javafx-base\20.0.2;%JAVAFX_PATH%\javafx-controls\20.0.2;%JAVAFX_PATH%\javafx-fxml\20.0.2;%JAVAFX_PATH%\javafx-graphics\20.0.2;%JAVAFX_PATH%\javafx-media\20.0.2
+
 REM Compiler le projet avec Maven
 echo Compilation du projet...
 call mvn clean package
@@ -27,7 +31,7 @@ if %errorlevel% neq 0 (
 
 REM Exécuter l'application
 echo Lancement de l'application...
-java --module-path "target/modules" --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base,javafx.media -jar target/fnartPI-1.0-SNAPSHOT.jar
+java --module-path "%PATH_TO_FX%" --add-modules=javafx.controls,javafx.fxml,javafx.graphics,javafx.base,javafx.media -jar target/fnartPI-1.0-SNAPSHOT.jar
 
 REM Si l'application s'est terminée avec une erreur
 if %errorlevel% neq 0 (

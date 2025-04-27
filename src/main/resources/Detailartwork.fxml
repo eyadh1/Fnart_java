@@ -4,48 +4,70 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.image.*?>
-<?import javafx.scene.text.Text?>
-<?import java.net.URL?>
+<?import javafx.scene.text.*?>
 
-<ScrollPane fitToWidth="true" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" 
-            fx:controller="tn.esprit.controllers.DetailartworkController">
-    <VBox spacing="20" styleClass="detail-container">
-        <!-- En-tête avec l'image et les informations principales -->
-        <HBox spacing="30" styleClass="header-section">
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="tn.esprit.controllers.DetailartworkController"
+            stylesheets="@styles/detailartwork.css">
+
+    <!-- Contenu principal centré -->
+    <center>
+        <VBox alignment="TOP_CENTER" spacing="20" styleClass="artwork-main-content">
             <!-- Image de l'œuvre -->
-            <VBox styleClass="image-container" alignment="CENTER">
-                <ImageView fx:id="artworkImage" fitWidth="400" fitHeight="400" 
-                          preserveRatio="true" styleClass="artwork-image"/>
-            </VBox>
-            
-            <!-- Informations principales -->
-            <VBox spacing="15" HBox.hgrow="ALWAYS" styleClass="info-container">
-                <Label fx:id="titleLabel" styleClass="title-label"/>
-                <Label fx:id="artistLabel" styleClass="artist-label"/>
-                <Label fx:id="yearLabel" styleClass="detail-label"/>
-                <Label fx:id="techniqueLabel" styleClass="detail-label"/>
-                <Label fx:id="dimensionsLabel" styleClass="detail-label"/>
-                <Label fx:id="priceLabel" styleClass="price-label"/>
-                <Label fx:id="statusLabel" styleClass="status-label"/>
-                <Label fx:id="locationLabel" styleClass="detail-label"/>
-            </VBox>
-        </HBox>
+            <ImageView fx:id="artworkImage" fitWidth="500" fitHeight="500" preserveRatio="true"
+                       styleClass="artwork-image"/>
 
-        <!-- Description -->
-        <VBox spacing="10" styleClass="description-section">
-            <Label text="Description" styleClass="section-title"/>
-            <Label fx:id="descriptionLabel" styleClass="description-text" wrapText="true"/>
+            <!-- Titre et artiste -->
+            <VBox alignment="CENTER" spacing="5">
+                <Label fx:id="artworkTitle" styleClass="artwork-title"/>
+                <Label fx:id="artworkArtist" styleClass="artwork-artist"/>
+            </VBox>
+
+
+
+            <!-- Boutons d'action -->
+            <HBox alignment="CENTER" spacing="15" styleClass="action-buttons">
+                <Button fx:id="saveButton" text="Save" styleClass="action-button"/>
+                <Button fx:id="shareButton" text="Share" styleClass="action-button"/>
+            </HBox>
         </VBox>
+    </center>
 
-        <!-- Conteneur pour les détails supplémentaires -->
-        <VBox fx:id="detailsContainer" spacing="15" styleClass="details-section"/>
-        
-        <stylesheets>
-            <URL value="@styles/detailartwork.css"/>
-        </stylesheets>
-        
-        <padding>
-            <Insets top="30" right="40" bottom="30" left="40"/>
-        </padding>
-    </VBox>
-</ScrollPane> 
+    <!-- Bloc d'achat à droite -->
+    <right>
+        <VBox alignment="TOP_CENTER" spacing="20" styleClass="purchase-panel">
+            <!-- Prix -->
+            <VBox alignment="CENTER" spacing="5">
+                <Label text="Prix" styleClass="price-label"/>
+                <Label fx:id="artworkPrice" styleClass="price-value"/>
+            </VBox>
+
+            <!-- Quantité -->
+            <VBox alignment="CENTER" spacing="5">
+                <Label text="Quantité" styleClass="quantity-label"/>
+                <Spinner fx:id="quantitySpinner" styleClass="quantity-spinner"/>
+            </VBox>
+
+            <!-- Bouton d'ajout au panier -->
+            <Button fx:id="addToCartButton" text="Ajouter au panier"
+                    styleClass="add-cart-button"/>
+
+            <Separator styleClass="separator"/>
+
+
+        </VBox>
+    </right>
+
+    <!-- Barre du haut avec boutons -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="top-bar">
+            <Button fx:id="backButton" text="←" styleClass="back-button"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <HBox alignment="CENTER_RIGHT" spacing="10">
+                <Label fx:id="likesCount" styleClass="likes-count"/>
+                <Button fx:id="likeButton" styleClass="like-button"/>
+
+            </HBox>
+        </HBox>
+    </top>
+</BorderPane>

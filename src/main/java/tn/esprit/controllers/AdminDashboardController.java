@@ -299,15 +299,23 @@ public class AdminDashboardController extends listartwork implements Initializab
 
                     // Load image
                     try {
-                        String fullPath = "C:/xampp/htdocs/artwork_images/" + artwork.getImage();
-                        File file = new File(fullPath);
-                        if (file.exists()) {
-                            Image image = new Image(file.toURI().toString());
-                            imageView.setImage(image);
-                        } else {
-                            imageView.setImage(null);
+                        String imageUrl = "http://localhost/artwork_images/" + artwork.getImage();
+                        System.out.println("Image URL: " + imageUrl);
+
+                        // Vérification de l'existence du fichier côté disque
+                        File file = new File("C:/xampp/htdocs/artwork_images/" + artwork.getImage());
+                        if (!file.exists()) {
+                            System.err.println("FICHIER INEXISTANT sur le disque: " + file.getAbsolutePath());
                         }
+
+                        Image image = new Image(imageUrl, true);
+                        if (image.isError()) {
+                            System.err.println("Erreur de chargement de l'image : " + image.getException());
+                        }
+                        imageView.setImage(image);
                     } catch (Exception e) {
+                        System.err.println("Exception lors du chargement de l'image : " + e.getMessage());
+                        e.printStackTrace();
                         imageView.setImage(null);
                     }
 

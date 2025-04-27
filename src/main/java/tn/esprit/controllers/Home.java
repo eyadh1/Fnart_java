@@ -13,12 +13,18 @@ public class Home extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AdminDashboard.fxml"));
+            var fxmlResource = getClass().getResource("/FrontArtwork.fxml");
+            System.out.println("FXML resource: " + fxmlResource);
+            if (fxmlResource == null) {
+                System.err.println("FXML file not found!");
+                return;
+            }
+            FXMLLoader loader = new FXMLLoader(fxmlResource);
             Parent root = loader.load();
             Scene scene = new Scene(root);
             
-            // Ajouter le CSS avec un chemin absolu
-            String cssPath = "/styles/frontartwork.css";
+            // Ajouter le CSS
+            String cssPath = "/styles/pinterest-style.css";
             var cssResource = getClass().getResource(cssPath);
             if (cssResource == null) {
                 System.err.println("Could not find CSS file: " + cssPath);
@@ -29,6 +35,7 @@ public class Home extends Application {
             
             stage.setTitle("Art Therapy Gallery");
             stage.setScene(scene);
+            stage.setMaximized(true); // Démarrer en plein écran
             stage.show();
         } catch (Exception e) {
             System.err.println("Error loading application: " + e.getMessage());
