@@ -12,6 +12,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import tn.esprit.enumerations.Role;
@@ -85,27 +86,24 @@ public class LoginController implements Initializable {
             String fxmlPath = determineDashboardPath(user.getRole());
             String title = determineDashboardTitle(user.getRole());
 
-            URL resourceUrl = getClass().getResource(fxmlPath);
-            if (resourceUrl == null) {
-                throw new IOException("FXML file not found: " + fxmlPath);
-            }
-
-            FXMLLoader loader = new FXMLLoader(resourceUrl);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent root = loader.load();
 
-            // Pass user data to dashboard controller
-            if (loader.getController() instanceof UserAwareController) {
-                ((UserAwareController) loader.getController()).setUser(user);
+            // Set the user in the controller
+            Object controller = loader.getController();
+            if (controller instanceof UserAwareController) {
+                ((UserAwareController) controller).setUser(user);
             }
 
             Stage stage = (Stage) emailTF.getScene().getWindow();
-            stage.setScene(new Scene(root));
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
             stage.setTitle(title);
             stage.show();
 
         } catch (IOException e) {
             showError("Failed to load dashboard. Error: " + e.getMessage());
-            e.printStackTrace(); // Log the full error for debugging
+            e.printStackTrace();
         }
     }
 
@@ -114,7 +112,7 @@ public class LoginController implements Initializable {
             case ADMIN -> "/AdminDashboard.fxml";
             case ARTIST -> "/ArtistDashboard.fxml";
             case THERAPIST -> "/TherapistDashboard.fxml";
-            default -> "/AdminDashboard.fxml";
+            default -> "/profile.fxml";
         };
     }
 
@@ -179,6 +177,11 @@ public class LoginController implements Initializable {
     }
 }
 
+
+
 interface UserAwareController {
     void setUser(User user);
 }
+
+
+

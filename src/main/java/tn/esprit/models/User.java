@@ -3,6 +3,7 @@ package tn.esprit.models;
 import tn.esprit.enumerations.Role;
 
 import java.util.Date;
+import java.sql.Timestamp;
 
 public class User {
 
@@ -11,6 +12,9 @@ public class User {
     private String imagePath; // New field for profile image
     private Role role;
     private Date DateOfBirth;
+    private String profilePicture;
+    private String resetToken;
+    private Timestamp resetTokenExpiry;
 
     public User() {
         // Default constructor
@@ -25,6 +29,16 @@ public class User {
         this.status = "PENDING";
     }
 
+    public User(String nom, String email, String password, String phone, String gender, Date DateOfBirth) {
+        this.nom = nom;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        this.gender = gender;
+        this.status = "PENDING";
+        this.DateOfBirth = DateOfBirth;
+    }
+
     public User(String nom, String email, String password, String phone, String gender, Role role) {
         this.nom = nom;
         this.email = email;
@@ -33,6 +47,17 @@ public class User {
         this.gender = gender;
         this.role = role;
         this.status = "PENDING";
+    }
+
+    public User(String nom, String email, String password, String phone, String gender, Role role, Date DateOfBirth) {
+        this.nom = nom;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        this.gender = gender;
+        this.role = role;
+        this.status = "PENDING";
+        this.DateOfBirth = DateOfBirth;
     }
 
     public User(String nom, String email, String password, String phone, String gender, Role role, String imagePath) {
@@ -102,6 +127,14 @@ public class User {
         this.role = role;
     }
 
+    public Date getDateOfBirth() {
+        return DateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        DateOfBirth = dateOfBirth;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -118,6 +151,30 @@ public class User {
         this.imagePath = imagePath;
     }
 
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
+    public Timestamp getResetTokenExpiry() {
+        return resetTokenExpiry;
+    }
+
+    public void setResetTokenExpiry(Timestamp resetTokenExpiry) {
+        this.resetTokenExpiry = resetTokenExpiry;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -130,6 +187,9 @@ public class User {
                 ", role=" + role +
                 ", status='" + status + '\'' +
                 ", imagePath='" + imagePath + '\'' +
+                ", profilePicture='" + profilePicture + '\'' +
+                ", resetToken='" + resetToken + '\'' +
+                ", resetTokenExpiry=" + resetTokenExpiry +
                 '}';
     }
 }

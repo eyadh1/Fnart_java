@@ -18,19 +18,20 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 
+<?import javafx.scene.control.ScrollPane?>
 <BorderPane stylesheets="@/styles/AdminDashboard.css" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.AdminDashboardController">
     <top>
         <AnchorPane prefHeight="70.0">
             <children>
                 <!-- Main Header -->
-                <HBox alignment="CENTER_LEFT" spacing="20.0" style="-fx-background-color: #310E10; -fx-padding: 15 25;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <HBox alignment="CENTER_LEFT" spacing="20.0" style="-fx-background-color: linear-gradient(to bottom, #334342,#6F4D38, #331B19); -fx-padding: 15 25;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <children>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                             <image>
                                 <Image url="@assets/paintingofawoman.jpeg" />
                             </image>
                         </ImageView>
-                        <Label text="Art Therapy Admin" textFill="WHITE">
+                        <Label text="Art Therapy Admin" textFill="#FFFFFF">
                             <font>
                                 <Font name="System Bold" size="22.0" />
                             </font>
@@ -79,73 +80,43 @@
 
     <center>
         <!-- Main Content -->
-        <VBox spacing="15.0" styleClass="container" BorderPane.alignment="CENTER">
+        <VBox spacing="15.0"  styleClass="container" BorderPane.alignment="CENTER">
             <padding>
                 <Insets top="15.0" right="15.0" bottom="15.0" left="15.0"/>
             </padding>
 
-            <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
-                <tabs>
+            <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS" >
+                <tabs >
                     <Tab text="All Users">
                         <content>
-                            <BorderPane>
-                                <center>
-                                    <TableView fx:id="allUsersTable" prefHeight="450.0" prefWidth="200.0">
-                                        <columns>
-                                            <TableColumn fx:id="allNameColumn" prefWidth="120.0" text="Name" />
-                                            <TableColumn fx:id="allEmailColumn" prefWidth="150.0" text="Email" />
-                                            <TableColumn fx:id="allRoleColumn" prefWidth="120.0" text="Role" />
-                                            <TableColumn fx:id="allStatusColumn" prefWidth="120.0" text="Status" />
-                                            <TableColumn fx:id="allPhoneColumn" prefWidth="120.0" text="Phone" />
-                                            <TableColumn fx:id="allGenderColumn" prefWidth="120.0" text="Gender" />
-                                        </columns>
-                                    </TableView>
-                                </center>
-                                <right>
-                                    <VBox spacing="10.0" prefWidth="200.0" alignment="TOP_CENTER">
+                            <VBox spacing="10.0" styleClass="user-list-panel">
+
+                                <ScrollPane fitToWidth="true" styleClass="user-list-scroll">
+                                    <VBox fx:id="allUsersCardContainer" spacing="10.0">
                                         <padding>
-                                            <Insets top="0.0" right="0.0" bottom="0.0" left="10.0"/>
+                                            <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
                                         </padding>
-                                        <children>
-                                            <Button fx:id="updateButton" mnemonicParsing="false" onAction="#handleUpdate" prefWidth="180.0" text="Update Selected User" />
-                                            <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDelete" prefWidth="180.0" text="Delete Selected User" />
-                                        </children>
                                     </VBox>
-                                </right>
-                                <padding>
-                                    <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
-                                </padding>
-                            </BorderPane>
+                                </ScrollPane>
+
+                            </VBox>
                         </content>
                     </Tab>
                     <Tab text="Pending Approvals">
                         <content>
-                            <BorderPane>
-                                <center>
-                                    <TableView fx:id="pendingUsersTable" prefHeight="450.0" prefWidth="200.0">
-                                        <columns>
-                                            <TableColumn fx:id="nameColumn" prefWidth="120.0" text="Name" />
-                                            <TableColumn fx:id="emailColumn" prefWidth="150.0" text="Email" />
-                                            <TableColumn fx:id="roleColumn" prefWidth="120.0" text="Role" />
-                                            <TableColumn fx:id="phoneColumn" prefWidth="114.0" text="Phone" />
-                                        </columns>
-                                    </TableView>
-                                </center>
-                                <right>
-                                    <VBox spacing="10.0" prefWidth="200.0" alignment="TOP_CENTER">
+                            <VBox spacing="10.0" styleClass="user-list-panel">
+                                <ScrollPane fitToWidth="true" styleClass="user-list-scroll">
+                                    <VBox fx:id="pendingUsersCardContainer" spacing="10.0">
                                         <padding>
-                                            <Insets top="0.0" right="0.0" bottom="0.0" left="10.0"/>
+                                            <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
                                         </padding>
-                                        <children>
-                                            <Button fx:id="approveButton" mnemonicParsing="false" onAction="#handleApprove" prefWidth="180.0" text="Approve Selected User" />
-                                            <Button fx:id="rejectButton" mnemonicParsing="false" onAction="#handleReject" prefWidth="180.0" text="Reject Selected User" />
-                                        </children>
                                     </VBox>
-                                </right>
-                                <padding>
-                                    <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
-                                </padding>
-                            </BorderPane>
+                                </ScrollPane>
+                                <HBox spacing="10" alignment="CENTER_RIGHT">
+                                    <Button fx:id="approveButton" text="Approve" onAction="#handleApprove" disable="true" />
+                                    <Button fx:id="rejectButton" text="Reject" onAction="#handleReject" disable="true" />
+                                </HBox>
+                            </VBox>
                         </content>
                     </Tab>
                 </tabs>
@@ -202,7 +173,7 @@
                                 <Font name="System Bold" size="14.0" />
                             </font>
                         </Label>
-                        <PieChart fx:id="userRoleChart" VBox.vgrow="ALWAYS" legendVisible="true" />
+                        <PieChart fx:id="userRoleChart" VBox.vgrow="ALWAYS" legendVisible="true" prefWidth="400" prefHeight="400" />
                         <padding>
                             <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
                         </padding>

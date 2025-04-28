@@ -2,21 +2,23 @@ package tn.esprit.services;
 import tn.esprit.enumerations.Role;
 import tn.esprit.interfaces.IService;
 import tn.esprit.models.User;
-
 import tn.esprit.utils.MyDataBase;
 import org.mindrot.jbcrypt.BCrypt;
 import tn.esprit.utils.SessionManager;
-
+import tn.esprit.services.EmailService;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class UserService implements IService<User> {
     private Connection cnx;
+    private EmailService emailService;
 
     public UserService(){
-        cnx = MyDataBase.getInstance().getCnx();
+        cnx = MyDataBase.getInstance().getConnection();
+        emailService = new EmailService();
     }
 
     public boolean signUp(User user) {
@@ -152,22 +154,44 @@ public class UserService implements IService<User> {
         return null;
     }*/
 
-    public boolean resetPassword(String email, String newPassword) {
-        String query = "UPDATE user SET password = ? WHERE email = ?";
-        try (PreparedStatement statement = cnx.prepareStatement(query)) {
-            // Hash the new password
-            String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+    public boolean resetPassword(String verificationCode, String newPassword) {
+        // First verify the code is valid and not expired
+        String verifyQuery = "SELECT email FROM user WHERE reset_token = ? AND reset_token_expiration > NOW()";
+        try {
+            String userEmail = null;
+            
+            // Verify code and get user email
+            try (PreparedStatement verifyStmt = cnx.prepareStatement(verifyQuery)) {
+                verifyStmt.setString(1, verificationCode);
+                ResultSet rs = verifyStmt.executeQuery();
+                if (rs.next()) {
+                    userEmail = rs.getString("email");
+                } else {
+                    return false; // Code invalid or expired
+                }
+            }
 
-            statement.setString(1, hashedPassword);
-            statement.setString(2, email);
-
-            int rowsAffected = statement.executeUpdate();
-            return rowsAffected > 0;
+            // Update password and clear code
+            String updateQuery = "UPDATE user SET password = ?, reset_token = NULL, reset_token_expiration = NULL WHERE reset_token = ?";
+            try (PreparedStatement updateStmt = cnx.prepareStatement(updateQuery)) {
+                // Hash the new password
+                String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+                
+                updateStmt.setString(1, hashedPassword);
+                updateStmt.setString(2, verificationCode);
+                
+                int rowsAffected = updateStmt.executeUpdate();
+                if (rowsAffected > 0) {
+                    // Send confirmation email
+                    emailService.sendPasswordChangedConfirmation(userEmail);
+                    return true;
+                }
+            }
         } catch (SQLException e) {
             System.err.println("Error resetting password: " + e.getMessage());
             e.printStackTrace();
-            return false;
         }
+        return false;
     }
 
 
@@ -212,38 +236,7 @@ public class UserService implements IService<User> {
         }
         return users;
     }
-   /* public List<User> getAll() {
-        List<User> users = new ArrayList<>();
-        String requete = "SELECT * FROM user";
-        try {
-            Statement statement = cnx.createStatement();
-            ResultSet resultSet = statement.executeQuery(requete);
-            while (resultSet.next()) {
-                User user = new User();
-                user.setId(resultSet.getInt("id"));
-                user.setNom(resultSet.getString("nom"));
-                user.setEmail(resultSet.getString("email"));
-                user.setPassword(resultSet.getString("password"));
-                user.setPhone(resultSet.getString("phone"));
 
-                // Parse the role from the database format
-                String rolesStr = resultSet.getString("roles");
-                if (rolesStr != null && !rolesStr.isEmpty()) {
-                    // Remove the square brackets and quotes
-                    String roleStr = rolesStr.replace("[", "").replace("]", "").replace("\"", "");
-                    // Convert database role to enum
-                    Role role = convertToRole(roleStr);
-                    user.setRole(role);
-                }
-
-                user.setGender(resultSet.getString("gender"));
-                users.add(user);
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return users;
-    }*/
 
     @Override
     public void update(User user) {
@@ -315,6 +308,7 @@ public class UserService implements IService<User> {
             case "ROLE_USER":
                 return Role.REGULARUSER;
             case "ROLE_ADMIN":
+            case "ADMIN":
                 return Role.ADMIN;
             case "ROLE_ARTIST":
                 return Role.ARTIST;
@@ -445,7 +439,8 @@ public List<User> searchPendingUsers(String searchTerm) {
                     u.getEmail().toLowerCase().contains(loweredTerm)) &&
                     "PENDING".equalsIgnoreCase(u.getStatus()))
             .toList();
-}/*
+}
+/*
     public List<User> searchPendingUsers(String searchTerm) {
         /*String loweredTerm = searchTerm.toLowerCase();
         return getAll().stream()
@@ -548,5 +543,86 @@ public List<User> searchPendingUsers(String searchTerm) {
         }
 
         return user;
+    }
+
+    public boolean emailExists(String email) {
+        try {
+            String query = "SELECT COUNT(*) FROM user WHERE email = ?";
+            PreparedStatement stmt = cnx.prepareStatement(query);
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public String generateResetToken(String email) {
+        String token = UUID.randomUUID().toString();
+        String query = "UPDATE user SET reset_token = ?, reset_token_expiration = DATE_ADD(NOW(), INTERVAL 1 HOUR) WHERE email = ?";
+        
+        try (PreparedStatement stmt = cnx.prepareStatement(query)) {
+            stmt.setString(1, token);
+            stmt.setString(2, email);
+            
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                // Generate the reset link
+                String resetLink = "http://localhost:8080/reset-password?token=" + token;
+                // Send the reset email
+                emailService.sendPasswordResetEmail(email, resetLink);
+                return token;
+            }
+        } catch (SQLException e) {
+            System.err.println("Error generating reset token: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean verifyPassword(String email, String password) {
+        String query = "SELECT password FROM user WHERE email = ?";
+        try (PreparedStatement statement = cnx.prepareStatement(query)) {
+            statement.setString(1, email);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                String storedHash = resultSet.getString("password");
+                return BCrypt.checkpw(password, storedHash);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error verifying password: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public void saveResetToken(String email, String token) {
+        String query = "UPDATE user SET reset_token = ?, reset_token_expiration = DATE_ADD(NOW(), INTERVAL 1 HOUR) WHERE email = ?";
+        try (PreparedStatement stmt = cnx.prepareStatement(query)) {
+            stmt.setString(1, token);
+            stmt.setString(2, email);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error saving reset token: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public boolean verifyResetToken(String email, String token) {
+        String query = "SELECT reset_token FROM user WHERE email = ? AND reset_token = ? AND reset_token_expiration > NOW()";
+        try (PreparedStatement stmt = cnx.prepareStatement(query)) {
+            stmt.setString(1, email);
+            stmt.setString(2, token);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next(); // Returns true if a matching valid token is found
+        } catch (SQLException e) {
+            System.err.println("Error verifying reset token: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
     }
 }

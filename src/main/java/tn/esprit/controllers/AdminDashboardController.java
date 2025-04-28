@@ -13,12 +13,14 @@ import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.animation.PauseTransition;
 import javafx.util.Duration;
 import javafx.stage.Screen;
-import javafx.scene.layout.GridPane;
 import javafx.geometry.Insets;
+import tn.esprit.components.UserCard;
 import tn.esprit.models.User;
 import tn.esprit.services.UserService;
 import tn.esprit.enumerations.Role;
@@ -30,29 +32,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 import javafx.animation.TranslateTransition;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import tn.esprit.utils.SessionManager;
 
 public class AdminDashboardController implements Initializable {
-
-    // Pending Users Table View Components
-    @FXML private TableView<User> pendingUsersTable;
-    @FXML private TableColumn<User, String> nameColumn;
-    @FXML private TableColumn<User, String> emailColumn;
-    @FXML private TableColumn<User, Role> roleColumn;
-    @FXML private TableColumn<User, String> phoneColumn;
-
-    // All Users Table View Components
-    @FXML private TableView<User> allUsersTable;
-    @FXML private TableColumn<User, String> allNameColumn;
-    @FXML private TableColumn<User, String> allEmailColumn;
-    @FXML private TableColumn<User, Role> allRoleColumn;
-    @FXML private TableColumn<User, String> allStatusColumn;
-    @FXML private TableColumn<User, String> allPhoneColumn;
-    @FXML private TableColumn<User, String> allGenderColumn;
 
     // Statistics Components
     @FXML private Label totalUsersLabel;
@@ -71,7 +55,7 @@ public class AdminDashboardController implements Initializable {
     // Search Field
     @FXML private TextField searchField;
 
-    //profile components
+    // Profile components
     @FXML private VBox profilePanel;
     @FXML private VBox profileContainer;
     @FXML private ImageView profileImage;
@@ -79,20 +63,24 @@ public class AdminDashboardController implements Initializable {
     @FXML private Label adminNameLabel;
     @FXML private Label adminEmailLabel;
 
+    // Card-based user containers
+    @FXML private VBox allUsersCardContainer;
+    @FXML private VBox pendingUsersCardContainer;
+
     private final UserService userService = new UserService();
-    //private boolean isProfilePanelVisible = false;
+
+    // Store selected pending user
+    private HBox selectedPendingCard = null;
+    private User selectedPendingUser = null;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-        setupTableColumns();
         loadAllUsers();
         loadPendingUsers();
         initializeStatistics();
         initializeChart();
         setupSearchListener();
-        setupTableSelectionListeners();
-        initializeProfileSection(); // Add this line
+        initializeProfileSection();
         addActivityLog("Admin dashboard initialized");
     }
 
@@ -110,7 +98,6 @@ public class AdminDashboardController implements Initializable {
         profilePanel.setVisible(!profilePanel.isVisible());
         profilePanel.setManaged(profilePanel.isVisible());
     }
-
 
     //  handling edit profile
     @FXML
@@ -175,61 +162,85 @@ public class AdminDashboardController implements Initializable {
         dialog.showAndWait();
     }
 
-    private void setupTableColumns() {
-        // Setup Pending Users Table columns
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("nom"));
-        emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
-        roleColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
-        phoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
+    private HBox createUserCard(User user, boolean isPending) {
+        HBox card = new HBox(15);
+        card.setPadding(new Insets(10));
+        card.setStyle("-fx-background-color: #fff; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.07), 5, 0, 0, 1);");
+        card.setMinHeight(60);
+        card.setMaxWidth(Double.MAX_VALUE);
+        card.setPrefWidth(1.7976931348623157E308);
 
-        // Setup All Users Table columns
-        allNameColumn.setCellValueFactory(new PropertyValueFactory<>("nom"));
-        allEmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
-        allRoleColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
-        allStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
-        allPhoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
-        allGenderColumn.setCellValueFactory(new PropertyValueFactory<>("gender"));
+        // Profile image
+        ImageView imageView = new ImageView();
+        imageView.setFitWidth(48);
+        imageView.setFitHeight(48);
+        imageView.setPreserveRatio(true);
+        if (user.getProfilePicture() != null && !user.getProfilePicture().isEmpty()) {
+            imageView.setImage(new Image(user.getProfilePicture(), true));
+        } else {
+            URL defaultImgUrl = getClass().getResource("/assets/default-profile.png");
+            if (defaultImgUrl != null) {
+                imageView.setImage(new Image(defaultImgUrl.toExternalForm()));
+            } else {
+                imageView.setImage(new Image("https://ui-avatars.com/api/?name=User"));
+            }
+        }
+        imageView.setStyle("-fx-background-radius: 50%;");
 
-        // Make columns resize with table width
-        pendingUsersTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        allUsersTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-    }
+        // User info
+        VBox infoBox = new VBox(2);
+        Label nameLabel = new Label(user.getNom());
+        nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 15;");
+        Label subtitleLabel = new Label(user.getEmail());
+        subtitleLabel.setStyle("-fx-text-fill: #888; -fx-font-size: 12;");
+        infoBox.getChildren().addAll(nameLabel, subtitleLabel);
 
-    private void setupTableSelectionListeners() {
-        // Add listener to enable/disable approve and reject buttons based on selection
-        pendingUsersTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            boolean hasSelection = newSelection != null;
-            if (approveButton != null) approveButton.setDisable(!hasSelection);
-            if (rejectButton != null) rejectButton.setDisable(!hasSelection);
-        });
+        // Spacer
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        // Add listener for the all users table to enable/disable update and delete buttons
-        allUsersTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            boolean hasSelection = newSelection != null;
-            if (updateButton != null) updateButton.setDisable(!hasSelection);
-            if (deleteButton != null) deleteButton.setDisable(!hasSelection);
-        });
+        // Action button (always at right)
+        Button actionButton = new Button("Voir le profil");
+        actionButton.setStyle("-fx-background-color: #e7f3ff; -fx-text-fill: #1877f2; -fx-background-radius: 8;");
+        actionButton.setOnAction(e -> openUserProfile(user));
 
-        // Initially disable buttons until a selection is made
-        if (approveButton != null) approveButton.setDisable(true);
-        if (rejectButton != null) rejectButton.setDisable(true);
-        if (updateButton != null) updateButton.setDisable(true);
-        if (deleteButton != null) deleteButton.setDisable(true);
+        card.getChildren().addAll(imageView, infoBox, spacer, actionButton);
+
+        // If this is a pending user card, add selection logic
+        if (isPending) {
+            card.setOnMouseClicked(e -> {
+                // Remove highlight from previous
+                if (selectedPendingCard != null) {
+                    selectedPendingCard.setStyle("-fx-background-color: #fff; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.07), 5, 0, 0, 1);");
+                }
+                // Highlight this card
+                card.setStyle("-fx-background-color: #e7f3ff; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, #1877f2, 8, 0, 0, 1);");
+                selectedPendingCard = card;
+                selectedPendingUser = user;
+                if (approveButton != null) approveButton.setDisable(false);
+                if (rejectButton != null) rejectButton.setDisable(false);
+            });
+        }
+        return card;
     }
 
     private void loadAllUsers() {
         ObservableList<User> allUsers = FXCollections.observableArrayList(userService.getAll());
-        allUsersTable.setItems(allUsers);
+        allUsersCardContainer.getChildren().clear();
+        for (User user : allUsers) {
+            allUsersCardContainer.getChildren().add(createUserCard(user, false));
+        }
     }
 
     private void loadPendingUsers() {
         ObservableList<User> pendingUsers = FXCollections.observableArrayList(userService.getPendingUsers());
-        pendingUsersTable.setItems(pendingUsers);
-
-        // Update button states
-        boolean hasItems = !pendingUsers.isEmpty();
-        if (pendingUsersTable.getSelectionModel().getSelectedItem() == null && hasItems) {
-            pendingUsersTable.getSelectionModel().selectFirst();
+        pendingUsersCardContainer.getChildren().clear();
+        selectedPendingCard = null;
+        selectedPendingUser = null;
+        if (approveButton != null) approveButton.setDisable(true);
+        if (rejectButton != null) rejectButton.setDisable(true);
+        for (User user : pendingUsers) {
+            pendingUsersCardContainer.getChildren().add(createUserCard(user, true));
         }
     }
 
@@ -250,22 +261,11 @@ public class AdminDashboardController implements Initializable {
         );
         userRoleChart.setData(pieChartData);
         userRoleChart.setLegendVisible(true);
-
-        // Set colors for the chart segments
         applyCustomChartColors(pieChartData);
     }
 
     private void applyCustomChartColors(ObservableList<PieChart.Data> pieChartData) {
-        String[] colors = {
-                "-fx-pie-color: #3498db;", // Blue
-                "-fx-pie-color: #2ecc71;", // Green
-                "-fx-pie-color: #e74c3c;", // Red
-                "-fx-pie-color: #f39c12;"  // Orange
-        };
-
-        for (int i = 0; i < pieChartData.size(); i++) {
-            pieChartData.get(i).getNode().setStyle(colors[i % colors.length]);
-        }
+        // No manual color setting; CSS will handle the 3D gradients
     }
 
     private void setupSearchListener() {
@@ -288,10 +288,17 @@ public class AdminDashboardController implements Initializable {
                             .toList()
             );
 
-            allUsersTable.setItems(filteredAllUsers);
-            pendingUsersTable.setItems(filteredPendingUsers);
+            allUsersCardContainer.getChildren().clear();
+            for (User user : filteredAllUsers) {
+                allUsersCardContainer.getChildren().add(createUserCard(user, false));
+            }
+            pendingUsersCardContainer.getChildren().clear();
+            for (User user : filteredPendingUsers) {
+                pendingUsersCardContainer.getChildren().add(createUserCard(user, true));
+            }
         });
     }
+
     @FXML
     private void handleSearch(ActionEvent event) {
         String searchTerm = searchField.getText().trim().toLowerCase();
@@ -317,20 +324,26 @@ public class AdminDashboardController implements Initializable {
                         .toList()
         );
 
-        allUsersTable.setItems(filteredAllUsers);
-        pendingUsersTable.setItems(filteredPendingUsers);
+        allUsersCardContainer.getChildren().clear();
+        for (User user : filteredAllUsers) {
+            allUsersCardContainer.getChildren().add(createUserCard(user, false));
+        }
+        pendingUsersCardContainer.getChildren().clear();
+        for (User user : filteredPendingUsers) {
+            pendingUsersCardContainer.getChildren().add(createUserCard(user, true));
+        }
     }
 
     @FXML
     private void handleApprove(ActionEvent event) {
-        User selectedUser = pendingUsersTable.getSelectionModel().getSelectedItem();
-        if (selectedUser != null) {
-            if (userService.approveUser(selectedUser.getId())) {
-                addActivityLog("Approved user: " + selectedUser.getEmail());
+        User userToApprove = selectedPendingUser;
+        if (userToApprove != null) {
+            if (userService.approveUser(userToApprove.getId())) {
+                addActivityLog("Approved user: " + userToApprove.getEmail());
                 refreshDashboard();
-                showAlert("User Approved", "User " + selectedUser.getNom() + " has been approved successfully.", Alert.AlertType.INFORMATION);
+                showAlert("User Approved", "User " + userToApprove.getNom() + " has been approved successfully.", Alert.AlertType.INFORMATION);
             } else {
-                showAlert("Error", "Failed to approve user: " + selectedUser.getEmail(), Alert.AlertType.ERROR);
+                showAlert("Error", "Failed to approve user: " + userToApprove.getEmail(), Alert.AlertType.ERROR);
             }
         } else {
             showAlert("No Selection", "Please select a user to approve.", Alert.AlertType.WARNING);
@@ -339,13 +352,13 @@ public class AdminDashboardController implements Initializable {
 
     @FXML
     private void handleReject(ActionEvent event) {
-        User selectedUser = pendingUsersTable.getSelectionModel().getSelectedItem();
-        if (selectedUser != null) {
+        User userToReject = selectedPendingUser;
+        if (userToReject != null) {
             // Show confirmation dialog
             Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
             confirmAlert.setTitle("Confirm Rejection");
             confirmAlert.setHeaderText(null);
-            confirmAlert.setContentText("Are you sure you want to reject user " + selectedUser.getNom() + "? This action cannot be undone.");
+            confirmAlert.setContentText("Are you sure you want to reject user " + userToReject.getNom() + "? This action cannot be undone.");
 
             ButtonType yesButton = new ButtonType("Yes");
             ButtonType noButton = new ButtonType("No");
@@ -353,12 +366,12 @@ public class AdminDashboardController implements Initializable {
             confirmAlert.getButtonTypes().setAll(yesButton, noButton);
             confirmAlert.showAndWait().ifPresent(buttonType -> {
                 if (buttonType == yesButton) {
-                    if (userService.rejectUser(selectedUser.getId())) {
-                        addActivityLog("Rejected user: " + selectedUser.getEmail());
+                    if (userService.rejectUser(userToReject.getId())) {
+                        addActivityLog("Rejected user: " + userToReject.getEmail());
                         refreshDashboard();
-                        showAlert("User Rejected", "User " + selectedUser.getNom() + " has been rejected and removed from the system.", Alert.AlertType.INFORMATION);
+                        showAlert("User Rejected", "User " + userToReject.getNom() + " has been rejected and removed from the system.", Alert.AlertType.INFORMATION);
                     } else {
-                        showAlert("Error", "Failed to reject user: " + selectedUser.getEmail(), Alert.AlertType.ERROR);
+                        showAlert("Error", "Failed to reject user: " + userToReject.getEmail(), Alert.AlertType.ERROR);
                     }
                 }
             });
@@ -369,7 +382,12 @@ public class AdminDashboardController implements Initializable {
 
     @FXML
     private void handleDelete(ActionEvent event) {
-        User selectedUser = allUsersTable.getSelectionModel().getSelectedItem();
+        User selectedUser = allUsersCardContainer.getChildren().stream()
+                .filter(node -> node instanceof UserCard)
+                .map(node -> (UserCard) node)
+                .findFirst()
+                .map(UserCard::getUser)
+                .orElse(null);
         if (selectedUser != null) {
             // Show confirmation dialog
             Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -399,7 +417,12 @@ public class AdminDashboardController implements Initializable {
 
     @FXML
     private void handleUpdate(ActionEvent event) {
-        User selectedUser = allUsersTable.getSelectionModel().getSelectedItem();
+        User selectedUser = allUsersCardContainer.getChildren().stream()
+                .filter(node -> node instanceof UserCard)
+                .map(node -> (UserCard) node)
+                .findFirst()
+                .map(UserCard::getUser)
+                .orElse(null);
         if (selectedUser != null) {
             // Create a dialog to update user information
             Dialog<User> dialog = new Dialog<>();
@@ -508,8 +531,6 @@ public class AdminDashboardController implements Initializable {
         }
     }
 
-
-
     private boolean confirmAction(String message) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirm Action");
@@ -517,6 +538,7 @@ public class AdminDashboardController implements Initializable {
         alert.setContentText("This cannot be undone.");
         return alert.showAndWait().filter(response -> response == ButtonType.OK).isPresent();
     }
+
     @FXML
     private void handleLogout(ActionEvent event) {
         try {
@@ -536,7 +558,6 @@ public class AdminDashboardController implements Initializable {
             showAlert("Error", "Failed to load login screen: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
-
 
     @FXML
     private void handleRefresh(ActionEvent event) {
@@ -594,5 +615,22 @@ public class AdminDashboardController implements Initializable {
 
         // Center the stage
         stage.centerOnScreen();
+    }
+
+    private void openUserProfile(User user) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/profile.fxml"));
+            Parent root = loader.load();
+            // Get the controller and pass the user
+            tn.esprit.controllers.ProfileController profileController = loader.getController();
+            profileController.setUser(user); // You need to implement setUser(User user) in ProfileController
+            // Show in a new window
+            Stage stage = new Stage();
+            stage.setTitle("Profil de l'utilisateur");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException ex) {
+            showAlert("Erreur", "Impossible d'ouvrir le profil: " + ex.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 }

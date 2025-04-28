@@ -1,4 +1,4 @@
 package tn.esprit.models;
 
-public class commande {
+public class Commande {
 }

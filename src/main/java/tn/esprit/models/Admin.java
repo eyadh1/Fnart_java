@@ -13,7 +13,7 @@ public class Admin extends User {
     }
 
     public Admin(String nom, String email, String password, String phone, String gender) {
-        super(nom, email, password, phone, gender, Role.ADMIN);
+        super(nom, email, password, phone, gender,Role.ADMIN);
     }
 
     public static Admin getInstance() {

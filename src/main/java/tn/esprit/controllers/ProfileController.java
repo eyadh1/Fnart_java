@@ -76,6 +76,7 @@ public class ProfileController implements UserAwareController {
 
         // Set default profile picture
         setDefaultProfilePicture();
+
     }
 
     private void setDefaultProfilePicture() {

@@ -1,4 +1,4 @@
 package tn.esprit.models;
 
-public class inscription_atelier {
+public class Inscription_atelier {
 }

@@ -154,10 +154,8 @@
                             </HBox>
                         </GridPane>
                     </VBox>
-                    <VBox fx:id="editProfileSection" spacing="30" style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 10;" visible="false">
-                        <HBox alignment="CENTER_RIGHT">
-                            <Button fx:id="saveButton" text="Save" style="-fx-background-color: linear-gradient(to bottom, #334342,#6F4D38, #331B19); -fx-text-fill: white; -fx-padding: 10 30; -fx-background-radius: 5; -fx-font-weight: bold;"/>
-                        </HBox>
+                    <VBox fx:id="editProfileSection" spacing="10" style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 10;" visible="false">
+
                         <Label text="Edit Profile" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #222;"/>
                         <!-- Profile Picture Section -->
                         <VBox alignment="CENTER" spacing="10">
@@ -207,6 +205,9 @@
                             <Label text="Bio" style="-fx-text-fill: #222;"/>
                             <TextArea fx:id="bioTextArea" promptText="Write something about yourself..." wrapText="true" style="-fx-background-color: #F8F9FA; -fx-background-radius: 5; -fx-text-fill: #222; -fx-pref-row-count: 3;"/>
                         </VBox>
+                        <HBox alignment="CENTER_RIGHT">
+                            <Button fx:id="saveButton" text="Save" style="-fx-background-color: linear-gradient(to bottom, #334342,#6F4D38, #331B19); -fx-text-fill: white; -fx-padding: 10 30; -fx-background-radius: 5; -fx-font-weight: bold;"/>
+                        </HBox>
                     </VBox>
                 </StackPane>
             </VBox>

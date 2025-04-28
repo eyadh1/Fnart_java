@@ -1,4 +1,4 @@
 package tn.esprit.models;
 
-public class dons {
+public class Dons {
 }
