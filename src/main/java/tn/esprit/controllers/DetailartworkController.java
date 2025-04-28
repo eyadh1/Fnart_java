@@ -36,6 +36,16 @@ public class DetailartworkController {
     @FXML private Label likesCount;
     @FXML private Button quickSaveButton;
     @FXML private HBox recommendedItems;
+    @FXML private Label limitedEditionBadge;
+    @FXML private Label availabilityIndicator;
+    @FXML private Label dimensionsLabel;
+    @FXML private Label dateLabel;
+    @FXML private Label techniqueLabel;
+    @FXML private Label originalPrice;
+    @FXML private Label promoBadge;
+    @FXML private VBox exhibitionMapContainer;
+    @FXML private ImageView mapImage;
+    @FXML private Label exhibitionLocation;
 
     private Artwork artwork;
     private boolean isLiked = false;
@@ -47,6 +57,31 @@ public class DetailartworkController {
         if (artwork != null) {
             updateUI();
             setupRecommendations();
+            if (dimensionsLabel != null) {
+                dimensionsLabel.setText("Dimensions: " + artwork.getDimensions());
+            }
+            if (dateLabel != null) {
+                dateLabel.setText("Date: " + artwork.getYear());
+            }
+            if (techniqueLabel != null) {
+                techniqueLabel.setText("Technique: " + artwork.getTechnique());
+            }
+            if (availabilityIndicator != null) {
+                availabilityIndicator.setText(
+                    "disponible".equalsIgnoreCase(artwork.getStatus()) ? "Disponible" : "Indisponible"
+                );
+            }
+            // if (exhibitionLocation != null) {
+            //     exhibitionLocation.setText(artwork.getLieuExposition() != null ? artwork.getLieuExposition() : "");
+            // }
+            // if (mapImage != null && artwork.getMapImagePath() != null) {
+            //     try {
+            //         Image mapImg = new Image(artwork.getMapImagePath());
+            //         mapImage.setImage(mapImg);
+            //     } catch (Exception e) {
+            //         System.err.println("Erreur chargement map image: " + e.getMessage());
+            //     }
+            // }
         }
     }
 

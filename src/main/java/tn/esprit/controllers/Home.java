@@ -13,7 +13,8 @@ public class Home extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            var fxmlResource = getClass().getResource("/FrontArtwork.fxml");
+            var fxmlResource = getClass().getResource("/FrontArtwork" +
+                    ".fxml");
             System.out.println("FXML resource: " + fxmlResource);
             if (fxmlResource == null) {
                 System.err.println("FXML file not found!");

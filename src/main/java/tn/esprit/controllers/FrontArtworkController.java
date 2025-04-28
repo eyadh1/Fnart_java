@@ -55,6 +55,7 @@ public class FrontArtworkController implements Initializable {
         profileImage.setImage(img);
         setupSearch();
         loadArtworks();
+        addFloatingAIButton(); // Ajout du bouton IA flottant
     }
 
     private void setupSearch() {
@@ -92,8 +93,11 @@ public class FrontArtworkController implements Initializable {
     private VBox createPinCard(Artwork artwork) {
         VBox card = new VBox(0);
         card.getStyleClass().add("pin-card");
-        card.setMaxWidth(236);  // Standard Pinterest card width
+        card.setMaxWidth(236);
 
+        // Ajoutez cette ligne pour permettre les transformations
+        card.setCache(true);
+        card.setCacheShape(true);
         // Image container with overlay buttons
         StackPane imageContainer = new StackPane();
         imageContainer.getStyleClass().add("pin-image-container");
@@ -114,23 +118,11 @@ public class FrontArtworkController implements Initializable {
             String imagePath = "C:/xampp/htdocs/artwork_images/" + artwork.getImage();
             Image image = new Image("file:" + imagePath);
             imageView.setImage(image);
-
-            // Adjust clip height based on loaded image
             clip.setHeight(imageView.getBoundsInLocal().getHeight());
         } catch (Exception e) {
             System.err.println("Erreur lors du chargement de l'image : " + e.getMessage());
         }
 
-        // Conteneur pour le bouton Save en haut
-        HBox topButtons = new HBox(8);
-        topButtons.getStyleClass().add("top-buttons");
-        topButtons.setAlignment(Pos.TOP_RIGHT);
-        StackPane.setAlignment(topButtons, Pos.TOP_RIGHT);
-
-        // Bouton Save
-        Button saveButton = new Button("Save");
-        saveButton.getStyleClass().add("save-button");
-        topButtons.getChildren().add(saveButton);
         // Conteneur pour les boutons en bas
         HBox bottomButtons = new HBox(4);
         bottomButtons.getStyleClass().add("bottom-buttons");
@@ -213,7 +205,7 @@ public class FrontArtworkController implements Initializable {
         });
 
         // Ajoute tous les éléments à l'image container
-        imageContainer.getChildren().addAll(imageView, topButtons, bottomButtons);
+        imageContainer.getChildren().addAll(imageView, bottomButtons);
 
         // Add only necessary components to card
         card.getChildren().addAll(imageContainer, infoBox);
@@ -553,6 +545,109 @@ public class FrontArtworkController implements Initializable {
         optionBox.setOnMouseClicked(handler);
         optionBox.setCursor(javafx.scene.Cursor.HAND);
         return optionBox;
+    }
+
+    private String generateAIImage(String prompt) {
+        try {
+            String url = "http://localhost:8080/api/images/generate";
+            java.net.URL obj = new java.net.URL(url);
+            java.net.HttpURLConnection con = (java.net.HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "application/json");
+            con.setDoOutput(true);
+
+            String jsonInputString = "{\"prompt\": \"" + prompt + "\"}";
+            try (java.io.OutputStream os = con.getOutputStream()) {
+                byte[] input = jsonInputString.getBytes("utf-8");
+                os.write(input, 0, input.length);
+            }
+
+            int code = con.getResponseCode();
+            if (code == 200) {
+                StringBuilder response = new StringBuilder();
+                try (java.io.BufferedReader br = new java.io.BufferedReader(
+                        new java.io.InputStreamReader(con.getInputStream(), "utf-8"))) {
+                    String responseLine;
+                    while ((responseLine = br.readLine()) != null) {
+                        response.append(responseLine.trim());
+                    }
+                }
+                // Ici, il faut parser le JSON pour extraire l'URL de l'image
+                String json = response.toString();
+                int idx = json.indexOf("\"imageUrl\":\"");
+                if (idx != -1) {
+                    int start = idx + 12;
+                    int end = json.indexOf("\"", start);
+                    return json.substring(start, end);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private void showAIImage(String imageUrl, String prompt) {
+        Stage stage = new Stage();
+        VBox box = new VBox(10);
+        box.setPadding(new Insets(20));
+        box.setAlignment(Pos.CENTER);
+        Label label = new Label("Image générée pour : " + prompt);
+        ImageView imageView = new ImageView(new Image(imageUrl, 400, 400, true, true));
+        box.getChildren().addAll(label, imageView);
+        Scene scene = new Scene(box);
+        stage.setScene(scene);
+        stage.setTitle("Image IA générée");
+        stage.show();
+    }
+
+    // Ajoute ce bouton flottant IA à la fenêtre principale
+    private void addFloatingAIButton() {
+        artworkGrid.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                Scene scene = newScene;
+                Parent oldRoot = scene.getRoot();
+                // Si ce n'est pas déjà un StackPane, on encapsule
+                StackPane newRoot;
+                if (oldRoot instanceof StackPane) {
+                    newRoot = (StackPane) oldRoot;
+                } else {
+                    newRoot = new StackPane();
+                    newRoot.getChildren().add(oldRoot);
+                    scene.setRoot(newRoot);
+                }
+                Button aiButton = new Button();
+                aiButton.setStyle(
+                    "-fx-background-radius: 50%; -fx-background-color: white; -fx-min-width: 56px; -fx-min-height: 56px; " +
+                    "-fx-max-width: 56px; -fx-max-height: 56px; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4,0,0,2);"
+                );
+                Label aiIcon = new Label("?");
+                aiIcon.setStyle("-fx-font-size: 28px; -fx-text-fill: black;");
+                aiButton.setGraphic(aiIcon);
+                newRoot.getChildren().add(aiButton);
+                StackPane.setAlignment(aiButton, Pos.BOTTOM_RIGHT);
+                StackPane.setMargin(aiButton, new Insets(0, 30, 30, 0));
+                aiButton.setOnAction(e -> showAIGenerateDialog());
+            }
+        });
+    }
+
+    private void showAIGenerateDialog() {
+        Stage dialogStage = new Stage();
+        dialogStage.initModality(Modality.APPLICATION_MODAL);
+        dialogStage.setTitle("Generate AI Image");
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/image_generation.fxml"));
+            Parent root = loader.load();
+
+            Scene scene = new Scene(root);
+            dialogStage.setScene(scene);
+            dialogStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Error", "Could not load the AI generation dialog: " + e.getMessage());
+        }
     }
 }
 

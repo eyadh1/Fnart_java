@@ -1,6 +1,4 @@
-package com.example.fnart_java_gallery;
-
-import com.example.fnart_java_gallery.utils.ImageResizer;
+package tn.esprit.utils;
 
 public class ImageResizeMain {
     public static void main(String[] args) {

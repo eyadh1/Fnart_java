@@ -195,13 +195,13 @@
 
 .artwork-grid {
     -fx-hgap: 20;
-    -fx-vgap: 20;
+    -fx-vgap: 8;
     -fx-alignment: center;
 }
 
 .artwork-card {
     -fx-background-color: white;
-    -fx-padding: 15;
+    -fx-padding: 8;
     -fx-background-radius: 12;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 8, 0, 0, 0);
     -fx-cursor: hand;
@@ -221,12 +221,11 @@
     -fx-fit-width: 100%;
     -fx-preserve-ratio: true;
 }
-
 .artwork-title {
     -fx-font-size: 16px;
     -fx-font-weight: bold;
     -fx-wrap-text: true;
-    -fx-padding: 10 0 5 0;
+    -fx-padding: 4 0 0 0; /* Réduire le padding */
     -fx-text-alignment: center;
 }
 
@@ -235,6 +234,11 @@
     -fx-text-fill: #666666;
     -fx-wrap-text: true;
     -fx-text-alignment: center;
+    -fx-padding: 0 0 2 0; /* Compacter */
+}
+
+.pin-title {
+    -fx-padding: 4 0 0 0; /* Réduire l'espace au-dessus du titre */
 }
 
 /* Popular Artworks Section */
@@ -368,4 +372,35 @@
     -fx-text-fill: #4CAF50;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
+}
+
+/* Animation de danse pour les cartes */
+@keyframes card-zoom {
+    0%   { transform: scale(1); }
+    30%  { transform: scale(1.10); }
+    60%  { transform: scale(0.97); }
+    80%  { transform: scale(1.04); }
+    100% { transform: scale(1); }
+}
+
+.pin-card {
+    -fx-background-radius: 12px;
+    -fx-background-color: white;
+    -fx-padding: 8 8 4 8; /* Réduction du padding inférieur */
+}
+
+.artwork-card {
+    -fx-padding: 8 8 4 8; /* Réduction du padding inférieur */
+}
+
+.pin-card:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 12, 0, 0, 4);
+    -fx-translate-y: -5px;
+    -fx-animation: card-zoom 0.5s cubic-bezier(.4,2,.6,1) both;
+    -fx-transition: all 0.3s ease;
+    z-index: 2;
+}
+
+.pin-title {
+    -fx-padding: 6 0 2 0;
 }

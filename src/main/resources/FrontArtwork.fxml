@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Text?>
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 
-<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" 
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="tn.esprit.controllers.FrontArtworkController"
       styleClass="root">
 
@@ -16,15 +16,15 @@
     <HBox styleClass="top-bar" alignment="CENTER" spacing="20">
         <!-- Logo -->
         <Label text="ArtTherapy" styleClass="logo"/>
-        
+
         <!-- Search Bar -->
         <HBox styleClass="search-bar-container" HBox.hgrow="ALWAYS">
             <FontAwesomeIconView glyphName="SEARCH" styleClass="search-icon" size="1.2em"/>
-            <TextField fx:id="searchField" promptText="Rechercher des œuvres d'art..." 
-                      styleClass="search-field" HBox.hgrow="ALWAYS"/>
+            <TextField fx:id="searchField" promptText="Rechercher des œuvres d'art..."
+                       styleClass="search-field" HBox.hgrow="ALWAYS"/>
         </HBox>
-        
-        <!-- Navigation Items -->
+
+        <!-- Navigation Items - Version consolidée -->
         <HBox spacing="10" alignment="CENTER">
             <Button text="Accueil" styleClass="nav-button" onAction="#handleOeuvres">
                 <graphic>
@@ -46,9 +46,13 @@
                     <FontAwesomeIconView glyphName="COMMENTS" styleClass="nav-icon" size="1.2em"/>
                 </graphic>
             </Button>
-            <Button text="Se connecter" styleClass="action-button"/>
+            <Button text="Panier" styleClass="nav-button" onAction="#handleCart">
+                <graphic>
+                    <FontAwesomeIconView glyphName="SHOPPING_CART" styleClass="nav-icon" size="1.2em"/>
+                </graphic>
+            </Button>
         </HBox>
-        
+
         <!-- Profile Section -->
         <HBox alignment="CENTER" spacing="8">
             <ImageView fx:id="profileImage" fitWidth="40" fitHeight="40" pickOnBounds="true" preserveRatio="true" styleClass="profile-image"/>
@@ -58,16 +62,6 @@
                     <MenuItem text="Déconnexion"/>
                 </items>
             </MenuButton>
-        </HBox>
-        <!-- Dans la partie Navigation Items -->
-        <HBox spacing="10" alignment="CENTER">
-            <!-- ... autres boutons existants ... -->
-            <Button text="Panier" styleClass="nav-button" onAction="#handleCart">
-                <graphic>
-                    <FontAwesomeIconView glyphName="SHOPPING_CART" styleClass="nav-icon" size="1.2em"/>
-                </graphic>
-            </Button>
-            <Button text="Se connecter" styleClass="action-button"/>
         </HBox>
     </HBox>
 

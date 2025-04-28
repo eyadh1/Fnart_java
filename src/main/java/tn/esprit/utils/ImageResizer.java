@@ -1,4 +1,4 @@
-package com.example.fnart_java_gallery.utils;
+package tn.esprit.utils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
