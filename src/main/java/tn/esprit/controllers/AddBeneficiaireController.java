@@ -1,5 +1,8 @@
 package tn.esprit.controllers;
 
+import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.type.PhoneNumber;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.fxml.FXMLLoader;
@@ -217,7 +220,8 @@ public class AddBeneficiaireController implements Initializable {
             services.add(beneficiaire);
             
             showAlert("Succès", "Bénéficiaire ajouté avec succès.", Alert.AlertType.INFORMATION);
-            
+            send_sms();
+
             // Navigate back to list
             handleBack();
             
@@ -287,6 +291,24 @@ public class AddBeneficiaireController implements Initializable {
             e.printStackTrace();
         }
     }
-}
 
+
+
+    void send_sms(){
+        String ACCOUNT_SID = "ACa40d66133a0ed3edeaeb7fbdd4148f1e";
+        String AUTH_TOKEN = "5426699ac651b405e7f7e3fc594a0dce";
+
+        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+
+        String recepientNumber = "+21628221962";
+        String message = "Bonjour Admin, \n"
+                +"Nous sommes ravis de vous informer qu'une nouvelle demande de beneficiaire  a été ajoutée.\n"
+                +"Cordialement, \n";
+
+        Message twilioMessage = Message.creator(
+                new PhoneNumber(recepientNumber),
+                new PhoneNumber("+19472247143"),message).create();
+        System.out.println("SMS envoyé : "+twilioMessage.getSid());
+    }
+}
 

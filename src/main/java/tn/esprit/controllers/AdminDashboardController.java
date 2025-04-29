@@ -1,5 +1,11 @@
 package tn.esprit.controllers;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -855,5 +861,35 @@ public class AdminDashboardController implements Initializable {
         );
         donsChart.setData(donsData);
         donsStatsChart.setData(FXCollections.observableArrayList(donsData));
+    }
+
+    @FXML
+    private void handleExportBeneficiairePDF() {
+        try {
+            Document document = new Document();
+            PdfWriter.getInstance(document, new FileOutputStream("Beneficiaires.pdf"));
+            document.open();
+            document.add(new Paragraph("Liste des Bénéficiaires"));
+            // Add logic to fetch and add beneficiary data to the PDF
+            document.close();
+            System.out.println("Beneficiary list exported to PDF.");
+        } catch (DocumentException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleExportDonsPDF() {
+        try {
+            Document document = new Document();
+            PdfWriter.getInstance(document, new FileOutputStream("Dons.pdf"));
+            document.open();
+            document.add(new Paragraph("Liste des Dons"));
+            // Add logic to fetch and add donation data to the PDF
+            document.close();
+            System.out.println("Donations list exported to PDF.");
+        } catch (DocumentException | IOException e) {
+            e.printStackTrace();
+        }
     }
 }

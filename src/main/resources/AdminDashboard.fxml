@@ -87,7 +87,7 @@
 
             <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
                 <tabs>
-                    <Tab text="Liste des Bénéficiaires">
+                    <Tab fx:id="beneficiaireTab" text="Bénéficiaire">
                         <content>
                             <AnchorPane fx:id="beneficiairesPane" prefHeight="600.0" prefWidth="800.0">
                                 <VBox alignment="CENTER" spacing="20" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
@@ -111,7 +111,7 @@
                             </AnchorPane>
                         </content>
                     </Tab>
-                    <Tab text="Liste des Dons">
+                    <Tab fx:id="donsTab" text="Dons">
                         <content>
                             <AnchorPane fx:id="donsPane" prefHeight="600.0" prefWidth="800.0">
                                 <VBox alignment="TOP_CENTER" prefHeight="601.0" prefWidth="870.0" spacing="20.0">

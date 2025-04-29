@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.TilePane;
+import com.stripe.Stripe;
 
 import java.io.IOException;
 import java.net.URL;
@@ -20,7 +21,7 @@ public class DashboardController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // Vérification du chargement du CSS
         try {
-            String cssPath = getClass().getResource("/css/style.css").toExternalForm();
+            String cssPath = getClass().getResource("/css/pinterest-style.css").toExternalForm();
             System.out.println("CSS file found at: " + cssPath);
         } catch (Exception e) {
             System.err.println("Error loading CSS file: " + e.getMessage());
@@ -40,7 +41,11 @@ public class DashboardController implements Initializable {
 
     private void loadForm(String fxmlFile) {
         try {
-            Node form = FXMLLoader.load(getClass().getResource(fxmlFile));
+            URL resource = getClass().getResource(fxmlFile);
+            if (resource == null) {
+                throw new IOException("FXML file not found: " + fxmlFile);
+            }
+            Node form = FXMLLoader.load(resource);
             artworkGrid.getChildren().clear(); // Clear existing content
             artworkGrid.getChildren().add(form); // Add the new form
         } catch (IOException e) {

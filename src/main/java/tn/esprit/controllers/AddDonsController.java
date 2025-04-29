@@ -13,6 +13,7 @@ import tn.esprit.models.Beneficiaires;
 import tn.esprit.models.Dons;
 import tn.esprit.services.ServicesBeneficiaires;
 import tn.esprit.services.ServicesDons;
+import com.stripe.Stripe;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -25,7 +26,7 @@ import java.util.regex.Pattern;
 import com.twilio.Twilio;
 import com.twilio.type.PhoneNumber;
 import com.twilio.rest.api.v2010.account.Message;
-
+import tn.esprit.services.StripeService;
 
 
 public class AddDonsController implements Initializable {
@@ -64,7 +65,7 @@ public class AddDonsController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        String cssPath = getClass().getResource("/css/style.css").toExternalForm();
+        String cssPath = getClass().getResource("/css/pinterest-style.css").toExternalForm();
         System.out.println("CSS file found at: " + cssPath);
         // Initialize type choices
         TypeChoice.getItems().addAll("Argent", "Materiel", "Locale", "Oeuvre");
@@ -116,6 +117,8 @@ public class AddDonsController implements Initializable {
         }
     }
 
+
+
     @FXML
     private void handleSubmit() {
         try {
@@ -154,7 +157,21 @@ public class AddDonsController implements Initializable {
             don.setBeneficiaire(selectedBeneficiaire);
 
             // Add to database
+            if (don.getType().equalsIgnoreCase("Argent")) {
+                try {
+                    String checkoutUrl = StripeService.createCheckoutSession(don.getValeur(), don.getDescription());
+                    java.awt.Desktop.getDesktop().browse(new java.net.URI(checkoutUrl));
+                    // Optionally save only after success with webhook/backend
+                } catch (Exception e) {
+                    showAlert("Erreur", "Impossible de lancer le paiement Stripe.");
+                    e.printStackTrace();
+                    return;
+                }
+            }
+
+// Then add to DB
             servicesDons.add(don);
+
 
             // Show success message
             Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
@@ -164,7 +181,7 @@ public class AddDonsController implements Initializable {
             successAlert.showAndWait();
 
             //Send Sms function
-            send_sms();
+          /*  send_sms();*/
 
             // Clear fields
             clearFields();
@@ -249,7 +266,7 @@ public class AddDonsController implements Initializable {
 
 
 
-    void send_sms(){
+   /* void send_sms(){
         String ACCOUNT_SID = "ACa40d66133a0ed3edeaeb7fbdd4148f1e";
         String AUTH_TOKEN = "b1d6f34c25ff6a562d9aa066e720ba35";
 
@@ -264,6 +281,6 @@ public class AddDonsController implements Initializable {
                 new PhoneNumber(recepientNumber),
                 new PhoneNumber("+19472247143"),message).create();
         System.out.println("SMS envoyé : "+twilioMessage.getSid());
-    }
+    }*/
     }
 
