@@ -1,67 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
-
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
-<BorderPane xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.AddBeneficiaireController" stylesheets="@css/style.css">
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane stylesheets="@css/pinterest-style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.AddBeneficiaireController">
    <center>
-      <AnchorPane fx:id="rootPane" prefHeight="600.0" prefWidth="800.0" >
+      <AnchorPane fx:id="rootPane" prefHeight="600.0" prefWidth="800.0">
          <children>
-            <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="800.0" spacing="20.0">
+            <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="800.0" spacing="20.0" stylesheets="@styles/pinterest-style.css">
                <padding>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </padding>
                
                <!-- Title -->
-               <Label text="Ajouter un Bénéficiaire" styleClass="header">
+               <Label styleClass="header" text="Ajouter un Bénéficiaire">
                   <VBox.margin>
                      <Insets bottom="20.0" />
                   </VBox.margin>
                </Label>
                
                <!-- Form Fields -->
-               <GridPane hgap="10" vgap="10" alignment="CENTER">
-                  <Label text="Nom:" styleClass="sub-header" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                  <TextField fx:id="NomTextField" prefWidth="200.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+               <GridPane alignment="CENTER" hgap="10" vgap="10">
+                  <Label styleClass="sub-header" text="Nom:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                  <TextField fx:id="NomTextField" prefWidth="200.0" styleClass="text-field" stylesheets="@styles/pinterest-style.css" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                   
-                  <Label text="Email:" styleClass="sub-header" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                  <TextField fx:id="EmailTextField" prefWidth="200.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                  <Label styleClass="sub-header" text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                  <TextField fx:id="EmailTextField" prefWidth="200.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   
-                  <Label text="Téléphone:" styleClass="sub-header" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                  <TextField fx:id="TelephoneTextField" prefWidth="200.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                  <Label styleClass="sub-header" text="Téléphone:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                  <TextField fx:id="TelephoneTextField" prefWidth="200.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   
-                  <Label text="Association:" styleClass="sub-header" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-                  <ChoiceBox fx:id="AssociationChoice" prefWidth="200.0" styleClass="choice-box" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                  <Label styleClass="sub-header" text="Association:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                  <ChoiceBox fx:id="AssociationChoice" prefWidth="200.0" styleClass="choice-box" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                   
-                  <Label text="Cause:" styleClass="sub-header" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-                  <TextField fx:id="CauseTextField" prefWidth="200.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                  <Label styleClass="sub-header" text="Cause:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                  <TextField fx:id="CauseTextField" prefWidth="200.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                   
-                  <Label text="Valeur Demandée:" styleClass="sub-header" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-                  <TextField fx:id="ValeurTextField" prefWidth="200.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                  <Label styleClass="sub-header" text="Valeur Demandée:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                  <TextField fx:id="ValeurTextField" prefWidth="200.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                   
-                  <Label text="Description:" styleClass="sub-header" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
-                  <TextArea fx:id="DescriptionTextArea" prefWidth="200.0" prefHeight="100.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+                  <Label styleClass="sub-header" text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                  <TextArea fx:id="DescriptionTextArea" prefHeight="100.0" prefWidth="200.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="6" />
 
                   
-                  <Label text="Image:" styleClass="sub-header" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+                  <Label styleClass="sub-header" text="Image:" GridPane.columnIndex="0" GridPane.rowIndex="8" />
                   <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="8">
-                      <ImageView fx:id="imagePreview" fitHeight="100" fitWidth="100" preserveRatio="true" styleClass="image-preview"/>
+                      <ImageView fx:id="imagePreview" fitHeight="100" fitWidth="100" preserveRatio="true" styleClass="image-preview" />
                       <VBox spacing="5">
-                          <Button fx:id="uploadButton" text="Choisir une image" onAction="#handleImageUpload" styleClass="button"/>
-                          <Button fx:id="clearButton" text="Effacer" onAction="#handleClearImage" styleClass="button"/>
+                          <Button fx:id="uploadButton" onAction="#handleImageUpload" styleClass="button" text="Choisir une image" />
+                          <Button fx:id="clearButton" onAction="#handleClearImage" styleClass="button" text="Effacer" />
                       </VBox>
                   </HBox>
+                  <columnConstraints>
+                     <ColumnConstraints />
+                     <ColumnConstraints />
+                  </columnConstraints>
+                  <rowConstraints>
+                     <RowConstraints />
+                     <RowConstraints />
+                     <RowConstraints />
+                     <RowConstraints />
+                     <RowConstraints />
+                     <RowConstraints />
+                     <RowConstraints />
+                     <RowConstraints />
+                     <RowConstraints />
+                  </rowConstraints>
                </GridPane>
                
                <!-- Buttons -->
                <HBox alignment="CENTER" spacing="20.0">
-                  <Button fx:id="AjoutBoutton" mnemonicParsing="false" onAction="#handleSubmit" text="Ajouter" styleClass="button"/>
+                  <Button fx:id="AjoutBoutton" mnemonicParsing="false" onAction="#handleSubmit" styleClass="button" text="Ajouter" />
                   
-                  <Button fx:id="ListeBenebutton" mnemonicParsing="false" onAction="#handleListeBene" text="Liste des Bénéficiaires" styleClass="button"/>
+                  <Button fx:id="ListeBenebutton" mnemonicParsing="false" onAction="#handleListeBene" styleClass="button" text="Liste des Bénéficiaires" />
                </HBox>
-               <Button fx:id="retourHome" mnemonicParsing="false" onAction="#handleBack" text="Retour" styleClass="button">
+               <Button fx:id="retourHome" mnemonicParsing="false" onAction="#handleBack" styleClass="button" text="Retour">
                   <VBox.margin>
                      <Insets top="20.0" />
                   </VBox.margin>

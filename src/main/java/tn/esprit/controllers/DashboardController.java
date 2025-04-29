@@ -2,24 +2,22 @@ package tn.esprit.controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.TilePane;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class DashboardController {
-
-    @FXML
-    private VBox contentArea;
-
-    @FXML
-    private BorderPane mainBorderPane;
+public class DashboardController implements Initializable {
 
     @FXML
-    public void initialize() {
+    private TilePane artworkGrid;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         // Vérification du chargement du CSS
         try {
             String cssPath = getClass().getResource("/css/style.css").toExternalForm();
@@ -32,40 +30,23 @@ public class DashboardController {
 
     @FXML
     private void handleAddBeneficiaire() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddBeneficiaire.fxml"));
-            Parent view = loader.load();
-
-            if (mainBorderPane != null) {
-                mainBorderPane.setCenter(view);
-                System.out.println("Navigation vers AddBeneficiaire");
-            } else {
-                showError("Erreur", "Le conteneur principal est null", null);
-            }
-        } catch (IOException e) {
-            showError("Erreur", "Impossible de charger la vue AddBeneficiaire", e);
-        }
+        loadForm("/AddBeneficiaire.fxml");
     }
-
 
     @FXML
     private void handleAddDons() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AddDons.fxml"));
-            Parent view = loader.load();
-
-            if (mainBorderPane != null) {
-                mainBorderPane.setCenter(view);
-                System.out.println("Navigation vers AddDons");
-            } else {
-                showError("Erreur", "Le conteneur principal est null", null);
-            }
-        } catch (IOException e) {
-            showError("Erreur", "Impossible de charger la vue AddDons", e);
-        }
+        loadForm("/AddDons.fxml");
     }
 
-
+    private void loadForm(String fxmlFile) {
+        try {
+            Node form = FXMLLoader.load(getClass().getResource(fxmlFile));
+            artworkGrid.getChildren().clear(); // Clear existing content
+            artworkGrid.getChildren().add(form); // Add the new form
+        } catch (IOException e) {
+            showError("Erreur", "Impossible de charger la vue " + fxmlFile, e);
+        }
+    }
 
     private void showError(String title, String content, Exception e) {
         Alert alert = new Alert(Alert.AlertType.ERROR);

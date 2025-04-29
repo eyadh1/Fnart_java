@@ -1,43 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.chart.PieChart?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import java.net.URL?>
+<?import javafx.scene.text.Text?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 
-<BorderPane  fx:id="mainBorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="tn.esprit.controllers.DashboardController"
-            stylesheets="@css/style.css">
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="tn.esprit.controllers.DashboardController"
+      styleClass="root">
 
-    <left>
-        <VBox spacing="20" styleClass="sidebar">
-            <Label text="🎨 ArtTherapy" styleClass="title"/>
-            <Label text="🏠 Home" styleClass="menu-item"/>
-            <Label text="🖼️ My Artworks" styleClass="menu-item"/>
-            <Label text="❤️ Favorites" styleClass="menu-item"/>
-            <Label text="Devenir un beneficiaire" styleClass="menu-item" onMouseClicked="#handleAddBeneficiaire"/>
-            <Label text="Faire un don" styleClass="menu-item" onMouseClicked="#handleAddDons"/>
-            <Label text="⚙️ Settings" styleClass="menu-item"/>
-        </VBox>
-    </left>
+    <!-- Top Navigation Bar -->
+    <HBox styleClass="top-bar" alignment="CENTER" spacing="20">
+        <!-- Logo -->
+        <Label text="ArtTherapy" styleClass="logo"/>
 
-    <center>
-        <VBox fx:id="contentArea" spacing="20" styleClass="content-area">
-            <Label text="Welcome to Your Art Therapy Space" styleClass="header"/>
-            <HBox spacing="20">
-                <ImageView fx:id="featuredArtwork" fitHeight="200" fitWidth="300"/>
-                <VBox>
-                    <Label text="Today's Featured Artwork" styleClass="sub-header"/>
-                    <Label fx:id="artworkTitle" styleClass="art-title"/>
-                    <Label fx:id="artworkDesc" styleClass="art-description"/>
-                </VBox>
-            </HBox>
-            <Label text="Popular Artworks" styleClass="section-title"/>
-            <ListView fx:id="artworkList" styleClass="art-list"/>
-        </VBox>
-    </center>
-</BorderPane>
+        <!-- Search Bar -->
+        <HBox styleClass="search-bar-container" HBox.hgrow="ALWAYS">
+            <FontAwesomeIconView glyphName="SEARCH" styleClass="search-icon" size="1.2em"/>
+            <TextField fx:id="searchField" promptText="Rechercher des œuvres d'art..."
+                       styleClass="search-field" HBox.hgrow="ALWAYS"/>
+        </HBox>
+
+        <!-- Navigation Items -->
+        <HBox spacing="10" alignment="CENTER">
+            <Button text="Accueil" styleClass="nav-button">
+                <graphic>
+                    <FontAwesomeIconView glyphName="HOME" styleClass="nav-icon" size="1.2em"/>
+                </graphic>
+            </Button>
+            <Button text="Atelier" styleClass="nav-button">
+                <graphic>
+                    <FontAwesomeIconView glyphName="PAINT_BRUSH" styleClass="nav-icon" size="1.2em"/>
+                </graphic>
+            </Button>
+            <Button text="Devenir beneficiaire" styleClass="nav-button" onAction="#handleAddBeneficiaire">
+                <graphic>
+                    <FontAwesomeIconView glyphName="GIFT" styleClass="nav-icon" size="1.2em"/>
+                </graphic>
+            </Button>
+            <Button text="Faire un don" styleClass="nav-button" onAction="#handleAddDons">
+                <graphic>
+                    <FontAwesomeIconView glyphName="GIFT" styleClass="nav-icon" size="1.2em"/>
+                </graphic>
+            </Button>
+            <Button text="Forum" styleClass="nav-button">
+                <graphic>
+                    <FontAwesomeIconView glyphName="COMMENTS" styleClass="nav-icon" size="1.2em"/>
+                </graphic>
+            </Button>
+            <Button text="Se connecter" styleClass="action-button"/>
+        </HBox>
+
+        <!-- Profile Section -->
+        <HBox alignment="CENTER" spacing="8">
+            <ImageView fx:id="profileImage" fitWidth="40" fitHeight="40" pickOnBounds="true" preserveRatio="true" styleClass="profile-image"/>
+            <MenuButton text="Accounts" styleClass="accounts-menu">
+                <items>
+                    <MenuItem text="Mon profil"/>
+                    <MenuItem text="Déconnexion"/>
+                </items>
+            </MenuButton>
+        </HBox>
+    </HBox>
+
+    <!-- Main Content Area -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="main-scroll-pane">
+        <TilePane fx:id="artworkGrid" styleClass="masonry-grid" hgap="16" vgap="16" prefColumns="4">
+            <!-- Content will be dynamically loaded here -->
+        </TilePane>
+    </ScrollPane>
+
+    <stylesheets>
+        <URL value="@css/pinterest-style.css"/>
+    </stylesheets>
+</VBox>

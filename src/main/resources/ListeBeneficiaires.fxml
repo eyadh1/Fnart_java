@@ -6,7 +6,7 @@
 
 <AnchorPane fx:id="rootPane" prefHeight="600.0" prefWidth="800.0"   xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.ListeBeneficiairesController">
    <children>
-      <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="800.0" spacing="20.0" stylesheets="@css/style.css">
+      <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="800.0" spacing="20.0" stylesheets="@css/pinterest-style.css">
          <padding>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </padding>

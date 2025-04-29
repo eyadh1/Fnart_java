@@ -21,6 +21,13 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
+
+import com.twilio.Twilio;
+import com.twilio.type.PhoneNumber;
+import com.twilio.rest.api.v2010.account.Message;
+
+
+
 public class AddDonsController implements Initializable {
     @FXML
     private Button retourHome;
@@ -78,7 +85,7 @@ public class AddDonsController implements Initializable {
         // Set up button actions
         AjoutButton.setOnAction(event -> handleSubmit());
         ListeButton.setOnAction(event -> handleListe());
-        ListeBeneficiairesButton.setOnAction(event -> handleListeBeneficiaires());
+
     }
 
     private boolean isValidNumber(String number) {
@@ -155,6 +162,9 @@ public class AddDonsController implements Initializable {
             successAlert.setHeaderText(null);
             successAlert.setContentText("Le don a été ajouté avec succès !");
             successAlert.showAndWait();
+
+            //Send Sms function
+            send_sms();
 
             // Clear fields
             clearFields();
@@ -236,5 +246,24 @@ public class AddDonsController implements Initializable {
                 e.printStackTrace();
             }
         }
+
+
+
+    void send_sms(){
+        String ACCOUNT_SID = "ACa40d66133a0ed3edeaeb7fbdd4148f1e";
+        String AUTH_TOKEN = "b1d6f34c25ff6a562d9aa066e720ba35";
+
+        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+
+        String recepientNumber = "+21628221962";
+        String message = "Bonjour Admin, \n"
+                +"Nous sommes ravis de vous informer qu'une nouvelle don a été ajoutée.\n"
+                +"Cordialement, \n";
+
+        Message twilioMessage = Message.creator(
+                new PhoneNumber(recepientNumber),
+                new PhoneNumber("+19472247143"),message).create();
+        System.out.println("SMS envoyé : "+twilioMessage.getSid());
+    }
     }
 

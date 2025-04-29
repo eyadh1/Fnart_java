@@ -1,0 +1,106 @@
+.root {
+    -fx-background-color: #f5f5f5;
+}
+
+.top-bar {
+    -fx-background-color: white;
+    -fx-padding: 15px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
+}
+
+.logo {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #310E10;
+}
+
+.search-bar-container {
+    -fx-background-color: #f0f0f0;
+    -fx-background-radius: 20px;
+    -fx-padding: 5px 10px;
+    -fx-spacing: 10px;
+}
+
+.search-icon {
+    -fx-fill: #666;
+}
+
+.search-field {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-prompt-text-fill: #666;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #666;
+    -fx-cursor: hand;
+}
+
+.nav-button:hover {
+    -fx-text-fill: #310E10;
+}
+
+.nav-icon {
+    -fx-fill: #666;
+}
+
+.action-button {
+    -fx-background-color: #310E10;
+    -fx-text-fill: white;
+    -fx-background-radius: 20px;
+    -fx-padding: 8px 20px;
+}
+
+.action-button:hover {
+    -fx-background-color: #4a1518;
+}
+
+.profile-image {
+    -fx-border-radius: 50%;
+    -fx-background-radius: 50%;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);
+}
+
+.accounts-menu {
+    -fx-background-color: transparent;
+    -fx-text-fill: #666;
+}
+
+.main-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-padding: 20px;
+}
+
+.masonry-grid {
+    -fx-padding: 20px;
+}
+
+/* Artwork card styles */
+.artwork-card {
+    -fx-background-color: white;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
+    -fx-padding: 10px;
+}
+
+.artwork-image {
+    -fx-background-radius: 5px;
+}
+
+.artwork-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #310E10;
+}
+
+.artwork-artist {
+    -fx-font-size: 14px;
+    -fx-text-fill: #666;
+}
+
+.artwork-price {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #310E10;
+} 

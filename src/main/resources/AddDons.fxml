@@ -4,9 +4,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.AddDonsController" stylesheets="@css/style.css">
+<BorderPane xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.AddDonsController" stylesheets="@css/pinterest-style.css">
    <center>
-      <AnchorPane fx:id="rootPane" prefHeight="600.0" prefWidth="800.0" stylesheets="@css/style.css">
+      <AnchorPane fx:id="rootPane" prefHeight="600.0" prefWidth="800.0" stylesheets="@css/pinterest-style.css">
          <children>
             <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="800.0" spacing="20.0">
                <padding>
