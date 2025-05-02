@@ -15,12 +15,14 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.web.WebView?>
+
 
 <BorderPane stylesheets="@css/pinterest-style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.AddDonsController">
    <center>
       <AnchorPane fx:id="rootPane" prefHeight="600.0" prefWidth="800.0" stylesheets="@css/pinterest-style.css">
          <children>
-            <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="800.0" spacing="20.0" styleClass="form-container">
+            <VBox fx:id="formContainer"  alignment="TOP_CENTER" prefHeight="600.0" prefWidth="800.0" spacing="20.0" styleClass="form-container">
                <padding>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </padding>
@@ -74,7 +76,6 @@
                         <Glow />
                      </effect>
                   </Button>
-                  <Button fx:id="ListeButton" mnemonicParsing="false" onAction="#handleListe" styleClass="download-option" text="Liste des Dons" />
 
                </HBox>
                <Button fx:id="retourHome" mnemonicParsing="false" onAction="#handleBack" styleClass="download-menu" text="Retour">
@@ -83,6 +84,8 @@
                   </VBox.margin>
                </Button>
             </VBox>
+            <WebView fx:id="webView" prefWidth="800.0" prefHeight="600.0" layoutX="0" layoutY="0" visible="false" managed="false"/>
+
          </children>
       </AnchorPane>
    </center>

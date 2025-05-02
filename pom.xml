@@ -28,6 +28,12 @@
             <artifactId>javafx-fxml</artifactId>
             <version>20.0.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
+            <version>20.0.2</version> <!-- Use the same version as your other JavaFX modules -->
+        </dependency>
+
 
         <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
         <dependency>

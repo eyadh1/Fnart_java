@@ -112,7 +112,7 @@ public class AddBeneficiaireController implements Initializable {
 
         // Initialize the clear button as invisible
         clearButton.setVisible(false);
-        
+
         // Create upload directory if it doesn't exist
         createUploadDirectory();
     }
@@ -141,15 +141,15 @@ public class AddBeneficiaireController implements Initializable {
             showAlert("Erreur", "Impossible de créer le répertoire d'upload: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
-    
+
     @FXML
     private void handleImageUpload() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choisir une image");
         fileChooser.getExtensionFilters().addAll(
-            new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif")
+                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif")
         );
-        
+
         File selectedFile = fileChooser.showOpenDialog(imagePreview.getScene().getWindow());
         if (selectedFile != null) {
             try {
@@ -158,23 +158,23 @@ public class AddBeneficiaireController implements Initializable {
                 String originalFilename = selectedFile.getName();
                 String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
                 String newFilename = timestamp + "_" + originalFilename;
-                
+
                 // Create the target file path
                 Path targetPath = Paths.get(UPLOAD_DIRECTORY, newFilename);
-                
+
                 // Copy the file to the upload directory
                 Files.copy(selectedFile.toPath(), targetPath, StandardCopyOption.REPLACE_EXISTING);
-                
+
                 // Store the absolute path for preview
                 selectedImagePath = targetPath.toAbsolutePath().toString();
-                
+
                 // Store the relative path for database
                 relativeImagePath = RELATIVE_PATH_PREFIX + newFilename;
-                
+
                 // Display the image in the preview
                 imagePreview.setImage(new Image("file:" + selectedImagePath));
                 clearButton.setVisible(true);
-                
+
                 System.out.println("Image uploaded successfully: " + relativeImagePath);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -182,7 +182,7 @@ public class AddBeneficiaireController implements Initializable {
             }
         }
     }
-    
+
     @FXML
     private void handleClearImage() {
         selectedImagePath = null;
@@ -195,13 +195,13 @@ public class AddBeneficiaireController implements Initializable {
     private void handleSubmit() {
         try {
             // Validate input fields
-            if (NomTextField.getText().isEmpty() || EmailTextField.getText().isEmpty() || 
-                TelephoneTextField.getText().isEmpty() || CauseTextField.getText().isEmpty() || 
-                ValeurTextField.getText().isEmpty()) {
+            if (NomTextField.getText().isEmpty() || EmailTextField.getText().isEmpty() ||
+                    TelephoneTextField.getText().isEmpty() || CauseTextField.getText().isEmpty() ||
+                    ValeurTextField.getText().isEmpty()) {
                 showAlert("Erreur", "Veuillez remplir tous les champs obligatoires.", Alert.AlertType.ERROR);
                 return;
             }
-            
+
             // Create new beneficiaire
             Beneficiaires beneficiaire = new Beneficiaires();
             beneficiaire.setNom(NomTextField.getText());
@@ -211,20 +211,20 @@ public class AddBeneficiaireController implements Initializable {
             beneficiaire.setCause(CauseTextField.getText());
             beneficiaire.setValeurDemande(Double.parseDouble(ValeurTextField.getText()));
             beneficiaire.setDescription(DescriptionTextArea.getText());
-            
+
             // Set the relative image path
             beneficiaire.setImage(relativeImagePath != null ? relativeImagePath : "default_image.jpg");
-            
+
             // Save to database
             ServicesBeneficiaires services = new ServicesBeneficiaires();
             services.add(beneficiaire);
-            
+
             showAlert("Succès", "Bénéficiaire ajouté avec succès.", Alert.AlertType.INFORMATION);
             send_sms();
 
             // Navigate back to list
             handleBack();
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             showAlert("Erreur", "Une erreur est survenue lors de l'ajout du bénéficiaire: " + e.getMessage(), Alert.AlertType.ERROR);
@@ -265,7 +265,7 @@ public class AddBeneficiaireController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(AddBeneficiaireController.class.getResource("/AddBeneficiaire.fxml"));
             Parent root = loader.load();
-            
+
             Scene scene = new Scene(root);
             primaryStage.setTitle("Ajouter un Bénéficiaire");
             primaryStage.setScene(scene);
@@ -311,4 +311,3 @@ public class AddBeneficiaireController implements Initializable {
         System.out.println("SMS envoyé : "+twilioMessage.getSid());
     }
 }
-

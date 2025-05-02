@@ -133,7 +133,7 @@ public class AdminDashboardController implements Initializable {
     @FXML private Label valeurDonErrorLabel;
     @FXML private Label typeDonErrorLabel;
     @FXML private Label beneficiaireErrorLabel;
-    
+
     // Statistics labels
     @FXML private Label totalBeneficiairesLabel;
     @FXML private Label enAttenteLabel;
@@ -143,7 +143,7 @@ public class AdminDashboardController implements Initializable {
     @FXML private Label valeurTotaleLabel;
     @FXML private Label donsNatureLabel;
     @FXML private Label donsFinanciersLabel;
-    
+
     // Charts
     @FXML private PieChart beneficiairesChart;
     @FXML private PieChart donsChart;
@@ -159,32 +159,32 @@ public class AdminDashboardController implements Initializable {
         // Initialize services
         servicesBeneficiaires = new ServicesBeneficiaires();
         servicesDons = new ServicesDons();
-        
+
         // Initialize lists
         beneficiairesList = FXCollections.observableArrayList();
         donsList = FXCollections.observableArrayList();
-        
+
         // Initialize choice boxes
         statusChoice.setItems(FXCollections.observableArrayList("en attente", "accepté", "refusé"));
         statusChoice.setValue("en attente");
 
         typeDonChoice.setItems(FXCollections.observableArrayList("Argent", "Materiels", "Locale", "Oeuvre"));
-        
+
         // Initialize sort and filter options
         sortOrderChoice.setItems(FXCollections.observableArrayList("A-Z", "Z-A"));
         typeFilterChoice.setItems(FXCollections.observableArrayList("Tous", "Argent", "Materiels", "Locale", "Oeuvre"));
         typeFilterChoice.setValue("Tous");
-        
+
         // Load beneficiaires for the choice box in dons form
         ObservableList<String> beneficiaireNames = FXCollections.observableArrayList();
         for (Beneficiaires beneficiaire : servicesBeneficiaires.getAll()) {
             beneficiaireNames.add(beneficiaire.getNom());
         }
         beneficiaireChoice.setItems(beneficiaireNames);
-        
+
         loadBeneficiaires();
         loadDons();
-        
+
         setupBeneficiairesSearchAndFilter();
         setupDonsSearchAndFilter();
 
@@ -249,10 +249,10 @@ public class AdminDashboardController implements Initializable {
         // Search functionality
         searchTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             String lowerCaseFilter = newValue == null ? "" : newValue.toLowerCase();
-            filteredBeneficiaires.setPredicate(beneficiaire -> 
-                beneficiaire.getNom().toLowerCase().contains(lowerCaseFilter) ||
-                beneficiaire.getEmail().toLowerCase().contains(lowerCaseFilter) ||
-                beneficiaire.getCause().toLowerCase().contains(lowerCaseFilter)
+            filteredBeneficiaires.setPredicate(beneficiaire ->
+                    beneficiaire.getNom().toLowerCase().contains(lowerCaseFilter) ||
+                            beneficiaire.getEmail().toLowerCase().contains(lowerCaseFilter) ||
+                            beneficiaire.getCause().toLowerCase().contains(lowerCaseFilter)
             );
         });
 
@@ -278,17 +278,17 @@ public class AdminDashboardController implements Initializable {
         // Search functionality
         searchTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             String lowerCaseFilter = newValue == null ? "" : newValue.toLowerCase();
-            filteredDons.setPredicate(don -> 
-                don.getDescription().toLowerCase().contains(lowerCaseFilter) ||
-                (don.getBeneficiaire() != null && don.getBeneficiaire().getNom().toLowerCase().contains(lowerCaseFilter))
+            filteredDons.setPredicate(don ->
+                    don.getDescription().toLowerCase().contains(lowerCaseFilter) ||
+                            (don.getBeneficiaire() != null && don.getBeneficiaire().getNom().toLowerCase().contains(lowerCaseFilter))
             );
         });
 
         // Type filter functionality
         typeFilterChoice.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                filteredDons.setPredicate(don -> 
-                    "Tous".equals(newValue) || don.getType().equals(newValue)
+                filteredDons.setPredicate(don ->
+                        "Tous".equals(newValue) || don.getType().equals(newValue)
                 );
             }
         });
@@ -425,24 +425,24 @@ public class AdminDashboardController implements Initializable {
 
         try {
             Dons don = new Dons();
-             don.setDescription(descriptionDonTextArea.getText());
-            
+            don.setDescription(descriptionDonTextArea.getText());
+
             // Parse and validate valeur
             double valeur = Double.parseDouble(valeurDonTextField.getText());
             if (valeur > 1000000) {
                 valeur = 1000000; // Limiter à 1 million
             }
             don.setValeur(valeur);
-            
+
             don.setType(typeDonChoice.getValue());
-            
+
             // Find the beneficiaire by name
             String selectedBeneficiaireName = String.valueOf(beneficiaireChoice.getValue());
             Beneficiaires selectedBeneficiaire = servicesBeneficiaires.getAll().stream()
-                .filter(b -> b.getNom().equals(selectedBeneficiaireName))
-                .findFirst()
-                .orElse(null);
-            
+                    .filter(b -> b.getNom().equals(selectedBeneficiaireName))
+                    .findFirst()
+                    .orElse(null);
+
             don.setBeneficiaire(selectedBeneficiaire);
 
             servicesDons.add(don);
@@ -463,12 +463,12 @@ public class AdminDashboardController implements Initializable {
         boolean isValid = true;
 
         if (nomTextField.getText().isEmpty() ||
-            emailTextField.getText().isEmpty() ||
-            telephoneTextField.getText().isEmpty() ||
-            causeTextField.getText().isEmpty() ||
-            valeurTextField.getText().isEmpty() ||
-            descriptionTextArea.getText().isEmpty() ||
-            selectedImagePath == null) {
+                emailTextField.getText().isEmpty() ||
+                telephoneTextField.getText().isEmpty() ||
+                causeTextField.getText().isEmpty() ||
+                valeurTextField.getText().isEmpty() ||
+                descriptionTextArea.getText().isEmpty() ||
+                selectedImagePath == null) {
             showAlert("Erreur", "Veuillez remplir tous les champs obligatoires");
             isValid = false;
         }
@@ -539,25 +539,25 @@ public class AdminDashboardController implements Initializable {
 
     @FXML
     private void handleFilterEnAttente() {
-        filteredBeneficiaires.setPredicate(beneficiaire -> 
-            beneficiaire.getStatus() != null && 
-            beneficiaire.getStatus().equalsIgnoreCase("En attente")
+        filteredBeneficiaires.setPredicate(beneficiaire ->
+                beneficiaire.getStatus() != null &&
+                        beneficiaire.getStatus().equalsIgnoreCase("En attente")
         );
     }
 
     @FXML
     private void handleFilterAccepte() {
-        filteredBeneficiaires.setPredicate(beneficiaire -> 
-            beneficiaire.getStatus() != null && 
-            beneficiaire.getStatus().equalsIgnoreCase("Accepté")
+        filteredBeneficiaires.setPredicate(beneficiaire ->
+                beneficiaire.getStatus() != null &&
+                        beneficiaire.getStatus().equalsIgnoreCase("Accepté")
         );
     }
 
     @FXML
     private void handleFilterRefuse() {
-        filteredBeneficiaires.setPredicate(beneficiaire -> 
-            beneficiaire.getStatus() != null && 
-            beneficiaire.getStatus().equalsIgnoreCase("Refusé")
+        filteredBeneficiaires.setPredicate(beneficiaire ->
+                beneficiaire.getStatus() != null &&
+                        beneficiaire.getStatus().equalsIgnoreCase("Refusé")
         );
     }
 
@@ -742,7 +742,7 @@ public class AdminDashboardController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choisir une image");
         fileChooser.getExtensionFilters().addAll(
-            new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif")
+                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif")
         );
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
@@ -766,7 +766,7 @@ public class AdminDashboardController implements Initializable {
                 descriptionDonTextArea.setStyle("-fx-border-color: green;");
             }
         });
-        
+
         // Valeur validation
         valeurDonTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null || newValue.trim().isEmpty()) {
@@ -780,7 +780,7 @@ public class AdminDashboardController implements Initializable {
                 valeurDonTextField.setStyle("-fx-border-color: green;");
             }
         });
-        
+
         // Type validation
         typeDonChoice.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null) {
@@ -791,7 +791,7 @@ public class AdminDashboardController implements Initializable {
                 typeDonChoice.setStyle("-fx-border-color: green;");
             }
         });
-        
+
         // Beneficiaire validation
         beneficiaireChoice.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null) {
@@ -805,7 +805,7 @@ public class AdminDashboardController implements Initializable {
 
         return true;
     }
-    
+
     private void updateStatistics() {
         // Update beneficiaires statistics
         int total = beneficiairesList.size();
@@ -832,7 +832,7 @@ public class AdminDashboardController implements Initializable {
         // Update charts
         updateCharts();
     }
-    
+
     private void updateCharts() {
         // Clear existing data
         beneficiairesChart.getData().clear();
@@ -842,22 +842,22 @@ public class AdminDashboardController implements Initializable {
 
         // Update beneficiaires charts
         ObservableList<PieChart.Data> beneficiairesData = FXCollections.observableArrayList(
-            new PieChart.Data("En Attente", 
-                beneficiairesList.stream().filter(b -> "en attente".equals(b.getStatus())).count()),
-            new PieChart.Data("Acceptés", 
-                beneficiairesList.stream().filter(b -> "accepté".equals(b.getStatus())).count()),
-            new PieChart.Data("Refusés", 
-                beneficiairesList.stream().filter(b -> "refusé".equals(b.getStatus())).count())
+                new PieChart.Data("En Attente",
+                        beneficiairesList.stream().filter(b -> "en attente".equals(b.getStatus())).count()),
+                new PieChart.Data("Acceptés",
+                        beneficiairesList.stream().filter(b -> "accepté".equals(b.getStatus())).count()),
+                new PieChart.Data("Refusés",
+                        beneficiairesList.stream().filter(b -> "refusé".equals(b.getStatus())).count())
         );
         beneficiairesChart.setData(beneficiairesData);
         beneficiairesStatsChart.setData(FXCollections.observableArrayList(beneficiairesData));
 
         // Update dons charts
         ObservableList<PieChart.Data> donsData = FXCollections.observableArrayList(
-            new PieChart.Data("Dons en Nature", 
-                donsList.stream().filter(d -> "Materiels".equals(d.getType())).count()),
-            new PieChart.Data("Dons Financiers", 
-                donsList.stream().filter(d -> "Argent".equals(d.getType())).count())
+                new PieChart.Data("Dons en Nature",
+                        donsList.stream().filter(d -> "Materiels".equals(d.getType())).count()),
+                new PieChart.Data("Dons Financiers",
+                        donsList.stream().filter(d -> "Argent".equals(d.getType())).count())
         );
         donsChart.setData(donsData);
         donsStatsChart.setData(FXCollections.observableArrayList(donsData));

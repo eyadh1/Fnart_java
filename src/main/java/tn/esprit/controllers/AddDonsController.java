@@ -1,12 +1,15 @@
 package tn.esprit.controllers;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import tn.esprit.models.Beneficiaires;
@@ -14,6 +17,9 @@ import tn.esprit.models.Dons;
 import tn.esprit.services.ServicesBeneficiaires;
 import tn.esprit.services.ServicesDons;
 import com.stripe.Stripe;
+import javafx.scene.web.WebView;
+import javafx.scene.web.WebEngine;
+
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -46,6 +52,13 @@ public class AddDonsController implements Initializable {
 
     @FXML
     private Button AjoutButton;
+
+    @FXML
+    private WebView webView;
+
+    @FXML
+    private VBox formContainer;
+
 
     @FXML
     private Button ListeButton;
@@ -85,7 +98,7 @@ public class AddDonsController implements Initializable {
 
         // Set up button actions
         AjoutButton.setOnAction(event -> handleSubmit());
-        ListeButton.setOnAction(event -> handleListe());
+       /* ListeButton.setOnAction(event -> handleListe());*/
 
     }
 
@@ -98,7 +111,7 @@ public class AddDonsController implements Initializable {
             List<Beneficiaires> beneficiairesList = servicesBeneficiaires.getAll();
             BeneficiaireChoice.getItems().clear();
             BeneficiaireChoice.getItems().addAll(beneficiairesList);
-            
+
             // Set converter to display beneficiaire name in the choice box
             BeneficiaireChoice.setConverter(new StringConverter<Beneficiaires>() {
                 @Override
@@ -160,28 +173,56 @@ public class AddDonsController implements Initializable {
             if (don.getType().equalsIgnoreCase("Argent")) {
                 try {
                     String checkoutUrl = StripeService.createCheckoutSession(don.getValeur(), don.getDescription());
-                    java.awt.Desktop.getDesktop().browse(new java.net.URI(checkoutUrl));
-                    // Optionally save only after success with webhook/backend
+
+                    // Hide form, show WebView
+                    formContainer.setVisible(false);
+                    formContainer.setManaged(false);
+                    webView.setVisible(true);
+                    webView.setManaged(true);
+
+                    WebEngine engine = webView.getEngine();
+                    engine.load(checkoutUrl);
+
+                    // Listen for Stripe redirect
+                    engine.locationProperty().addListener((obs, oldLoc, newLoc) -> {
+                        if (newLoc.contains("/success")) {
+                            showToast("✅ Paiement réussi ! Merci pour votre don ❤️", true);
+                            webView.setVisible(false);
+                            webView.setManaged(false);
+                            formContainer.setVisible(true);
+                            formContainer.setManaged(true);
+                            clearFields(); // optional
+                        } else if (newLoc.contains("/cancel")) {
+                            showToast("❌ Paiement annulé", false);
+                            webView.setVisible(false);
+                            webView.setManaged(false);
+                            formContainer.setVisible(true);
+                            formContainer.setManaged(true);
+                        }
+                    });
+
+                    // Exit here to wait for Stripe
+                    return;
+
                 } catch (Exception e) {
-                    showAlert("Erreur", "Impossible de lancer le paiement Stripe.");
+                    showAlert("Erreur", "Échec du paiement Stripe.");
                     e.printStackTrace();
                     return;
                 }
             }
 
-// Then add to DB
+
+
             servicesDons.add(don);
 
 
-            // Show success message
             Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
             successAlert.setTitle("Succès");
             successAlert.setHeaderText(null);
             successAlert.setContentText("Le don a été ajouté avec succès !");
             successAlert.showAndWait();
 
-            //Send Sms function
-          /*  send_sms();*/
+
 
             // Clear fields
             clearFields();
@@ -236,7 +277,7 @@ public class AddDonsController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(AddDonsController.class.getResource("/AddDons.fxml"));
             Parent root = loader.load();
-            
+
             Scene scene = new Scene(root);
             primaryStage.setTitle("Ajouter un Don");
             primaryStage.setScene(scene);
@@ -252,35 +293,49 @@ public class AddDonsController implements Initializable {
     }
 
 
-        public void handleBack() {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Dashboard.fxml"));
-                Parent root = loader.load();
-                Stage stage = (Stage) retourHome.getScene().getWindow();
-                stage.setScene(new Scene(root));
-                stage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    public void handleBack() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Dashboard.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) retourHome.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-
-
-   /* void send_sms(){
-        String ACCOUNT_SID = "ACa40d66133a0ed3edeaeb7fbdd4148f1e";
-        String AUTH_TOKEN = "b1d6f34c25ff6a562d9aa066e720ba35";
-
-        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
-
-        String recepientNumber = "+21628221962";
-        String message = "Bonjour Admin, \n"
-                +"Nous sommes ravis de vous informer qu'une nouvelle don a été ajoutée.\n"
-                +"Cordialement, \n";
-
-        Message twilioMessage = Message.creator(
-                new PhoneNumber(recepientNumber),
-                new PhoneNumber("+19472247143"),message).create();
-        System.out.println("SMS envoyé : "+twilioMessage.getSid());
-    }*/
     }
 
+    private void showToast(String message, boolean success) {
+        Label toast = new Label(message);
+        toast.setStyle("-fx-background-color: " + (success ? "#4BB543" : "#D32F2F") + ";" +
+                "-fx-text-fill: white;" +
+                "-fx-padding: 12px 20px;" +
+                "-fx-font-size: 14px;" +
+                "-fx-background-radius: 10;");
+        toast.setOpacity(0);
+
+        // Center horizontally
+        toast.setLayoutX((rootPane.getWidth() - 300) / 2);
+        toast.setLayoutY(rootPane.getHeight() - 80); // 80px from bottom
+
+        rootPane.getChildren().add(toast);
+
+        // Fade in and out
+        javafx.animation.FadeTransition fadeIn = new javafx.animation.FadeTransition(javafx.util.Duration.seconds(0.5), toast);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+
+        javafx.animation.FadeTransition fadeOut = new javafx.animation.FadeTransition(javafx.util.Duration.seconds(0.5), toast);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        fadeOut.setDelay(javafx.util.Duration.seconds(2.5));
+
+        fadeIn.setOnFinished(e -> fadeOut.play());
+        fadeOut.setOnFinished(e -> rootPane.getChildren().remove(toast));
+
+        fadeIn.play();
+    }
+
+
+
+}

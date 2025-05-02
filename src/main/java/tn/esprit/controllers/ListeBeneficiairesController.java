@@ -102,10 +102,10 @@ public class ListeBeneficiairesController implements Initializable {
                                     if (imageFile.exists()) {
                                         imageView.setImage(new Image(imageFile.toURI().toString()));
                                     } else {
-                                        imageView.setImage(new Image(getClass().getResourceAsStream("/images/placeholder.png")));
+                                        imageView.setImage(new Image(getClass().getResourceAsStream("/images/default_image.jpg")));
                                     }
                                 } else {
-                                    imageView.setImage(new Image(getClass().getResourceAsStream("/images/placeholder.png")));
+                                    imageView.setImage(new Image(getClass().getResourceAsStream("/images/default_image.jpg")));
                                 }
 
                                 imageContainer.getChildren().add(imageView);
