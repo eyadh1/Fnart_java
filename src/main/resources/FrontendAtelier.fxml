@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import java.net.URL?>
+<?import javafx.scene.text.Text?>
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="esprit.tn.controllers.FrontendAtelierController"
+      styleClass="root">
+
+    <!-- Top Navigation Bar -->
+    <HBox styleClass="top-bar" alignment="CENTER" spacing="20">
+        <!-- Logo -->
+        <Label text="ArtTherapy" styleClass="logo"/>
+
+        <!-- Search Bar -->
+        <HBox styleClass="search-bar-container" HBox.hgrow="ALWAYS">
+            <Label text="🔍" styleClass="search-icon"/>
+            <TextField fx:id="searchField" promptText="Rechercher des ateliers..."
+                       styleClass="search-field" HBox.hgrow="ALWAYS"/>
+        </HBox>
+
+        <!-- Navigation Items -->
+        <HBox spacing="10" alignment="CENTER">
+            <Button text="Accueil" styleClass="nav-button" onAction="#handleHome">
+                <graphic>
+                    <Label text="🏠" styleClass="nav-icon"/>
+                </graphic>
+            </Button>
+            <Button text="Atelier" styleClass="nav-button, active-nav-button" onAction="#handleAtelier">
+                <graphic>
+                    <Label text="🖌️" styleClass="nav-icon"/>
+                </graphic>
+            </Button>
+            <Button text="Dons" styleClass="nav-button" onAction="#handleDons">
+                <graphic>
+                    <Label text="🎁" styleClass="nav-icon"/>
+                </graphic>
+            </Button>
+            <Button text="Forum" styleClass="nav-button" onAction="#handleForum">
+                <graphic>
+                    <Label text="💬" styleClass="nav-icon"/>
+                </graphic>
+            </Button>
+            <Button text="Panier" styleClass="nav-button" onAction="#handleCart">
+                <graphic>
+                    <Label text="🛒" styleClass="nav-icon"/>
+                </graphic>
+            </Button>
+        </HBox>
+
+        <!-- Profile Section -->
+        <HBox alignment="CENTER" spacing="8">
+            <ImageView fx:id="profileImage" fitWidth="40" fitHeight="40" pickOnBounds="true" preserveRatio="true" styleClass="profile-image"/>
+            <MenuButton text="Mon Compte" styleClass="accounts-menu">
+                <items>
+                    <MenuItem text="Mon profil"/>
+                    <MenuItem text="Déconnexion"/>
+                </items>
+            </MenuButton>
+        </HBox>
+    </HBox>
+    
+    <!-- Filter Bar -->
+    <HBox styleClass="filter-bar" spacing="15" alignment="CENTER_LEFT">
+        <padding>
+            <Insets top="10" right="10" bottom="10" left="10" />
+        </padding>
+        <Label text="Filtres:" styleClass="filter-label"/>
+        
+        <!-- Date Range Filter -->
+        <HBox alignment="CENTER" spacing="5" styleClass="date-filter">
+            <Label text="Du:" />
+            <DatePicker fx:id="fromDatePicker" promptText="Date début" />
+            <Label text="au:" />
+            <DatePicker fx:id="toDatePicker" promptText="Date fin" />
+            <Button text="Filtrer" onAction="#applyDateFilter" styleClass="filter-button"/>
+            <Button text="Réinitialiser" onAction="#resetFilters" styleClass="reset-button"/>
+        </HBox>
+        
+        <Region HBox.hgrow="ALWAYS" />
+        
+        <!-- Sort Options -->
+        <Label text="Trier par:" />
+        <ComboBox fx:id="sortComboBox" prefWidth="150" />
+    </HBox>
+
+    <!-- Main Content Area -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="main-scroll-pane" fitToHeight="false">
+        <VBox spacing="20" alignment="CENTER">
+            <!-- Workshops Grid -->
+            <TilePane fx:id="atelierGrid" styleClass="masonry-grid" hgap="16" vgap="16" prefColumns="4">
+                <!-- Atelier cards will be added here dynamically -->
+            </TilePane>
+            
+            <!-- Pagination Controls -->
+            <HBox alignment="CENTER" spacing="10" styleClass="pagination-controls">
+                <Button text="◀" fx:id="prevPageButton" onAction="#prevPage" styleClass="page-button" />
+                <Label fx:id="pageInfoLabel" text="Page 1 sur 1" styleClass="page-info" />
+                <Button text="▶" fx:id="nextPageButton" onAction="#nextPage" styleClass="page-button" />
+                <ComboBox fx:id="pageSizeComboBox" prefWidth="100" promptText="Afficher" />
+                <Label text="par page" />
+            </HBox>
+        </VBox>
+    </ScrollPane>
+
+    <!-- Back button at the bottom -->
+    <HBox alignment="CENTER" spacing="10" styleClass="bottom-bar">
+        <Button text="Retour" onAction="#goBack" styleClass="back-button">
+            <graphic>
+                <Label text="⬅️" styleClass="back-icon"/>
+            </graphic>
+        </Button>
+    </HBox>
+
+    <stylesheets>
+        <URL value="@styles/pinterest-style.css"/>
+    </stylesheets>
+</VBox>
