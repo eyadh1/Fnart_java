@@ -213,7 +213,7 @@ public class AddBeneficiaireController implements Initializable {
             beneficiaire.setDescription(DescriptionTextArea.getText());
 
             // Set the relative image path
-            beneficiaire.setImage(relativeImagePath != null ? relativeImagePath : "default_image.jpg");
+            beneficiaire.setImage(relativeImagePath != null ? relativeImagePath : "default_profile.png");
 
             // Save to database
             ServicesBeneficiaires services = new ServicesBeneficiaires();

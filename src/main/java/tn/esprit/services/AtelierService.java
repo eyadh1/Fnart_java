@@ -1,5 +1,6 @@
-package tn.esprit.interfaces;
+package tn.esprit.services;
 
+import tn.esprit.interfaces.IService;
 import tn.esprit.models.Atelier;
 import tn.esprit.utils.MyDataBase;
 
@@ -20,6 +21,26 @@ public class AtelierService implements IService<Atelier> {
     public AtelierService() {
         cnx = MyDataBase.getInstance().getCnx();
         inscriptionService = new InscriptionAtelierService();
+    }
+
+    @Override
+    public void add(Atelier atelier) {
+
+    }
+
+    @Override
+    public List<Atelier> getAll() {
+        return null;
+    }
+
+    @Override
+    public void update(Atelier atelier) {
+
+    }
+
+    @Override
+    public void delete(Atelier atelier) {
+
     }
 
     @Override

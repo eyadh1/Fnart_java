@@ -11,11 +11,11 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.text.Text?>
 
-<VBox fx:id="cardContainer" styleClass="workshop-card" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="esprit.tn.controllers.CardViewController">
+<VBox fx:id="cardContainer" styleClass="workshop-card" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.CardViewController">
     <children>
         <!-- Workshop Image -->
         <ImageView fx:id="workshopImage" fitWidth="280" fitHeight="160" preserveRatio="true">
-            <Image url="@images/workshop-icon.png" />
+            <Image url="@images/image.png" />
         </ImageView>
         
         <!-- Workshop Status Badge -->

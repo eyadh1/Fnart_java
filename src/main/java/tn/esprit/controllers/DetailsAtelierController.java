@@ -1,9 +1,8 @@
-package esprit.tn.controllers;
+package tn.esprit.controllers;
 
-import esprit.tn.entities.Atelier;
-import esprit.tn.services.EmailService;
-import esprit.tn.services.InscriptionAtelierService;
-import esprit.tn.main.MainFX;
+import tn.esprit.models.Atelier;
+import tn.esprit.services.EmailService;
+import tn.esprit.services.InscriptionAtelierService;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
@@ -138,10 +137,7 @@ public class DetailsAtelierController {
         stage.close();
     }
 
-    @FXML
-    private void goBack() {
-        MainFX.goBack();
-    }
+
 
     @FXML
     private void downloadPdf() {

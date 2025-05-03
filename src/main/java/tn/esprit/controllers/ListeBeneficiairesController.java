@@ -97,15 +97,16 @@ public class ListeBeneficiairesController implements Initializable {
 
                                 // Load image from file system
                                 String imagePath = item.getImage();
-                                if (imagePath != null && !imagePath.isEmpty() && !imagePath.equals("default_image.jpg")) {
+                                if (imagePath != null && !imagePath.isEmpty() && !imagePath.equals("default_image.png")) {
                                     File imageFile = new File("src/main/resources/" + imagePath);
                                     if (imageFile.exists()) {
                                         imageView.setImage(new Image(imageFile.toURI().toString()));
                                     } else {
-                                        imageView.setImage(new Image(getClass().getResourceAsStream("/images/default_image.jpg")));
+                                        System.err.println("Image file not found: " + imagePath);
+                                        imageView.setImage(getDefaultImage());
                                     }
                                 } else {
-                                    imageView.setImage(new Image(getClass().getResourceAsStream("/images/default_image.jpg")));
+                                    imageView.setImage(getDefaultImage());
                                 }
 
                                 imageContainer.getChildren().add(imageView);
@@ -153,6 +154,15 @@ public class ListeBeneficiairesController implements Initializable {
         } catch (Exception e) {
             showAlert("Erreur", "Impossible de charger les bénéficiaires");
             e.printStackTrace();
+        }
+    }
+
+    private Image getDefaultImage() {
+        try {
+            return new Image(getClass().getResourceAsStream("/images/default_profile.png"));
+        } catch (Exception e) {
+            System.err.println("Default image not found.");
+            return null;
         }
     }
 

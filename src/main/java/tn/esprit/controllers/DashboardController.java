@@ -39,16 +39,27 @@ public class DashboardController implements Initializable {
         loadForm("/AddDons.fxml");
     }
 
+    @FXML
+    private void handleAtelier() {
+        // Revert to loading FrontendAtelier.fxml
+        loadForm("/FrontendAtelier.fxml");
+    }
+
     private void loadForm(String fxmlFile) {
         try {
+            System.out.println("Attempting to load FXML file: " + fxmlFile);
             URL resource = getClass().getResource(fxmlFile);
             if (resource == null) {
                 throw new IOException("FXML file not found: " + fxmlFile);
             }
+            System.out.println("FXML file found at: " + resource.toExternalForm());
             Node form = FXMLLoader.load(resource);
             artworkGrid.getChildren().clear(); // Clear existing content
             artworkGrid.getChildren().add(form); // Add the new form
+            System.out.println("Successfully loaded and displayed FXML file: " + fxmlFile);
         } catch (IOException e) {
+            System.err.println("Error loading FXML file: " + fxmlFile);
+            e.printStackTrace();
             showError("Erreur", "Impossible de charger la vue " + fxmlFile, e);
         }
     }

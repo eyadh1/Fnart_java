@@ -1,9 +1,8 @@
-package esprit.tn.controllers;
+package tn.esprit.controllers;
 
-import esprit.tn.entities.Atelier;
-import esprit.tn.main.MainFX;
-import esprit.tn.services.AtelierService;
-import esprit.tn.services.InscriptionAtelierService;
+import tn.esprit.models.Atelier;
+import tn.esprit.services.AtelierService;
+import tn.esprit.services.InscriptionAtelierService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -246,10 +245,7 @@ public class AfficherAtelierController {
         profilePanel.setVisible(false);
     }
 
-    @FXML
-    private void goBack() {
-        MainFX.goBack();
-    }
+
 
     private void loadAteliers() {
         ateliers.clear();

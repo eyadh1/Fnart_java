@@ -50,11 +50,16 @@
 
                   <Label styleClass="form-label" text="Bénéficiaire:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
                   <ChoiceBox fx:id="BeneficiaireChoice" prefWidth="200.0" styleClass="form-dropdown" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                  <Label styleClass="form-label" text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                  <TextField fx:id="emailField" prefWidth="200.0" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
                      <columnConstraints>
                         <ColumnConstraints />
                         <ColumnConstraints />
                      </columnConstraints>
                      <rowConstraints>
+                        <RowConstraints />
                         <RowConstraints />
                         <RowConstraints />
                         <RowConstraints />
@@ -66,7 +71,7 @@
                      <RowConstraints />
                      <RowConstraints />
                      <RowConstraints />
-
+                     <RowConstraints />
                   </rowConstraints>
                </GridPane>
                <!-- Buttons -->

@@ -1,7 +1,7 @@
-package esprit.tn.controllers;
+package tn.esprit.controllers;
 
-import esprit.tn.entities.Atelier;
-import esprit.tn.services.AtelierService;
+import tn.esprit.models.Atelier;
+import tn.esprit.services.AtelierService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -248,7 +248,7 @@ public class AjouterAtelierController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherAtelier.fxml"));
             Parent root = loader.load();
 
-            esprit.tn.controllers.AfficherAtelierController controller = loader.getController();
+            tn.esprit.controllers.AfficherAtelierController controller = loader.getController();
             controller.refreshAteliers(); // Refresh the list with the new atelier
 
             Stage stage = (Stage) titreField.getScene().getWindow();
@@ -275,5 +275,43 @@ public class AjouterAtelierController {
 
     public void resetForm(ActionEvent actionEvent) {
 
+    }
+
+    @FXML
+    private void handleValidate() {
+        // Perform validation logic for the form
+        StringBuilder validationErrors = new StringBuilder();
+
+        if (titreField.getText().isEmpty()) {
+            validationErrors.append("Le titre est requis.\n");
+        }
+        if (lieuField.getText().isEmpty()) {
+            validationErrors.append("Le lieu est requis.\n");
+        }
+        if (datePicker.getValue() == null) {
+            validationErrors.append("La date est requise.\n");
+        }
+        if (participantMaxField.getText().isEmpty() || !participantMaxField.getText().matches("\\d+")) {
+            validationErrors.append("Le nombre maximum de participants doit être un nombre valide.\n");
+        }
+        if (descriptionArea.getText().isEmpty()) {
+            validationErrors.append("La description est requise.\n");
+        }
+
+        if (validationErrors.length() > 0) {
+            // Show validation errors
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreurs de validation");
+            alert.setHeaderText(null);
+            alert.setContentText(validationErrors.toString());
+            alert.showAndWait();
+        } else {
+            // Show success message
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Validation réussie");
+            alert.setHeaderText(null);
+            alert.setContentText("Tous les champs sont valides.");
+            alert.showAndWait();
+        }
     }
 }

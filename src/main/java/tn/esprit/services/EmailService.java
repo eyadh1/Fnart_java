@@ -1,4 +1,4 @@
-package tn.esprit.interfaces;
+package tn.esprit.services;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;

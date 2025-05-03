@@ -1,6 +1,6 @@
-package esprit.tn.controllers;
+package tn.esprit.controllers;
 
-import esprit.tn.entities.Atelier;
+import tn.esprit.models.Atelier;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;

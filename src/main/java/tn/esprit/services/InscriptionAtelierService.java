@@ -1,9 +1,9 @@
-package tn.esprit.interfaces;
+package tn.esprit.services;
 
-import esprit.tn.entities.Atelier;
-import esprit.tn.entities.InscriptionAtelier;
-import esprit.tn.main.DatabaseConnection;
-import esprit.tn.services.EmailService;
+import tn.esprit.models.Atelier;
+import tn.esprit.models.InscriptionAtelier;
+import tn.esprit.utils.MyDataBase;
+import tn.esprit.services.EmailService;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,7 +18,7 @@ public class InscriptionAtelierService {
     private final List<InscriptionAtelier> inscriptions = new ArrayList<>();
 
     public InscriptionAtelierService() {
-        cnx = DatabaseConnection.getInstance().getCnx();
+        cnx = MyDataBase.getInstance().getCnx();
     }
 
     // Retrieve all inscriptions for a specific atelier by its ID
@@ -123,7 +123,7 @@ public class InscriptionAtelierService {
 
     public void updateInscriptionStatus(int inscriptionId, String status) {
         String req = "UPDATE inscription_atelier SET status = ? WHERE id = ?";
-        try (Connection conn = DatabaseConnection.getInstance().getCnx();
+        try (Connection conn = MyDataBase.getInstance().getCnx();
              PreparedStatement stm = conn.prepareStatement(req)) {
             stm.setString(1, status);
             stm.setInt(2, inscriptionId);

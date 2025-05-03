@@ -91,7 +91,7 @@ public class AddBeneficiaireBackController implements Initializable {
             newBeneficiaire.setStatus(StatusChoice.getValue());
 
             // Handle image saving
-            String savedImagePath = "default_image.jpg";
+            String savedImagePath = "default_profile.png";
             if (selectedImageFile != null) {
                 File destDir = new File("src/main/resources/uploads/beneficiaires/");
                 if (!destDir.exists()) {

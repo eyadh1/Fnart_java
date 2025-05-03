@@ -24,6 +24,7 @@ import javafx.stage.Stage;
 import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.scene.chart.PieChart;
+import javafx.event.ActionEvent;
 
 import java.io.File;
 import java.io.IOException;
@@ -573,10 +574,10 @@ public class AdminDashboardController implements Initializable {
                 private final Button refuserBtn = new Button("Refuser");
 
                 {
-                    modifierBtn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
-                    detailsBtn.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");
-                    accepterBtn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
-                    refuserBtn.setStyle("-fx-background-color: #f44336; -fx-text-fill: white;");
+                    modifierBtn.setStyle("-fx-background-color: #2f6931; -fx-text-fill: white;");
+                    detailsBtn.setStyle("-fx-background-color: #26608d; -fx-text-fill: white;");
+                    accepterBtn.setStyle("-fx-background-color: #317533; -fx-text-fill: white;");
+                    refuserBtn.setStyle("-fx-background-color: #942b25; -fx-text-fill: white;");
                 }
 
                 @Override
@@ -890,6 +891,95 @@ public class AdminDashboardController implements Initializable {
             System.out.println("Donations list exported to PDF.");
         } catch (DocumentException | IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleAfficherAtelier() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherAtelier.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Afficher Ateliers");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Erreur", "Impossible d'afficher les ateliers: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleAjouterAtelier() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterAtelier.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Ajouter Atelier");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Erreur", "Impossible d'ajouter un atelier: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleModifierAtelier() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierAtelier.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Modifier Atelier");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Erreur", "Impossible de modifier l'atelier: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleDetailAtelier() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/DetailAtelier.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Détails Atelier");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Erreur", "Impossible d'afficher les détails de l'atelier: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    public void applyDateFilter(ActionEvent event) {
+        // Placeholder logic for filtering workshops by date
+        System.out.println("Date filter applied.");
+        // Add your filtering logic here
+    }
+
+    @FXML
+    public void handleSupprimerAtelier(ActionEvent event) {
+        // Placeholder logic for deleting a workshop
+        System.out.println("Supprimer Atelier button clicked.");
+        // Add your deletion logic here
+    }
+
+    @FXML
+    public void openPublicInterface(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Dashboard.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Front Office Dashboard");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Erreur", "Impossible d'ouvrir le tableau de bord du front office: " + e.getMessage());
         }
     }
 }

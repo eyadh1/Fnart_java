@@ -1,107 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.image.*?>
 <?import java.net.URL?>
-<?import javafx.scene.text.Text?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="esprit.tn.controllers.FrontendAtelierController"
-      styleClass="root">
-
-    <!-- Top Navigation Bar -->
-    <HBox styleClass="top-bar" alignment="CENTER" spacing="20">
-        <!-- Logo -->
-        <Label text="ArtTherapy" styleClass="logo"/>
-
-        <!-- Search Bar -->
-        <HBox styleClass="search-bar-container" HBox.hgrow="ALWAYS">
-            <Label text="🔍" styleClass="search-icon"/>
-            <TextField fx:id="searchField" promptText="Rechercher des ateliers..."
-                       styleClass="search-field" HBox.hgrow="ALWAYS"/>
-        </HBox>
-
-        <!-- Navigation Items -->
-        <HBox spacing="10" alignment="CENTER">
-            <Button text="Accueil" styleClass="nav-button" onAction="#handleHome">
-                <graphic>
-                    <Label text="🏠" styleClass="nav-icon"/>
-                </graphic>
-            </Button>
-            <Button text="Atelier" styleClass="nav-button, active-nav-button" onAction="#handleAtelier">
-                <graphic>
-                    <Label text="🖌️" styleClass="nav-icon"/>
-                </graphic>
-            </Button>
-            <Button text="Dons" styleClass="nav-button" onAction="#handleDons">
-                <graphic>
-                    <Label text="🎁" styleClass="nav-icon"/>
-                </graphic>
-            </Button>
-            <Button text="Forum" styleClass="nav-button" onAction="#handleForum">
-                <graphic>
-                    <Label text="💬" styleClass="nav-icon"/>
-                </graphic>
-            </Button>
-            <Button text="Panier" styleClass="nav-button" onAction="#handleCart">
-                <graphic>
-                    <Label text="🛒" styleClass="nav-icon"/>
-                </graphic>
-            </Button>
-        </HBox>
-
-        <!-- Profile Section -->
-        <HBox alignment="CENTER" spacing="8">
-            <ImageView fx:id="profileImage" fitWidth="40" fitHeight="40" pickOnBounds="true" preserveRatio="true" styleClass="profile-image"/>
-            <MenuButton text="Mon Compte" styleClass="accounts-menu">
-                <items>
-                    <MenuItem text="Mon profil"/>
-                    <MenuItem text="Déconnexion"/>
-                </items>
-            </MenuButton>
-        </HBox>
-    </HBox>
+<VBox styleClass="root" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.FrontendAtelierController">
     
     <!-- Filter Bar -->
-    <HBox styleClass="filter-bar" spacing="15" alignment="CENTER_LEFT">
+    <HBox alignment="CENTER_LEFT" spacing="15" styleClass="filter-bar">
         <padding>
-            <Insets top="10" right="10" bottom="10" left="10" />
+            <Insets bottom="10" left="10" right="10" top="10" />
         </padding>
-        <Label text="Filtres:" styleClass="filter-label"/>
+        <Label styleClass="form-label" stylesheets="@css/pinterest-style.css" text="Filtres:" />
         
         <!-- Date Range Filter -->
         <HBox alignment="CENTER" spacing="5" styleClass="date-filter">
-            <Label text="Du:" />
-            <DatePicker fx:id="fromDatePicker" promptText="Date début" />
-            <Label text="au:" />
-            <DatePicker fx:id="toDatePicker" promptText="Date fin" />
-            <Button text="Filtrer" onAction="#applyDateFilter" styleClass="filter-button"/>
-            <Button text="Réinitialiser" onAction="#resetFilters" styleClass="reset-button"/>
+            <Label styleClass="form-label" stylesheets="@css/pinterest-style.css" text="Du:" />
+            <DatePicker fx:id="fromDatePicker" promptText="Date début" styleClass="download-menu" stylesheets="@css/pinterest-style.css" />
+            <Label styleClass="form-label" stylesheets="@css/pinterest-style.css" text="au:" />
+            <DatePicker fx:id="toDatePicker" promptText="Date fin" styleClass="download-menu" stylesheets="@css/pinterest-style.css" />
+            <Button onAction="#applyDateFilter" styleClass="download-option" stylesheets="@css/pinterest-style.css" text="Filtrer" />
+            <Button onAction="#resetFilters" styleClass="download-option" stylesheets="@css/pinterest-style.css" text="Réinitialiser" />
         </HBox>
         
         <Region HBox.hgrow="ALWAYS" />
         
         <!-- Sort Options -->
-        <Label text="Trier par:" />
-        <ComboBox fx:id="sortComboBox" prefWidth="150" />
+        <Label styleClass="form-label" stylesheets="@css/pinterest-style.css" text="Trier par:" />
+        <ComboBox fx:id="sortComboBox" prefWidth="150" styleClass="form-dropdown" stylesheets="@css/pinterest-style.css" />
+        
+        <!-- Search Field -->
+        <TextField fx:id="searchField" promptText="Rechercher des ateliers..." styleClass="search-field" />
     </HBox>
 
     <!-- Main Content Area -->
-    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="main-scroll-pane" fitToHeight="false">
-        <VBox spacing="20" alignment="CENTER">
+    <ScrollPane fitToHeight="false" fitToWidth="true" styleClass="main-scroll-pane" VBox.vgrow="ALWAYS">
+        <VBox alignment="CENTER" spacing="20">
             <!-- Workshops Grid -->
-            <TilePane fx:id="atelierGrid" styleClass="masonry-grid" hgap="16" vgap="16" prefColumns="4">
+            <TilePane fx:id="atelierGrid" hgap="16" prefColumns="4" styleClass="masonry-grid" vgap="16">
                 <!-- Atelier cards will be added here dynamically -->
             </TilePane>
             
             <!-- Pagination Controls -->
             <HBox alignment="CENTER" spacing="10" styleClass="pagination-controls">
-                <Button text="◀" fx:id="prevPageButton" onAction="#prevPage" styleClass="page-button" />
-                <Label fx:id="pageInfoLabel" text="Page 1 sur 1" styleClass="page-info" />
-                <Button text="▶" fx:id="nextPageButton" onAction="#nextPage" styleClass="page-button" />
-                <ComboBox fx:id="pageSizeComboBox" prefWidth="100" promptText="Afficher" />
+                <Button fx:id="prevPageButton" onAction="#prevPage" styleClass="download-option" stylesheets="@css/pinterest-style.css" text="◀" />
+                <Label fx:id="pageInfoLabel" styleClass="page-info" text="Page 1 sur 1" />
+                <Button fx:id="nextPageButton" onAction="#nextPage" styleClass="download-option" stylesheets="@css/pinterest-style.css" text="▶" />
+                <ComboBox fx:id="pageSizeComboBox" prefWidth="100" promptText="Afficher" styleClass="form-dropdown" stylesheets="@css/pinterest-style.css" />
                 <Label text="par page" />
             </HBox>
         </VBox>
@@ -109,14 +63,14 @@
 
     <!-- Back button at the bottom -->
     <HBox alignment="CENTER" spacing="10" styleClass="bottom-bar">
-        <Button text="Retour" onAction="#goBack" styleClass="back-button">
+        <Button onAction="#goBack" styleClass="download-option" stylesheets="@css/pinterest-style.css" text="Retour">
             <graphic>
-                <Label text="⬅️" styleClass="back-icon"/>
+                <Label styleClass="back-icon" text="⬅️" />
             </graphic>
         </Button>
     </HBox>
 
     <stylesheets>
-        <URL value="@styles/pinterest-style.css"/>
+        <URL value="@styles/pinterest-style.css" />
     </stylesheets>
 </VBox>

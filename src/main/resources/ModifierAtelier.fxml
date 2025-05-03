@@ -19,7 +19,7 @@
 <?import javafx.scene.web.WebView?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-             fx:controller="esprit.tn.controllers.ModifierAtelierController"
+             fx:controller="tn.esprit.controllers.ModifierAtelierController"
              stylesheets="@styles.css" style="-fx-background-color: -fx-workshop-background;">
     <children>
         <VBox styleClass="workshop-form-container" spacing="20" AnchorPane.topAnchor="10" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10">
@@ -152,6 +152,11 @@
                 <Button text="Retour" onAction="#goBack" styleClass="workshop-button-outline" visible="true">
                     <graphic>
                         <Text text="←" />
+                    </graphic>
+                </Button>
+                <Button text="Valider" onAction="#handleModifier" styleClass="workshop-button" visible="true" managed="true">
+                    <graphic>
+                        <Text text="✔" />
                     </graphic>
                 </Button>
             </HBox>

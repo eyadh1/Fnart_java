@@ -1,4 +1,4 @@
-package esprit.tn.entities;
+package tn.esprit.models;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;

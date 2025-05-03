@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.effect.DropShadow?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="esprit.tn.controllers.DetailsAtelierController"
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.DetailsAtelierController"
             styleClass="root" stylesheets="@styles.css">
     <children>
         <VBox AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
@@ -24,11 +24,7 @@
                 <padding>
                     <Insets top="15" right="20" bottom="15" left="20" />
                 </padding>
-                <Button text="←" onAction="#goBack" styleClass="button-outline">
-                    <padding>
-                        <Insets top="5" right="12" bottom="5" left="12" />
-                    </padding>
-                </Button>
+
                 <Text text="Détails de l'atelier" styleClass="header-label" />
             </HBox>
 

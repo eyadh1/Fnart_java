@@ -31,7 +31,7 @@
                     <FontAwesomeIconView glyphName="HOME" styleClass="nav-icon" size="1.2em"/>
                 </graphic>
             </Button>
-            <Button text="Atelier" styleClass="nav-button">
+            <Button fx:id="atelierButton" text="Atelier" styleClass="nav-button" onAction="#handleAtelier">
                 <graphic>
                     <FontAwesomeIconView glyphName="PAINT_BRUSH" styleClass="nav-icon" size="1.2em"/>
                 </graphic>

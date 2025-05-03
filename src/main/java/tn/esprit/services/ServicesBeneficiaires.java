@@ -43,7 +43,7 @@ public class ServicesBeneficiaires implements IService<Beneficiaires> {
             // Handle the image path - use default if null or empty
             String imagePath = b.getImage();
             if (imagePath == null || imagePath.trim().isEmpty()) {
-                imagePath = "default_image.jpg";
+                imagePath = "default_profile.png";
             }
             ps.setString(8, imagePath);
 
@@ -135,6 +135,56 @@ public class ServicesBeneficiaires implements IService<Beneficiaires> {
             System.out.println("Erreur lors de la suppression du bénéficiaire !");
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean ajouter(Beneficiaires beneficiaires) throws SQLException {
+        return false;
+    }
+
+    @Override
+    public void modifier(Beneficiaires beneficiaires) {
+
+    }
+
+    @Override
+    public void supprimer(Beneficiaires beneficiaires) {
+
+    }
+
+    @Override
+    public List<Beneficiaires> getall() {
+        return null;
+    }
+
+    @Override
+    public Beneficiaires getone() {
+        String sql = "SELECT * FROM beneficiaires WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            // Replace with the actual ID you want to fetch
+            long id = 1; // Example ID
+            ps.setLong(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Beneficiaires b = new Beneficiaires();
+                    b.setId(rs.getLong("id"));
+                    b.setNom(rs.getString("nom"));
+                    b.setEmail(rs.getString("email"));
+                    b.setTelephone(rs.getString("telephone"));
+                    b.setEstElleAssociation(rs.getString("est_elle_association"));
+                    b.setCause(rs.getString("cause"));
+                    b.setValeurDemande(rs.getDouble("valeur_demande"));
+                    b.setStatus(rs.getString("status"));
+                    b.setDescription(rs.getString("description"));
+                    b.setImage(rs.getString("image"));
+                    return b;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erreur lors de la récupération du bénéficiaire: " + e.getMessage());
+        }
+        return null;
     }
 
     public ObservableList<Beneficiaires> getByStatus(String enAttente) {

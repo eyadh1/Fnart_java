@@ -27,58 +27,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.GridPane?>
 
-<BorderPane prefHeight="700.0" prefWidth="900.0" stylesheets="@styles/AdminDashboard.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="esprit.tn.controllers.AfficherAtelierController">
-    <top>
-        <AnchorPane>
-            <children>
-                <HBox alignment="CENTER_LEFT" spacing="20.0" style="-fx-background-color: #310E10; -fx-padding: 15;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                    <children>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                            <image>
-                                <Image url="@images/workshop-icon.png" />
-                            </image>
-                        </ImageView>
-                        <Label text="Gestion des Ateliers" textFill="WHITE">
-                            <font>
-                                <Font name="System Bold" size="22.0" />
-                            </font>
-                        </Label>
-                        <HBox alignment="CENTER_RIGHT" spacing="15.0" HBox.hgrow="ALWAYS">
-                            <TextField fx:id="searchField" prefWidth="250.0" promptText="Rechercher un atelier..." />
-                            <Button mnemonicParsing="false" onAction="#refreshTable" text="Rechercher" />
-                            <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#refreshAteliers" text="Rafraîchir" />
-                            <Button mnemonicParsing="false" onAction="#goBack" text="Retour" />
-                            
-                            <VBox fx:id="profileContainer" alignment="CENTER" styleClass="profile-container">
-                                <ImageView fx:id="profileImage" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" styleClass="profile-image">
-                                    <image>
-                                        <Image url="@images/workshop-icon.png" />
-                                    </image>
-                                </ImageView>
-                            </VBox>
-                        </HBox>
-                    </children>
-                </HBox>
-                
-                <AnchorPane fx:id="profilePanel" managed="false" styleClass="profile-panel" visible="false" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
-                    <VBox alignment="TOP_CENTER" spacing="10.0" styleClass="profile-panel-content">
-                        <ImageView fx:id="profileImageLarge" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true" styleClass="profile-image-large">
-                            <image>
-                                <Image url="@images/workshop-icon.png" />
-                            </image>
-                        </ImageView>
-                        <Label fx:id="adminNameLabel" styleClass="profile-name" text="Admin" />
-                        <Label fx:id="adminEmailLabel" styleClass="profile-email" text="admin@example.com" />
-                        <HBox alignment="CENTER" spacing="10.0">
-                            <Button mnemonicParsing="false" text="Modifier Profil" />
-                            <Button mnemonicParsing="false" styleClass="sign-out-button" text="Déconnexion" />
-                        </HBox>
-                    </VBox>
-                </AnchorPane>
-            </children>
-        </AnchorPane>
-    </top>
-
+<BorderPane prefHeight="700.0" prefWidth="900.0" stylesheets="@styles/AdminDashboard.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.controllers.AfficherAtelierController">
     <center>
         <VBox spacing="15.0" styleClass="container" BorderPane.alignment="CENTER">
             <padding>
@@ -155,6 +104,12 @@
                                         <Button text="Supprimer" onAction="#supprimerAtelier" styleClass="button" />
                                         <Button text="Interface Publique" onAction="#openPublicInterface" styleClass="button" />
                                     </HBox>
+                                    
+                                    <!-- Search Field -->
+                                    <HBox alignment="CENTER" spacing="10">
+                                        <TextField fx:id="searchField" prefWidth="250.0" promptText="Rechercher un atelier..." />
+                                        <Button mnemonicParsing="false" onAction="#refreshTable" text="Rechercher" />
+                                    </HBox>
                                 </VBox>
                             </AnchorPane>
                         </content>
@@ -224,9 +179,6 @@
         </VBox>
     </center>
 
-    <bottom>
-        <HBox alignment="CENTER_RIGHT" prefHeight="0.0" prefWidth="900.0" style="-fx-background-color: #F9F5F0; -fx-padding: 5 15;">
-            <Label text="© 2025 Gestion des Ateliers. Tous droits réservés." />
-        </HBox>
-    </bottom>
+    <!-- Profile Panel -->
+    <AnchorPane fx:id="profilePanel" managed="false" styleClass="profile-panel" visible="false" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0" />
 </BorderPane>

@@ -1,10 +1,10 @@
-package esprit.tn.controllers;
+package tn.esprit.controllers;
 
-import esprit.tn.entities.Atelier;
-import esprit.tn.entities.InscriptionAtelier;
-import esprit.tn.services.EmailService;
-import esprit.tn.services.InscriptionAtelierService;
-import esprit.tn.utils.ValidationUtils;
+import tn.esprit.models.Atelier;
+import tn.esprit.models.InscriptionAtelier;
+import tn.esprit.services.EmailService;
+import tn.esprit.services.InscriptionAtelierService;
+import tn.esprit.utils.ValidationUtils;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

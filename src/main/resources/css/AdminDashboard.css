@@ -6,17 +6,17 @@
 
 /* Color palette from signup page */
 .root {
-    -primary-dark: #310E10;  /* Dark brown used in signup */
-    -primary: #947268;       /* Medium brown from painting background */
-    -primary-light: #A98B6A; /* Lighter brown */
-    -accent: #FFCC00;        /* Gold accent from hyperlink */
-    -bg-light: #F9F5F0;      /* Off-white background */
-    -text-dark: #2C3E50;     /* Dark text color */
+    -primary-dark: #A56C56;  /* Dark brown used in signup */
+    -primary: #B28C44;       /* Medium brown from painting background */
+    -primary-light: #b7816c; /* Lighter brown */
+    -accent: #E6E2DA;        /* Gold accent from hyperlink */
+    -bg-light: #B87E68;      /* Off-white background */
+    -text-dark: #A56C56;     /* Dark text color */
     -text-light: #FFFFFF;    /* White text */
-    -error: #E74C3C;         /* Error color */
-    -success: #2ECC71;       /* Success color */
-    -info: #3498DB;          /* Info color */
-    -warning: #F39C12;       /* Warning color */
+    -error: #a64841;         /* Error color */
+    -success: #5d7e6b;       /* Success color */
+    -info: #276691;          /* Info color */
+    -warning: #e09011;       /* Warning color */
 }
 
 /* Main container styling */
@@ -29,7 +29,9 @@
     -fx-tab-min-width: 120px;
     -fx-background-color: transparent;
 }
-
+.label.title {
+    -fx-text-fill: -accent;
+}
 .tab-pane .tab-header-area .tab-header-background {
     -fx-background-color: -primary-light, derive(-primary-light, 50%);
     -fx-background-insets: 0, 0 0 1 0;
@@ -349,11 +351,22 @@
 }
 
 #refreshButton {
-    -fx-background-color: -warning;
+    -fx-background-color: -primary-light;
 }
 
+#searchField {
+    -fx-background-color: -primary-light;
+}
 #refreshButton:hover {
     -fx-background-color: derive(-warning, 15%);
+}
+#logoutButton{
+    -fx-background-color: -primary-light;
+
+}
+#searchButton {
+    -fx-background-color: -primary-light;
+
 }
 
 /* Dialog styling */

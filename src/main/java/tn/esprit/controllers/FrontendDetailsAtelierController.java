@@ -1,9 +1,8 @@
-package esprit.tn.controllers;
+package tn.esprit.controllers;
 
-import esprit.tn.entities.Atelier;
-import esprit.tn.services.InscriptionAtelierService;
-import esprit.tn.services.AtelierService;
-import esprit.tn.main.MainFX;
+import tn.esprit.models.Atelier;
+import tn.esprit.services.InscriptionAtelierService;
+import tn.esprit.services.AtelierService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -233,6 +232,10 @@ public class FrontendDetailsAtelierController {
         try {
             // Charger la page HTML de la carte
             System.out.println("Chargement de la carte Leaflet...");
+            if (getClass().getResource("/leaflet-viewer.html") == null) {
+                System.err.println("Error: leaflet-viewer.html not found");
+                return;
+            }
             webEngine.load(getClass().getResource("/leaflet-viewer.html").toExternalForm());
             
             // Créer un bridge Java-JavaScript pour recevoir la notification quand la carte est prête
@@ -315,14 +318,6 @@ public class FrontendDetailsAtelierController {
         stage.close();
     }
 
-    @FXML
-    private void goBack() {
-        try {
-            MainFX.goBack();
-        } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de revenir à la page précédente: " + e.getMessage());
-        }
-    }
 
     @FXML
     private void downloadPdf() {
@@ -467,6 +462,11 @@ public class FrontendDetailsAtelierController {
         Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
         try {
             stage.getIcons().add(new Image(getClass().getResource("/images/workshop-icon.png").toString()));
+            // Added null check for resource
+            if (getClass().getResource("/images/workshop-icon.png") == null) {
+                System.err.println("Error: workshop-icon.png not found");
+                return;
+            }
         } catch (Exception e) {
             System.err.println("Impossible de charger l'icône: " + e.getMessage());
         }
@@ -544,7 +544,7 @@ public class FrontendDetailsAtelierController {
         dialog.getDialogPane().setContent(grid);
         
         // Apply CSS
-        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/styles/AdminDashboard.css").toExternalForm());
+        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/css/AdminDashboard.css").toExternalForm());
         dialog.getDialogPane().getStyleClass().add("custom-dialog");
         
         // Request focus on the nom field by default
@@ -637,7 +637,7 @@ public class FrontendDetailsAtelierController {
         
         confirmDialog.getDialogPane().setContent(content);
         confirmDialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-        confirmDialog.getDialogPane().getStylesheets().add(getClass().getResource("/styles/AdminDashboard.css").toExternalForm());
+        confirmDialog.getDialogPane().getStylesheets().add(getClass().getResource("/css/AdminDashboard.css").toExternalForm());
         
         // Apply fade-in animation
         content.setOpacity(0);

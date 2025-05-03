@@ -1,7 +1,7 @@
-package esprit.tn.controllers;
+package tn.esprit.controllers;
 
-import esprit.tn.entities.Atelier;
-import esprit.tn.services.AtelierService;
+import tn.esprit.models.Atelier;
+import tn.esprit.services.AtelierService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;

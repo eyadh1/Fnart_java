@@ -20,20 +20,25 @@ import com.stripe.Stripe;
 import javafx.scene.web.WebView;
 import javafx.scene.web.WebEngine;
 
-
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.List;
+import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
-
 import com.twilio.Twilio;
 import com.twilio.type.PhoneNumber;
-import com.twilio.rest.api.v2010.account.Message;
 import tn.esprit.services.StripeService;
-
 
 public class AddDonsController implements Initializable {
     @FXML
@@ -59,7 +64,6 @@ public class AddDonsController implements Initializable {
     @FXML
     private VBox formContainer;
 
-
     @FXML
     private Button ListeButton;
 
@@ -69,6 +73,8 @@ public class AddDonsController implements Initializable {
     @FXML
     private AnchorPane rootPane;
 
+    @FXML
+    private TextField emailField; // Ensure this is annotated with @FXML
 
     private final ServicesDons servicesDons = new ServicesDons();
     private final ServicesBeneficiaires servicesBeneficiaires = new ServicesBeneficiaires();
@@ -98,8 +104,6 @@ public class AddDonsController implements Initializable {
 
         // Set up button actions
         AjoutButton.setOnAction(event -> handleSubmit());
-       /* ListeButton.setOnAction(event -> handleListe());*/
-
     }
 
     private boolean isValidNumber(String number) {
@@ -129,8 +133,6 @@ public class AddDonsController implements Initializable {
             e.printStackTrace();
         }
     }
-
-
 
     @FXML
     private void handleSubmit() {
@@ -209,20 +211,77 @@ public class AddDonsController implements Initializable {
                     e.printStackTrace();
                     return;
                 }
+            } else {
+                String email = emailField.getText();
+                if (email == null || email.trim().isEmpty() || !isValidEmail(email)) {
+                    showAlert("Validation Error", "Veuillez fournir une adresse email valide.");
+                    return;
+                }
+
+                // Send email with donation details
+                String htmlContent = "<html>" +
+                        "<head>" +
+                        "<meta charset='UTF-8'>" +
+                        "<meta name='viewport' content='width=device-width, initial-scale=1.0'>" +
+                        "</head>" +
+                        "<body style='font-family: \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333; line-height: 1.6; background-color: #f9f9f9;'>" +
+                        "<div style='background-color: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);'>" +
+                        "<div style='text-align: center; margin-bottom: 25px;'>" +
+                        "<h1 style='font-size: 26px; font-weight: 600; color: #3498DB; margin: 0;'>✨ Merci pour votre générosité ✨</h1>" +
+                        "<div style='width: 80px; height: 3px; background: linear-gradient(90deg, #3498DB, #9B59B6); margin: 15px auto;'></div>" +
+                        "</div>" +
+
+                        "<p style='font-size: 16px; margin-bottom: 20px;'>Bonjour,</p>" +
+
+                        "<p style='font-size: 16px; margin-bottom: 10px;'>Nous sommes touchés par votre contribution et tenons à vous remercier chaleureusement pour votre don :</p>" +
+
+                        "<div style='background: linear-gradient(135deg, #E8F8F5, #D1F2EB); border-left: 4px solid #28B463; padding: 15px; border-radius: 6px; margin: 20px 0;'>" +
+                        "<p style='font-size: 20px; font-weight: 600; color: #1E8449; margin: 0; text-align: center;'>" + don.getType() + "</p>" +
+                        "</div>" +
+
+                        "<p style='font-size: 16px; margin-bottom: 25px;'>Votre soutien fait une réelle différence et contribue directement à améliorer la vie de ceux qui en ont le plus besoin. 💖</p>" +
+
+                        "<div style='background-color: #F5F5F5; border-radius: 8px; padding: 20px; margin: 25px 0;'>" +
+                        "<h2 style='font-size: 18px; color: #34495E; margin-top: 0; display: flex; align-items: center;'>" +
+                        "<span style='margin-right: 10px;'>📞</span> Prochaines étapes" +
+                        "</h2>" +
+                        "<p style='margin-bottom: 15px;'>Pour organiser la récupération de votre don, veuillez contacter notre responsable :</p>" +
+
+                        "<div style='display: flex; flex-direction: column; gap: 8px;'>" +
+                        "<div style='display: flex; align-items: center;'>" +
+                        "<span style='width: 20px; margin-right: 10px; text-align: center;'>👤</span>" +
+                        "<span style='font-weight: 600;'>Mme Yasmine Trabelsi</span>" +
+                        "</div>" +
+                        "<div style='display: flex; align-items: center;'>" +
+                        "<span style='width: 20px; margin-right: 10px; text-align: center;'>📱</span>" +
+                        "<span style='font-weight: 600;'>+216 55 123 456</span>" +
+                        "</div>" +
+                        "<div style='display: flex; align-items: center;'>" +
+                        "<span style='width: 20px; margin-right: 10px; text-align: center;'>✉️</span>" +
+                        "<span style='font-weight: 600;'>responsable.dons@fnart.com</span>" +
+                        "</div>" +
+                        "</div>" +
+                        "</div>" +
+
+                        "<p style='font-size: 16px; margin-top: 30px;'>Cordialement,</p>" +
+                        "<p style='font-size: 16px; font-weight: 600; color: #3498DB; margin-bottom: 5px;'>L'équipe de Fnart</p>" +
+
+                        "<div style='text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eaeaea;'>" +
+                        "<p style='color: #7F8C8D; font-size: 14px;'>Merci de faire partie de notre communauté solidaire</p>" +
+                        "</div>" +
+                        "</div>" +
+                        "</body>" +
+                        "</html>";
+                sendEmail(email, "Détails du don", htmlContent);
             }
 
-
-
             servicesDons.add(don);
-
 
             Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
             successAlert.setTitle("Succès");
             successAlert.setHeaderText(null);
             successAlert.setContentText("Le don a été ajouté avec succès !");
             successAlert.showAndWait();
-
-
 
             // Clear fields
             clearFields();
@@ -235,11 +294,48 @@ public class AddDonsController implements Initializable {
         }
     }
 
+    private boolean isValidEmail(String email) {
+        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+    }
+
+    private void sendEmail(String to, String subject, String bodyHtml) {
+        String from = "eyadhiflaouii@gmail.com"; // Replace with your email
+        String password = "ayrt opol imsy wtga"; // App password (NEVER hardcode in production)
+
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+
+        Session session = Session.getInstance(props, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(from, password);
+            }
+        });
+
+        try {
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(from));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+            message.setSubject(subject);
+            message.setContent(bodyHtml, "text/html; charset=utf-8"); // Send as HTML
+
+            Transport.send(message);
+        } catch (MessagingException e) {
+            showAlert("Erreur Email", "Échec de l'envoi de l'email : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
     private void clearFields() {
         ValeurTextField.clear();
         TypeChoice.setValue("Argent");
         DescriptionTextArea.clear();
         BeneficiaireChoice.setValue(null);
+        emailField.clear();
     }
 
     @FXML
@@ -292,7 +388,6 @@ public class AddDonsController implements Initializable {
         }
     }
 
-
     public void handleBack() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Dashboard.fxml"));
@@ -335,7 +430,4 @@ public class AddDonsController implements Initializable {
 
         fadeIn.play();
     }
-
-
-
 }
