@@ -318,4 +318,22 @@ public class ModifierAtelierController {
     public void setBackController(BackAtelierController backAtelierController) {
         // Implementation for back button controller reference
     }
+
+    @FXML
+    private void redirectToAtelierManagement() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AdminDashboard.fxml"));
+            Parent root = loader.load();
+
+            AdminDashboardController controller = loader.getController();
+            controller.handleAfficherAtelier();
+
+            Stage stage = (Stage) titreField.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Admin Dashboard - Atelier Management");
+            stage.setMaximized(true);
+        } catch (IOException e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de rediriger vers la gestion des ateliers: " + e.getMessage());
+        }
+    }
 }

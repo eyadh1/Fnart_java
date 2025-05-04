@@ -78,31 +78,25 @@
                                     <ScrollPane fitToWidth="true" styleClass="workshop-scroll-pane" VBox.vgrow="ALWAYS" prefHeight="450.0">
                                         <content>
                                             <ListView fx:id="workshopsListView" styleClass="workshops-list-view" VBox.vgrow="ALWAYS" prefHeight="440.0" minHeight="400.0">
-                                                <!-- Workshop items will be added here dynamically -->
+                                                <!-- Workshop items will be displayed as modern cards dynamically -->
                                             </ListView>
                                         </content>
                                     </ScrollPane>
                                     
-                                    <!-- Pagination Controls -->
-                                    <HBox alignment="CENTER" spacing="15" styleClass="pagination-controls">
+                                    <!-- Enhanced Pagination Controls -->
+                                    <HBox alignment="CENTER" spacing="20" styleClass="pagination-controls">
                                         <Button fx:id="prevPageButton" text="⬅ Précédent" onAction="#prevPage" styleClass="page-nav-button" />
-                                        <HBox alignment="CENTER" spacing="5" styleClass="page-numbers">
-                                            <fx:define>
-                                                <ToggleGroup fx:id="pageToggleGroup" />
-                                            </fx:define>
-                                            <!-- Page buttons will be added dynamically -->
-                                            <Label fx:id="pageInfoLabel" text="Page 1 sur 1" styleClass="page-info" />
-                                        </HBox>
+                                        <Label fx:id="pageInfoLabel" text="Page 1 sur 1" styleClass="page-info" />
                                         <Button fx:id="nextPageButton" text="Suivant ➡" onAction="#nextPage" styleClass="page-nav-button" />
-                                        <ComboBox fx:id="pageSizeComboBox" prefWidth="100" promptText="10 par page" />
+                                        <ComboBox fx:id="pageSizeComboBox" prefWidth="120" promptText="10 par page" />
                                     </HBox>
                                     
-                                    <!-- Action Buttons -->
-                                    <HBox alignment="CENTER" spacing="20">
-                                        <Button text="Ajouter" onAction="#ajouterAtelier" styleClass="button" />
-                                        <Button text="Modifier" onAction="#modifierAtelier" styleClass="button" />
-                                        <Button text="Supprimer" onAction="#supprimerAtelier" styleClass="button" />
-                                        <Button text="Interface Publique" onAction="#openPublicInterface" styleClass="button" />
+                                    <!-- Updated Action Buttons -->
+                                    <HBox alignment="CENTER" spacing="30">
+                                        <Button text="Ajouter" onAction="#ajouterAtelier" styleClass="action-button" />
+                                        <Button text="Modifier" onAction="#modifierAtelier" styleClass="action-button" />
+                                        <Button text="Supprimer" onAction="#supprimerAtelier" styleClass="action-button" />
+                                        <Button text="Interface Publique" onAction="#openPublicInterface" styleClass="action-button" />
                                     </HBox>
                                     
                                     <!-- Search Field -->

@@ -14,6 +14,7 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/AdminDashboard.fxml"));
         primaryStage.setTitle("Fnart ");
         primaryStage.setScene(new Scene(root));
+        primaryStage.setMaximized(true);
         primaryStage.show();
     }
 

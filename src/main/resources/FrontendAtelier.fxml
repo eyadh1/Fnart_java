@@ -46,8 +46,11 @@
     <ScrollPane fitToHeight="false" fitToWidth="true" styleClass="main-scroll-pane" VBox.vgrow="ALWAYS">
         <VBox alignment="CENTER" spacing="20">
             <!-- Workshops Grid -->
-            <TilePane fx:id="atelierGrid" hgap="16" prefColumns="4" styleClass="masonry-grid" vgap="16">
+            <TilePane fx:id="atelierGrid" hgap="16" prefColumns="3" styleClass="masonry-grid" vgap="16">
                 <!-- Atelier cards will be added here dynamically -->
+                <stylesheets>
+                    <URL value="@styles/pinterest-style.css" />
+                </stylesheets>
             </TilePane>
             
             <!-- Pagination Controls -->

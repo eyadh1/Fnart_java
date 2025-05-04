@@ -352,6 +352,7 @@ public class AdminDashboardController implements Initializable {
             Stage stage = new Stage();
             stage.setTitle("Détails du bénéficiaire");
             stage.setScene(new Scene(root));
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -372,6 +373,7 @@ public class AdminDashboardController implements Initializable {
             Stage stage = new Stage();
             stage.setTitle("Modifier le bénéficiaire");
             stage.setScene(new Scene(root));
+            stage.setMaximized(true);
             stage.show();
 
             // Refresh the list when the update form is closed
@@ -731,6 +733,7 @@ public class AdminDashboardController implements Initializable {
             Stage stage = new Stage();
             stage.setTitle("Détails du don");
             stage.setScene(new Scene(root));
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -902,6 +905,7 @@ public class AdminDashboardController implements Initializable {
             Stage stage = new Stage();
             stage.setTitle("Afficher Ateliers");
             stage.setScene(new Scene(root));
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -917,6 +921,7 @@ public class AdminDashboardController implements Initializable {
             Stage stage = new Stage();
             stage.setTitle("Ajouter Atelier");
             stage.setScene(new Scene(root));
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -932,6 +937,7 @@ public class AdminDashboardController implements Initializable {
             Stage stage = new Stage();
             stage.setTitle("Modifier Atelier");
             stage.setScene(new Scene(root));
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -947,6 +953,7 @@ public class AdminDashboardController implements Initializable {
             Stage stage = new Stage();
             stage.setTitle("Détails Atelier");
             stage.setScene(new Scene(root));
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -976,6 +983,7 @@ public class AdminDashboardController implements Initializable {
             Stage stage = new Stage();
             stage.setTitle("Front Office Dashboard");
             stage.setScene(new Scene(root));
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
