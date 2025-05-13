@@ -56,7 +56,7 @@ Internet access (for API-based features like SMS, AI generation, payment)
 ⚙️ Installation
 Clone the repository
 
-git clone https://github.com/your-username/fnart-desktop.git
+git clone https://github.com/eyadh1/Fnart_java.git
 cd fnart-desktop
 Configure database connection
 Set your DB URL, username, and password in your application.properties or equivalent configuration file.
